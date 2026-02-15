@@ -1,0 +1,110 @@
+{
+  "version": "0.0.1",
+  "timestamp": "2026-02-15T16:29:15.522643",
+  "entities": [
+    {
+      "guid": "73792808-fc3d-38c9-bf4b-f9d786078f49",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "4654500a-a7c8-cf12-b8b4-15d40e744444",
+      "hasProperties": [],
+      "componentName": "Pset_BuildingStoreyCommon"
+    },
+    {
+      "guid": "4f12d893-de9d-c7f4-fb08-44f321b5f298",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "0fef9ff3-3118-a8fe-7057-674186238e33",
+      "hasProperties": [],
+      "componentName": "Pset_ProductRequirements"
+    },
+    {
+      "guid": "6e79883c-b0a6-c9ca-c8c5-25c3649bdd9e",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "b5c1672e-287a-a611-c765-055c553c8791",
+      "hasProperties": [],
+      "componentName": "Pset_AirSideSystemInformation"
+    },
+    {
+      "guid": "ee011be3-ad1c-ae20-7e02-64b4bae44883",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "710c4a31-8030-e3f8-36b4-099c01bad6a3",
+      "hasProperties": [],
+      "componentName": "Pset_BuildingStoreyCommon"
+    },
+    {
+      "guid": "a091002e-7985-0b5f-d3ed-22d58cc0d4ad",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "e50a448d-e49e-6463-9960-780adf83d910",
+      "hasProperties": [],
+      "componentName": "Pset_ProductRequirements"
+    },
+    {
+      "guid": "7a5d3a4d-2f5a-85b7-f6c9-c2533bbb1c5a",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "e3ba26fe-610c-1f96-a9fd-ec795a8571f3",
+      "hasProperties": [],
+      "componentName": "Pset_BuildingCommon"
+    },
+    {
+      "guid": "4256d507-b0f9-2480-97cd-83f98cd53b8e",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "d14afc37-e991-e5b2-fbce-2dd6b4745c3e",
+      "hasProperties": [],
+      "componentName": "Pset_DoorCommon"
+    },
+    {
+      "guid": "e7aded38-5204-253f-5781-ea28cbbf2709",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "ac6ee654-89a4-c57e-5a60-3161e2fd466b",
+      "hasProperties": [],
+      "componentName": "Pset_QuantityTakeOff"
+    },
+    {
+      "guid": "a105c32b-6497-7417-97e9-07ed54013c72",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "af139d38-0415-4c92-32bc-cde97debca24",
+      "hasProperties": [],
+      "componentName": "Pset_AirSideSystemInformation"
+    },
+    {
+      "guid": "492a7024-3dc8-431e-2117-51aa11ee6ff6",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "3625f980-f8d7-c67b-043c-b655f9896dd4",
+      "hasProperties": [],
+      "componentName": "Pset_QuantityTakeOff"
+    },
+    {
+      "guid": "10ff42c0-53d0-33c2-e651-3828d473ae94",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "236d8b84-def3-35a2-eb60-ecff3a7c8fca",
+      "hasProperties": [],
+      "componentName": "Pset_ReinforcementBarPitchOfWall"
+    },
+    {
+      "guid": "5129e96d-065f-0b6a-5bac-65a3bd190f85",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "d38b406c-7636-37ae-0ff8-06596cc45ad5",
+      "hasProperties": [],
+      "componentName": "Pset_WallCommon"
+    },
+    {
+      "guid": "4b881c84-4b80-12c4-013a-6c130c728f5a",
+      "componentType": "IfcPropertySetComponent",
+      "componentDescription": "",
+      "entityGuid": "951efe5d-db7c-52a2-8f27-a7af698e355b",
+      "hasProperties": [],
+      "componentName": "Pset_ReinforcementBarPitchOfWall"
+    }
+  ]
+}

@@ -298,7 +298,7 @@ class IFC2JSONSimple:
                 vertString = 'v ' + '\nv '.join(vertsList) + '\n'
 
                 faces = shape.geometry.faces
-                facesList = [' '.join(map(str, faces[x:x+3]))
+                facesList = [' '.join(map(str, [f + 1 for f in faces[x:x+3]]))
                              for x in range(0, len(faces), 3)]
                 faceString = 'f ' + '\nf '.join(map(str, facesList)) + '\n'
 

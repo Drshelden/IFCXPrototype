@@ -1,6 +1,7 @@
 """Flask server for IFC processing with file-based data store"""
 
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 import os
 import json
 import sys
@@ -16,6 +17,9 @@ from dataStores.fileBased import FileBasedStore
 from memoryTree import MemoryTree
 
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app)
 
 # Configuration
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
@@ -52,6 +56,11 @@ def allowed_file(filename):
 def admin():
     """Serve the admin page"""
     return render_template('admin.html')
+
+@app.route('/viewer')
+def viewer():
+    """Serve the advanced viewer page"""
+    return render_template('viewer.html')
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
@@ -313,6 +322,7 @@ def too_large(e):
 if __name__ == '__main__':
     print("🚀 IFC Processing Server Starting...")
     print("📄 Admin Page: http://localhost:5000")
+    print("🔍 Viewer Page: http://localhost:5000/viewer")
     print("\n📡 API Endpoints:")
     print("   POST   /api/upload                  - Upload & process IFC/JSON files")
     print("   GET    /api/entities                - Query entity GUIDs")

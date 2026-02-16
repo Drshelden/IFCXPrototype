@@ -37,6 +37,15 @@ Open your browser and navigate to:
 http://localhost:5000
 ```
 
+### 4. (Optional) Use the Advanced Viewer
+
+For advanced data exploration with 3D visualization:
+```
+http://localhost:5000/viewer
+```
+
+**📖 See [VIEWER_GUIDE.md](VIEWER_GUIDE.md) for detailed viewer documentation**
+
 ## File Structure
 
 ```
@@ -44,7 +53,8 @@ server/
 ├── app.py                          # Main Flask application
 ├── requirements.txt                # Python dependencies
 ├── templates/
-│   └── admin.html                 # Web admin interface
+│   ├── admin.html                 # Web admin interface
+│   └── viewer.html                # Advanced 3D viewer interface
 ├── ingestors/
 │   ├── ifc4ingestor.py           # IFC to JSON converter
 │   └── utils.py                   # Utility functions

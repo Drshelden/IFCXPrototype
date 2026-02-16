@@ -9,7 +9,7 @@ When a file is uploaded to the server from the admin page, the file based store 
 The files that are uploaded will be JSON files containing an array of components in the root of the JSON file. The service will write out in the folder named for that file a separate file for each of the components contained in that root array.
 The name of each file will be its entity GUID concatenated with its GUID with an underscore in between them.The type of this file will be specified as .JSON
 
-Now do this: 
+
 Once a new file has been uploaded and every time the server starts, there is a refresh action. Refresh stores the all the components in memory in a number of different ways.
 The data is developed in a Python memory tree structure with the following organization at the root level. We have the individual files, which we will call models from now on.
 Within each model, there will be a by entity list and a by type list.
@@ -40,5 +40,8 @@ The components end point retrieves a list of component IDs, filtered by the spec
 components?guids=[GUID1, GUI2, ...] returns the data associated with these GUIDs as a json string, with an array of the component contents as dictionaries in this array
 
 
+Now do this: 
+Watching the viewer.
 
+Let's say it works this way here's how the UI is laid out from the top there's a text entry field that allows me to to send a rest API query along the lines of what we've developed in the middle the large middle vertically of the screen there are two views side by side on the left is an expandable accordion style folder structure where I can see all the lists of the entity ID's by expand that I'll see all of the list of the component IDs if I expand those I see the the component that the the parameters associated with that component on the right I see a 3D view and if there are IFC shape representations um in the in the return collection I will display those in an open 3D web GL excuse me web GL viewer I will see those data sets displayed as obj import as obj triangle collections. On the bottom will be a data display showing all of the and the tabular view showing all of the returned entries component values so a bit of clarification the left view will show an expanding check series of check marks that can turn on and off the entity or the component and if I select those I will see the results displayed in the bottom panel
 

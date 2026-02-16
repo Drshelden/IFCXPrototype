@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFC Component Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Query Input Section */
+        .query-section {
+            background: #2d2d2d;
+            border-bottom: 1px solid #444;
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .query-input-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 8px;
+        }
+
+        #queryInput {
+            flex: 1;
+            padding: 8px 12px;
+            background: #3d3d3d;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: #e0e0e0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+        }
+
+        #queryInput::placeholder {
+            color: #888;
+        }
+
+        #queryInput:focus {
+            outline: none;
+            border-color: #0098ff;
+            box-shadow: 0 0 8px rgba(0, 152, 255, 0.3);
+        }
+
+        button {
+            padding: 8px 16px;
+            background: #0098ff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #0078cc;
+        }
+
+        button:active {
+            background: #005fa3;
+        }
+
+        /* Status indicator */
+        .status-info {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Content Section */
+        .content-section {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+            gap: 8px;
+            padding: 8px;
+        }
+
+        /* Left Panel - Tree View */
+        .left-panel {
+            width: min(33%, 400px);
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tree-header {
+            padding: 12px;
+            border-bottom: 1px solid #444;
+            font-weight: 600;
+            font-size: 13px;
+            background: #252525;
+        }
+
+        .tree-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .tree-item {
+            border-left: 2px solid transparent;
+            transition: background 0.15s;
+        }
+
+        .tree-item:hover {
+            background: #3d3d3d;
+        }
+
+        .tree-item-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 12px;
+        }
+
+        .tree-item.selected > .tree-item-content {
+            background: #0098ff;
+            color: white;
+            border-left-color: #0078cc;
+        }
+
+        .tree-toggle {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .tree-toggle::before {
+            content: '▶';
+            font-size: 10px;
+            transition: transform 0.15s;
+            display: inline-block;
+        }
+
+        .tree-item.expanded > .tree-item-content .tree-toggle::before {
+            transform: rotate(90deg);
+        }
+
+        .tree-checkbox {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            cursor: pointer;
+            accent-color: #0098ff;
+        }
+
+        .tree-label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tree-count {
+            font-size: 11px;
+            color: #888;
+            margin-left: auto;
+        }
+
+        .tree-children {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+
+        .tree-item.expanded > .tree-children {
+            max-height: 2000px;
+        }
+
+        .tree-children > .tree-item {
+            margin-left: 16px;
+        }
+
+        /* Right Panel - 3D Viewer */
+        .right-panel {
+            flex: 1;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .viewer-header {
+            padding: 12px;
+            border-bottom: 1px solid #444;
+            font-weight: 600;
+            font-size: 13px;
+            background: #252525;
+        }
+
+        #canvas3d {
+            flex: 1;
+            background: #1a1a1a;
+        }
+
+        .viewer-controls {
+            padding: 8px 12px;
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid #444;
+            background: #252525;
+            font-size: 11px;
+        }
+
+        .viewer-control-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .viewer-control-group label {
+            color: #aaa;
+        }
+
+        .viewer-control-group input[type="checkbox"] {
+            accent-color: #0098ff;
+            cursor: pointer;
+        }
+
+        .control-separator {
+            width: 1px;
+            height: 16px;
+            background: #444;
+        }
+
+        /* Bottom Panel - Data Table */
+        .bottom-panel {
+            display: none;
+        }
+
+        .table-header {
+            padding: 12px;
+            border-bottom: 1px solid #444;
+            font-weight: 600;
+            font-size: 13px;
+            background: #252525;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .table-content {
+            flex: 1;
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        thead {
+            background: #252525;
+            border-bottom: 1px solid #444;
+            position: sticky;
+            top: 0;
+        }
+
+        th {
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #aaa;
+            white-space: nowrap;
+            background: #252525;
+        }
+
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #3d3d3d;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        tr:hover {
+            background: #383838;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #2a2a2a;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #666;
+        }
+
+        /* Loading indicator */
+        .loading {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #0098ff;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+            margin-left: 4px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Empty state */
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .empty-state code {
+            background: #3d3d3d;
+            padding: 2px 6px;
+            border-radius: 2px;
+            color: #0098ff;
+            font-family: 'Monaco', monospace;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        /* Tooltips */
+        [data-tooltip] {
+            position: relative;
+        }
+
+        [data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            background: #000;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            white-space: nowrap;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            pointer-events: none;
+            border: 1px solid #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Query Input Section -->
+        <div class="query-section">
+            <div class="query-input-wrapper">
+                <input 
+                    type="text" 
+                    id="queryInput" 
+                    placeholder="Enter REST query (e.g., http://localhost:5000/api/entities?entity_types=IfcWall,IfcShapeRepresentation or /api/guids?models=HelloWall)"
+                >
+                <button id="executeBtn">Execute</button>
+                <button id="clearBtn" title="Clear results">Clear</button>
+            </div>
+            <div class="status-info">
+                <div class="status-dot"></div>
+                <span id="statusText">Ready</span>
+            </div>
+        </div>
+
+        <!-- Main Content: Tree + 3D Viewer + Data Table -->
+        <div class="content-section">
+            <!-- Left: Entity/Component Tree -->
+            <div class="left-panel">
+                <div class="tree-header">Entities & Components</div>
+                <div class="tree-content" id="treeContainer">
+                    <div class="empty-state">Execute a query to load data</div>
+                </div>
+            </div>
+
+            <!-- Right: 3D Viewer -->
+            <div style="flex: 1; display: flex; flex-direction: column;">
+                <div class="right-panel" style="flex: 1;">
+                    <div class="viewer-header">3D View</div>
+                    <canvas id="canvas3d"></canvas>
+                    <div class="viewer-controls">
+                        <div class="viewer-control-group">
+                            <input type="checkbox" id="showGrid" checked>
+                            <label for="showGrid">Grid</label>
+                        </div>
+                        <div class="control-separator"></div>
+                        <div class="viewer-control-group">
+                            <input type="checkbox" id="showAxes" checked>
+                            <label for="showAxes">Axes</label>
+                        </div>
+                        <div class="control-separator"></div>
+                        <button id="resetView" style="padding: 4px 12px; font-size: 11px;">Reset View</button>
+                        <button id="fitAll" style="padding: 4px 12px; font-size: 11px;">Fit All</button>
+                    </div>
+                </div>
+
+                <!-- Bottom: Data Table -->
+                <div class="bottom-panel">
+                    <div class="table-header">
+                        <span>Component Data <span id="rowCount"></span></span>
+                        <span id="tableStatus"></span>
+                    </div>
+                    <div class="table-content" id="tableContainer">
+                        <div class="empty-state">No data selected</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // 3D VIEWER SETUP (Three.js)
+        // ============================================
+        let scene, camera, renderer, controls;
+        const objects3d = new Map(); // guid -> mesh
+        const selectedGuids = new Set();
+        let gridHelper, axesHelper;
+        let panTarget; // Track the pan/orbit center point
+
+        function init3DViewer() {
+            const canvas = document.getElementById('canvas3d');
+            const container = canvas.parentElement;
+
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a1a);
+
+            // Camera
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
+            camera.up.set(0, 0, 1); // Z axis points up (right-hand rule)
+            camera.position.set(10, -10, 10); // View from back-left-top
+            camera.lookAt(0, 0, 0);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(100, 100, 100);
+            scene.add(directionalLight);
+
+            // Grid
+            gridHelper = new THREE.GridHelper(500, 50, 0x444444, 0x222222);
+            gridHelper.rotation.x = Math.PI / 2; // Rotate to XY plane (Z pointing up)
+            scene.add(gridHelper);
+
+            // Axes
+            axesHelper = new THREE.AxesHelper(50);
+            scene.add(axesHelper);
+
+            // Simple orbit-like controls via mouse
+            panTarget = new THREE.Vector3(0, 0, 0); // Initialize pan target at origin
+            setupMouseControls();
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const newWidth = container.clientWidth;
+                const newHeight = container.clientHeight;
+                camera.aspect = newWidth / newHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(newWidth, newHeight);
+            });
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Control event listeners
+            document.getElementById('showGrid').addEventListener('change', (e) => {
+                gridHelper.visible = e.target.checked;
+            });
+
+            document.getElementById('showAxes').addEventListener('change', (e) => {
+                axesHelper.visible = e.target.checked;
+            });
+
+            document.getElementById('resetView').addEventListener('click', () => {
+                camera.up.set(0, 0, 1); // Z axis points up
+                camera.position.set(-100, -100, 100); // View from back-left-top
+                panTarget.set(0, 0, 0); // Reset pan target to origin
+                camera.lookAt(0, 0, 0);
+            });
+
+            document.getElementById('fitAll').addEventListener('click', fitAllObjects);
+        }
+
+        function setupMouseControls() {
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+
+            const canvas = document.getElementById('canvas3d');
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const deltaX = e.clientX - previousMousePosition.x;
+                const deltaY = e.clientY - previousMousePosition.y;
+
+                if (e.shiftKey) {
+                    // Pan mode: move camera and target together
+                    const radius = camera.position.length();
+                    
+                    // Calculate camera's right and up vectors for panning in screen space
+                    const forward = new THREE.Vector3()
+                        .subVectors(panTarget, camera.position)
+                        .normalize();
+                    const right = new THREE.Vector3()
+                        .crossVectors(forward, camera.up)
+                        .normalize();
+                    const up = new THREE.Vector3()
+                        .crossVectors(right, forward)
+                        .normalize();
+                    
+                    // Pan amount proportional to camera distance
+                    const panSpeed = radius * 0.005;
+                    const panX = right.multiplyScalar(-deltaX * panSpeed);
+                    const panY = up.multiplyScalar(deltaY * panSpeed);
+                    
+                    // Move both camera and target
+                    panTarget.add(panX).add(panY);
+                    camera.position.add(panX).add(panY);
+                    camera.lookAt(panTarget);
+                } else {
+                    // Rotate mode: orbit around target
+                    const offsetPos = new THREE.Vector3()
+                        .subVectors(camera.position, panTarget);
+                    const radius = offsetPos.length();
+                    
+                    const theta = Math.atan2(offsetPos.y, offsetPos.x) - deltaX * 0.01;
+                    const phi = Math.acos(offsetPos.z / radius) - deltaY * 0.01;
+
+                    const clampedPhi = Math.max(0.1, Math.min(Math.PI - 0.1, phi));
+                    offsetPos.x = radius * Math.sin(clampedPhi) * Math.cos(theta);
+                    offsetPos.y = radius * Math.sin(clampedPhi) * Math.sin(theta);
+                    offsetPos.z = radius * Math.cos(clampedPhi);
+                    
+                    camera.position.copy(panTarget).add(offsetPos);
+                    camera.up.set(0, 0, 1); // Preserve Z-up orientation
+                    camera.lookAt(panTarget);
+                }
+
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            canvas.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const offsetPos = new THREE.Vector3().subVectors(camera.position, panTarget);
+                const radius = offsetPos.length();
+                const newRadius = Math.max(10, Math.min(1000, radius + e.deltaY * 0.1));
+                const scale = newRadius / radius;
+                offsetPos.multiplyScalar(scale);
+                camera.position.copy(panTarget).add(offsetPos);
+                camera.up.set(0, 0, 1); // Preserve Z-up orientation when zooming
+            });
+        }
+
+        function fitAllObjects() {
+            if (objects3d.size === 0) {
+                console.log("fitAllObjects: No objects to fit");
+                return;
+            }
+
+            console.log(`📏 fitAllObjects: Calculating bounds for ${objects3d.size} objects`);
+            
+            let minX = Infinity, maxX = -Infinity;
+            let minY = Infinity, maxY = -Infinity;
+            let minZ = Infinity, maxZ = -Infinity;
+            let validMeshes = 0;
+
+            objects3d.forEach((mesh, guid) => {
+                if (!mesh.visible) {
+                    console.log(`  Skipping invisible mesh: ${guid}`);
+                    return;
+                }
+
+                const box = new THREE.Box3().setFromObject(mesh);
+                
+                if (box.min.x === Infinity || box.max.x === -Infinity) {
+                    console.warn(`  Mesh ${guid} has invalid bounds`);
+                    return;
+                }
+
+                minX = Math.min(minX, box.min.x);
+                maxX = Math.max(maxX, box.max.x);
+                minY = Math.min(minY, box.min.y);
+                maxY = Math.max(maxY, box.max.y);
+                minZ = Math.min(minZ, box.min.z);
+                maxZ = Math.max(maxZ, box.max.z);
+                validMeshes++;
+                console.log(`  Mesh ${guid.substring(0, 20)}... bounds: (${box.min.x.toFixed(2)}, ${box.min.y.toFixed(2)}, ${box.min.z.toFixed(2)}) to (${box.max.x.toFixed(2)}, ${box.max.y.toFixed(2)}, ${box.max.z.toFixed(2)})`);
+            });
+
+            if (validMeshes === 0) {
+                console.warn("fitAllObjects: No visible meshes with valid bounds");
+                return;
+            }
+
+            console.log(`✓ Valid bounds from ${validMeshes} meshes`);
+            console.log(`  Overall bounds: (${minX.toFixed(2)}, ${minY.toFixed(2)}, ${minZ.toFixed(2)}) to (${maxX.toFixed(2)}, ${maxY.toFixed(2)}, ${maxZ.toFixed(2)})`);
+
+            const centerX = (minX + maxX) / 2;
+            const centerY = (minY + maxY) / 2;
+            const centerZ = (minZ + maxZ) / 2;
+
+            const sizeX = maxX - minX;
+            const sizeY = maxY - minY;
+            const sizeZ = maxZ - minZ;
+            const maxSize = Math.max(sizeX, sizeY, sizeZ);
+            
+            console.log(`  Center: (${centerX.toFixed(2)}, ${centerY.toFixed(2)}, ${centerZ.toFixed(2)})`);
+            console.log(`  Size: ${sizeX.toFixed(2)} x ${sizeY.toFixed(2)} x ${sizeZ.toFixed(2)}, max: ${maxSize.toFixed(2)}`);
+
+            // Calculate distance with buffer to ensure full view
+            const vFOV = camera.fov * Math.PI / 180; // convert vertical FOV to radians
+            const distance = (maxSize / 2) / Math.tan(vFOV / 2) + (maxSize * 0.2); // add 20% buffer
+
+            console.log(`  Positioning camera at distance ${distance.toFixed(2)} from center`);
+            
+            // Set the pan target to the center of the bounding box
+            panTarget.set(centerX, centerY, centerZ);
+            
+            camera.up.set(0, 0, 1); // Ensure Z points up
+            camera.position.set(
+                centerX - distance * 0.866, // position from back-left-top
+                centerY - distance * 0.866,
+                centerZ + distance * 0.866
+            );
+            camera.lookAt(centerX, centerY, centerZ);
+            
+            console.log(`  Camera position: (${camera.position.x.toFixed(2)}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)})`);
+        }
+
+        function addMeshToScene(guid, triangles, color = 0x0098ff) {
+            // Convert triangle data to Three.js geometry
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const indices = [];
+
+            triangles.forEach((tri, idx) => {
+                if (Array.isArray(tri) && tri.length >= 3) {
+                    const p1 = tri[0], p2 = tri[1], p3 = tri[2];
+                    vertices.push(p1[0], p1[1], p1[2]);
+                    vertices.push(p2[0], p2[1], p2[2]);
+                    vertices.push(p3[0], p3[1], p3[2]);
+                    const baseIdx = idx * 3;
+                    indices.push(baseIdx, baseIdx + 1, baseIdx + 2);
+                }
+            });
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
+            geometry.setIndex(new THREE.BufferAttribute(new Uint32Array(indices), 1));
+            geometry.computeVertexNormals();
+
+            const material = new THREE.MeshPhongMaterial({
+                color: color,
+                emissive: 0x000000,
+                shininess: 100,
+                wireframe: false,
+                side: THREE.DoubleSide
+            });
+
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+            objects3d.set(guid, mesh);
+        }
+
+        function updateMeshVisibility(guid, visible) {
+            const mesh = objects3d.get(guid);
+            if (mesh) {
+                mesh.visible = visible;
+            }
+        }
+
+        // Simple OBJ parser for handling OBJ strings
+        function parseOBJString(objString) {
+            const lines = objString.split('\n');
+            const vertices = [];
+            const faces = [];
+
+            lines.forEach(line => {
+                const parts = line.trim().split(/\s+/);
+                if (parts.length === 0) return;
+
+                if (parts[0] === 'v' && parts.length >= 4) {
+                    // Vertex definition: v x y z
+                    vertices.push(
+                        parseFloat(parts[1]),
+                        parseFloat(parts[2]),
+                        parseFloat(parts[3])
+                    );
+                } else if (parts[0] === 'f' && parts.length >= 4) {
+                    // Face definition: f idx1 idx2 idx3 (1-based indices)
+                    for (let i = 1; i < parts.length - 2; i++) {
+                        // Parse face indices (could be "1", "1/1", or "1/1/1" format)
+                        const i1 = parseInt(parts[1].split('/')[0]) - 1;
+                        const i2 = parseInt(parts[i + 1].split('/')[0]) - 1;
+                        const i3 = parseInt(parts[i + 2].split('/')[0]) - 1;
+                        faces.push(i1, i2, i3);
+                    }
+                }
+            });
+
+            if (vertices.length === 0 || faces.length === 0) {
+                console.warn('parseOBJString: No vertices or faces found');
+                return null;
+            }
+
+            // Create Three.js geometry
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
+            geometry.setIndex(new THREE.BufferAttribute(new Uint32Array(faces), 1));
+            geometry.computeVertexNormals();
+
+            return geometry;
+        }
+
+        function renderComponentShapes(componentGuid, componentData) {
+            if (!componentData) {
+                console.warn(`renderComponentShapes: No component data for ${componentGuid}`);
+                return;
+            }
+
+            console.log(`🔍 renderComponentShapes called for ${componentGuid}`);
+            console.log(`   Full component data:`, componentData);
+            console.log(`   Component data keys:`, Object.keys(componentData));
+
+            // Check if component has Items array (IfcShapeRepresentationComponent)
+            const items = componentData.Items || componentData.items;
+            if (!Array.isArray(items) || items.length === 0) {
+                console.warn(`⚠️  No items array found in component ${componentGuid}`);
+                console.log(`   Checked for: Items, items`);
+                console.log(`   Available keys: ${Object.keys(componentData).join(', ')}`);
+                return;
+            }
+
+            console.log(`✓ Found ${items.length} items in component ${componentGuid}`);
+            
+            let meshesCreated = 0;
+            // Process each item in the shape representation
+            items.forEach((item, idx) => {
+                if (!item) {
+                    console.warn(`   Item ${idx} is null/undefined`);
+                    return;
+                }
+
+                console.log(`\n   Processing item ${idx}:`, typeof item);
+                
+                // Item could be OBJ string data or an object with geometry
+                if (typeof item === 'string') {
+                    console.log(`   Item ${idx} is OBJ string data (${item.length} chars)`);
+                    try {
+                        const geometry = parseOBJString(item);
+                        if (!geometry) {
+                            console.warn(`   ✗ Failed to parse OBJ string`);
+                            return;
+                        }
+                        
+                        const meshId = `${componentGuid}-item-${idx}`;
+                        
+                        // Material for the OBJ mesh
+                        const material = new THREE.MeshPhongMaterial({
+                            color: 0x0098ff,
+                            emissive: 0x000000,
+                            shininess: 100,
+                            wireframe: false,
+                            side: THREE.DoubleSide
+                        });
+                        
+                        const mesh = new THREE.Mesh(geometry, material);
+                        scene.add(mesh);
+                        objects3d.set(meshId, mesh);
+                        meshesCreated++;
+                        console.log(`   ✓ Added OBJ mesh ${meshId} (vertices: ${geometry.attributes.position.count}, faces: ${geometry.index.count / 3})`);
+                    } catch (error) {
+                        console.error(`   ✗ Failed to parse OBJ at item ${idx}:`, error);
+                    }
+                    return;
+                }
+
+                if (typeof item === 'object') {
+                    console.log(`   Item ${idx} keys:`, Object.keys(item).slice(0, 15));
+                }
+
+                // Try to extract vertices and faces from item
+                const vertices = item.vertices || item.Vertices || item.vector || item.Vector || [];
+                const faces = item.faces || item.Faces || item.indices || item.Indices || item.triangles || item.Triangles || [];
+
+                console.log(`   Vertices: ${vertices.length} items, Faces: ${faces.length} items`);
+
+                if (vertices.length > 0 && faces.length > 0) {
+                    // Create a unique mesh ID for this item
+                    const meshId = `${componentGuid}-item-${idx}`;
+                    
+                    // Create geometry from vertices and faces
+                    const geometry = new THREE.BufferGeometry();
+                    
+                    // Flatten vertices array if needed
+                    let flatVertices = [];
+                    vertices.forEach(v => {
+                        if (Array.isArray(v)) {
+                            if (v.length >= 3) {
+                                flatVertices.push(v[0], v[1], v[2]);
+                            }
+                        } else if (v && typeof v === 'object' && v.x !== undefined && v.y !== undefined && v.z !== undefined) {
+                            flatVertices.push(v.x, v.y, v.z);
+                        }
+                    });
+
+                    console.log(`   Flattened vertices: ${flatVertices.length / 3} points`);
+
+                    if (flatVertices.length < 3) {
+                        console.warn(`   Not enough vertex data to create mesh`);
+                        return;
+                    }
+
+                    geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(flatVertices), 3));
+                    
+                    // Set indices if available
+                    if (faces.length > 0) {
+                        let flatIndices = [];
+                        faces.forEach(f => {
+                            if (Array.isArray(f)) {
+                                flatIndices.push(...f);
+                            } else if (typeof f === 'number') {
+                                flatIndices.push(f);
+                            }
+                        });
+                        
+                        console.log(`   Flattened indices: ${flatIndices.length}`);
+                        
+                        if (flatIndices.length > 0) {
+                            geometry.setIndex(new THREE.BufferAttribute(new Uint32Array(flatIndices), 1));
+                        } else {
+                            console.warn(`   Failed to flatten indices`);
+                        }
+                    }
+
+                    geometry.computeVertexNormals();
+
+                    const material = new THREE.MeshPhongMaterial({
+                        color: 0x0098ff,
+                        emissive: 0x000000,
+                        shininess: 100,
+                        wireframe: false,
+                        side: THREE.DoubleSide
+                    });
+
+                    const mesh = new THREE.Mesh(geometry, material);
+                    scene.add(mesh);
+                    objects3d.set(meshId, mesh);
+                    meshesCreated++;
+                    console.log(`   ✓ Added mesh ${meshId}`);
+                } else {
+                    console.warn(`   ✗ Item ${idx} missing geometry (vertices: ${vertices.length}, faces: ${faces.length})`);
+                }
+            });
+
+            console.log(`\n📊 Summary: Created ${meshesCreated}/${items.length} meshes, total objects3d: ${objects3d.size}`);
+        }
+
+        // ============================================
+        // DATA MANAGEMENT
+        // ============================================
+        let currentData = null;
+
+        function updateUI(data) {
+            console.log('updateUI called with data:', data);
+            console.log('  - entities:', Object.keys(data.entities || {}).length);
+            console.log('  - components:', Object.keys(data.components || {}).length);
+            currentData = data;
+            buildTree(data);
+            updateTable([]);
+        }
+
+        function extractModelName(url) {
+            try {
+                const urlObj = new URL(url);
+                const models = urlObj.searchParams.get('models');
+                if (models) return models;
+                
+                const modelParam = urlObj.searchParams.get('model');
+                if (modelParam) return modelParam;
+            } catch (e) {
+                console.warn('Could not parse model from URL:', e);
+            }
+            return 'DefaultModel';
+        }
+
+        function buildTree(data) {
+            const container = document.getElementById('treeContainer');
+            container.innerHTML = '';
+
+            if (!data || !data.entities) {
+                console.warn('buildTree: No data or entities');
+                container.innerHTML = '<div class="empty-state"><div>No data to display</div></div>';
+                return;
+            }
+
+            const entities = Object.keys(data.entities);
+            console.log('buildTree: Building tree with', entities.length, 'entities');
+            
+            if (entities.length === 0) {
+                console.warn('buildTree: No entities found');
+                container.innerHTML = `<div class="empty-state">
+                    <div>
+                        <div style="margin-bottom: 12px;"><strong>No results found</strong></div>
+                        <div style="margin: 8px 0; font-size: 12px; color: #666;">
+                            Try one of these:<br>
+                            <code>/api/guids</code> - All components<br>
+                            <code>/api/guids?entity_types=IfcDoor</code> - Different type
+                        </div>
+                    </div>
+                </div>`;
+                return;
+            }
+            
+            const componentCount = Object.values(data.entities).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
+            if (componentCount === 0) {
+                console.warn('buildTree: No components found');
+                container.innerHTML = `<div class="empty-state">
+                    <div>
+                        <div style="margin-bottom: 12px;"><strong>No components found</strong></div>
+                        <div style="margin: 8px 0; font-size: 12px; color: #666;">
+                            Your query returned entities but no data.<br>
+                            Try: <code>/api/guids</code> or check 
+                            <code>/api/entity_types</code> for available types
+                        </div>
+                    </div>
+                </div>`;
+                return;
+            }
+
+            // Create root node
+            const rootItem = createTreeItem('IFCxPrototype', 'root', componentCount);
+            const rootChildren = document.createElement('div');
+            rootChildren.className = 'tree-children';
+
+            // Get model name from current query or data
+            const modelName = data.modelName || extractModelName(data.queryUrl || '');
+            
+            // Create model node
+            const modelItem = createTreeItem(modelName, 'model', componentCount);
+            const modelChildren = document.createElement('div');
+            modelChildren.className = 'tree-children';
+
+            // Build entity → component tree under model
+            Object.keys(data.entities).sort().forEach(entityGuid => {
+                const entityItem = createTreeItem(entityGuid, 'entity', data.entities[entityGuid].length);
+                const entityChildren = document.createElement('div');
+                entityChildren.className = 'tree-children';
+
+                data.entities[entityGuid].forEach((componentGuid, idx) => {
+                    const componentItem = createTreeItem(componentGuid, 'component', null);
+                    const componentChildren = document.createElement('div');
+                    componentChildren.className = 'tree-children';
+
+                    // Add component properties
+                    if (data.components && data.components[componentGuid]) {
+                        const comp = data.components[componentGuid];
+                        Object.keys(comp).slice(0, 10).forEach(key => {
+                            const propItem = createPropertyItem(key, comp[key]);
+                            componentChildren.appendChild(propItem);
+                        });
+                        if (Object.keys(comp).length > 10) {
+                            const moreItem = document.createElement('div');
+                            moreItem.className = 'tree-item';
+                            moreItem.innerHTML = `<div class="tree-item-content" style="color: #888;"><span class="tree-label">... ${Object.keys(comp).length - 10} more properties</span></div>`;
+                            componentChildren.appendChild(moreItem);
+                        }
+                    }
+
+                    componentItem.appendChild(componentChildren);
+                    entityChildren.appendChild(componentItem);
+
+                    // Toggle expand on arrow click
+                    const componentToggle = componentItem.querySelector('.tree-toggle');
+                    if (componentToggle) {
+                        componentToggle.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            componentItem.classList.toggle('expanded');
+                        });
+                    }
+
+                    // Toggle expand on text click
+                    componentItem.addEventListener('click', (e) => {
+                        if (e.target.closest('.tree-toggle, .tree-checkbox')) return;
+                        e.stopPropagation();
+                        componentItem.classList.toggle('expanded');
+                    });
+
+                    // Checkbox for component visibility
+                    const checkbox = componentItem.querySelector('.tree-checkbox');
+                    checkbox.addEventListener('change', (e) => {
+                        selectedGuids[e.target.checked ? 'add' : 'delete'](componentGuid);
+                        if (e.target.checked) {
+                            renderComponentShapes(componentGuid, data.components?.[componentGuid]);
+                        }
+                        updateComponentVisibility();
+                        updateTableForSelection();
+                    });
+                });
+
+                entityItem.appendChild(entityChildren);
+                modelChildren.appendChild(entityItem);
+
+                // Toggle expand on arrow click
+                const entityToggle = entityItem.querySelector('.tree-toggle');
+                if (entityToggle) {
+                    entityToggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        entityItem.classList.toggle('expanded');
+                    });
+                }
+
+                // Toggle expand on text click
+                entityItem.addEventListener('click', (e) => {
+                    if (e.target.closest('.tree-toggle, .tree-checkbox')) return;
+                    e.stopPropagation();
+                    entityItem.classList.toggle('expanded');
+                });
+
+                // Checkbox for entity
+                const checkbox = entityItem.querySelector('.tree-checkbox');
+                checkbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        data.entities[entityGuid].forEach(guid => {
+                            selectedGuids.add(guid);
+                            // Render shapes for all components in this entity
+                            renderComponentShapes(guid, data.components?.[guid]);
+                        });
+                    } else {
+                        data.entities[entityGuid].forEach(guid => selectedGuids.delete(guid));
+                    }
+                    // Update child checkboxes visually
+                    const childCheckboxes = entityItem.querySelectorAll('.tree-children .tree-item .tree-checkbox');
+                    childCheckboxes.forEach(cb => cb.checked = e.target.checked);
+                    updateComponentVisibility();
+                    updateTableForSelection();
+                });
+            });
+
+            modelItem.appendChild(modelChildren);
+            rootChildren.appendChild(modelItem);
+
+            // Toggle expand on arrow click for model
+            const modelToggle = modelItem.querySelector('.tree-toggle');
+            if (modelToggle) {
+                modelToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    modelItem.classList.toggle('expanded');
+                });
+            }
+
+            // Toggle expand on text click for model
+            modelItem.addEventListener('click', (e) => {
+                if (e.target.closest('.tree-toggle, .tree-checkbox')) return;
+                e.stopPropagation();
+                modelItem.classList.toggle('expanded');
+            });
+
+            // Checkbox for model (select/deselect all components in model)
+            const modelCheckbox = modelItem.querySelector('.tree-checkbox');
+            modelCheckbox.addEventListener('change', (e) => {
+                Object.keys(data.entities).forEach(entityGuid => {
+                    data.entities[entityGuid].forEach(guid => {
+                        if (e.target.checked) {
+                            selectedGuids.add(guid);
+                            renderComponentShapes(guid, data.components?.[guid]);
+                        } else {
+                            selectedGuids.delete(guid);
+                        }
+                    });
+                });
+                // Update child checkboxes visually
+                const childCheckboxes = modelItem.querySelectorAll('.tree-children .tree-checkbox');
+                childCheckboxes.forEach(cb => cb.checked = e.target.checked);
+                updateComponentVisibility();
+                updateTableForSelection();
+            });
+
+            rootItem.appendChild(rootChildren);
+            container.appendChild(rootItem);
+
+            // Toggle expand on arrow click for root
+            const rootToggle = rootItem.querySelector('.tree-toggle');
+            if (rootToggle) {
+                rootToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    rootItem.classList.toggle('expanded');
+                });
+            }
+
+            // Toggle expand on text click for root
+            rootItem.addEventListener('click', (e) => {
+                if (e.target.closest('.tree-toggle, .tree-checkbox')) return;
+                e.stopPropagation();
+                rootItem.classList.toggle('expanded');
+            });
+
+            // Checkbox for root (select/deselect all)
+            const rootCheckbox = rootItem.querySelector('.tree-checkbox');
+            rootCheckbox.addEventListener('change', (e) => {
+                Object.keys(data.entities).forEach(entityGuid => {
+                    data.entities[entityGuid].forEach(guid => {
+                        if (e.target.checked) {
+                            selectedGuids.add(guid);
+                            renderComponentShapes(guid, data.components?.[guid]);
+                        } else {
+                            selectedGuids.delete(guid);
+                        }
+                    });
+                });
+                // Update child checkboxes visually
+                const childCheckboxes = rootItem.querySelectorAll('.tree-children .tree-checkbox');
+                childCheckboxes.forEach(cb => cb.checked = e.target.checked);
+                updateComponentVisibility();
+                updateTableForSelection();
+            });
+
+            // Expand root and model by default
+            rootItem.classList.add('expanded');
+            modelItem.classList.add('expanded');
+        }
+
+        function createTreeItem(label, type, count) {
+            const item = document.createElement('div');
+            item.className = 'tree-item';
+
+            let countText = count !== null ? ` (${count})` : '';
+            let displayLabel = label;
+            if (displayLabel.length > 40) {
+                displayLabel = displayLabel.substring(0, 37) + '...';
+            }
+
+            item.innerHTML = `
+                <div class="tree-item-content">
+                    <div class="tree-toggle"></div>
+                    <input type="checkbox" class="tree-checkbox">
+                    <span class="tree-label">${displayLabel}</span>
+                    <span class="tree-count">${countText}</span>
+                </div>
+            `;
+            return item;
+        }
+
+        function createPropertyItem(key, value) {
+            const item = document.createElement('div');
+            item.className = 'tree-item';
+
+            let valueStr = String(value);
+            if (valueStr.length > 50) {
+                valueStr = valueStr.substring(0, 47) + '...';
+            }
+
+            item.innerHTML = `
+                <div class="tree-item-content" style="padding-left: 32px; cursor: default;">
+                    <span class="tree-label"><strong>${key}:</strong> ${valueStr}</span>
+                </div>
+            `;
+            return item;
+        }
+
+        function updateComponentVisibility() {
+            objects3d.forEach((mesh, guid) => {
+                // Handle both direct component GUIDs and shape mesh IDs
+                if (selectedGuids.has(guid)) {
+                    mesh.visible = true;
+                } else {
+                    // Check if this is a shape mesh (format: componentGuid-item-idx)
+                    const componentGuid = guid.split('-item-')[0];
+                    mesh.visible = selectedGuids.has(componentGuid);
+                }
+            });
+        }
+
+        function updateTableForSelection() {
+            if (selectedGuids.size === 0) {
+                updateTable([]);
+                return;
+            }
+
+            const rows = [];
+            selectedGuids.forEach(guid => {
+                if (currentData.components && currentData.components[guid]) {
+                    const comp = currentData.components[guid];
+                    Object.keys(comp).forEach(key => {
+                        rows.push({ guid, key, value: comp[key] });
+                    });
+                }
+            });
+
+            updateTable(rows);
+        }
+
+        function updateTable(rows) {
+            const container = document.getElementById('tableContainer');
+            const rowCount = document.getElementById('rowCount');
+
+            if (rows.length === 0) {
+                container.innerHTML = '<div class="empty-state">Select components to view data</div>';
+                rowCount.textContent = '';
+                return;
+            }
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>GUID</th>
+                            <th>Property</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            rows.forEach(row => {
+                const guidShort = row.guid.substring(0, 8) + '...';
+                const valueStr = String(row.value).length > 100 
+                    ? String(row.value).substring(0, 97) + '...'
+                    : row.value;
+                html += `
+                    <tr title="${row.value}">
+                        <td>${guidShort}</td>
+                        <td>${row.key}</td>
+                        <td>${valueStr}</td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+            rowCount.textContent = `(${rows.length} rows)`;
+        }
+
+        // ============================================
+        // API INTERACTION
+        // ============================================
+        async function executeQuery() {
+            const input = document.getElementById('queryInput').value.trim();
+            if (!input) return;
+
+            const status = document.getElementById('statusText');
+            status.innerHTML = 'Loading<span class="loading"></span>';
+
+            try {
+                // Parse the query - support full URLs with server/port
+                let url = input;
+                
+                // If it's a full URL (has protocol), use it as-is
+                if (url.startsWith('http://') || url.startsWith('https://')) {
+                    // Already a full URL, use as-is
+                } 
+                // If it starts with /, add default server
+                else if (url.startsWith('/')) {
+                    url = 'http://localhost:5000' + url;
+                }
+                // If it starts with 'api/', add / prefix and server
+                else if (url.startsWith('api/')) {
+                    url = 'http://localhost:5000/' + url;
+                }
+                // Otherwise assume it's a path, add / and server
+                else {
+                    url = 'http://localhost:5000/api/' + url;
+                }
+
+                console.log('Executing query:', url);
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const apiData = await response.json();
+                if (apiData.error) {
+                    throw new Error(apiData.error);
+                }
+
+                // Build data structure for tree
+                const data = {
+                    entities: {},
+                    components: {}
+                };
+
+                // Determine response type and handle accordingly
+                if (apiData.component_guids) {
+                    // This is from /guids or /entities endpoint returning component GUIDs
+                    const componentGuids = apiData.component_guids;
+                    console.log('Processing component_guids response:', componentGuids.length, 'guids');
+                    data.entities['Result'] = componentGuids;
+
+                    // Fetch component data
+                    if (componentGuids.length > 0) {
+                        // Extract server from current URL
+                        const urlObj = new URL(url);
+                        const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
+                        
+                        const compResponse = await fetch(
+                            baseUrl + '/api/components?guids=' + 
+                            componentGuids.slice(0, 100).join(',')
+                        );
+                        const compData = await compResponse.json();
+                        console.log('Component data response:', compData.components ? compData.components.length : 0, 'components');
+                        if (compData.components) {
+                            compData.components.forEach(comp => {
+                                data.components[comp.guid] = comp;
+                            });
+                        }
+                    }
+                }
+                else if (apiData.entity_guids !== undefined) {
+                    // This is from /entities endpoint returning entity GUIDs
+                    const entityGuids = apiData.entity_guids;
+                    console.log('Processing entity_guids response:', entityGuids.length, 'entities');
+                    
+                    if (entityGuids.length === 0) {
+                        // Entity guids is empty - check if there's a component_context 
+                        // or fetch based on the query parameters
+                        console.log('No entity GUIDs returned, treating as result group');
+                        data.entities['Components'] = [];
+                    } else {
+                        // Build the tree with entities as top level
+                        for (let i = 0; i < entityGuids.length; i++) {
+                            data.entities[entityGuids[i]] = [];
+                        }
+                    }
+                    
+                    // Now fetch all components for these entities
+                    const urlObj = new URL(url);
+                    const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
+                    
+                    // If we have entity GUIDs, query for their components
+                    // Otherwise, just fetch based on the query parameters
+                    let componentGuidsToFetch = [];
+                    
+                    if (entityGuids.length > 0) {
+                        console.log('Fetching components for', entityGuids.length, 'entities');
+                        const entityGuidsParam = entityGuids.slice(0, 50).join(',');
+                        const compResponse = await fetch(
+                            baseUrl + '/api/guids?entity_guids=' + entityGuidsParam
+                        );
+                        const guidsData = await compResponse.json();
+                        console.log('Component guids for entities:', guidsData.component_guids ? guidsData.component_guids.length : 0, 'guids');
+                        componentGuidsToFetch = guidsData.component_guids || [];
+                    } else {
+                        // Try alternate approach - use the same query params but for /api/guids
+                        const urlObj = new URL(url);
+                        const queryParams = urlObj.search;
+                        console.log('EntityGuids empty, trying fallback. Query params:', queryParams);
+                        console.log('Will fetch from:', baseUrl + '/api/guids' + queryParams);
+                        
+                        if (queryParams && queryParams.length > 1) {
+                            try {
+                                const guidsUrl = baseUrl + '/api/guids' + queryParams;
+                                console.log('Fetching from:', guidsUrl);
+                                const guidsResponse = await fetch(guidsUrl);
+                                const guidsData = await guidsResponse.json();
+                                console.log('Full response from /api/guids:', guidsData);
+                                console.log('Component guids from query params:', guidsData.component_guids ? guidsData.component_guids.length : 0, 'guids');
+                                componentGuidsToFetch = guidsData.component_guids || [];
+                            } catch (e) {
+                                console.error('Error fetching guids:', e);
+                            }
+                        } else {
+                            console.log('No query params to use for fallback');
+                        }
+                    }
+                    
+                    console.log('Total component guids to fetch:', componentGuidsToFetch.length);
+                    
+                    if (componentGuidsToFetch.length > 0) {
+                        // Now fetch the actual component data
+                        const compUrl = baseUrl + '/api/components?guids=' + 
+                            componentGuidsToFetch.slice(0, 100).join(',');
+                        console.log('Fetching component data from:', compUrl.substring(0, 100) + '...');
+                        
+                        const dataResponse = await fetch(compUrl);
+                        const compData = await dataResponse.json();
+                        console.log('Component data response:', compData);
+                        console.log('Final component data:', compData.components ? compData.components.length : 0, 'components');
+                        
+                        if (compData.components) {
+                            compData.components.forEach(comp => {
+                                const entityId = comp.entityGuid || Object.keys(data.entities)[0];
+                                console.log('Adding component', comp.guid.substring(0, 8), 'to entity', entityId.substring(0, 20));
+                                if (data.entities[entityId]) {
+                                    data.entities[entityId].push(comp.guid);
+
+                                } else if (data.entities['Components']) {
+                                    data.entities['Components'].push(comp.guid);
+                                }
+                                data.components[comp.guid] = comp;
+                            });
+                        }
+                    }
+                }
+                else if (apiData.components) {
+                    // Direct component data response
+                    console.log('Processing direct components response:', apiData.components.length, 'components');
+                    data.entities['Result'] = apiData.components.map(c => c.guid);
+                    apiData.components.forEach(comp => {
+                        data.components[comp.guid] = comp;
+                    });
+                }
+                else if (apiData.models) {
+                    // Models list response
+                    console.log('Processing models response:', apiData.models.length, 'models');
+                    data.entities['Models'] = apiData.models || [];
+                }
+                else if (apiData.entity_types) {
+                    // Entity types response
+                    console.log('Processing entity_types response:', apiData.entity_types.length, 'types');
+                    data.entities['Entity Types'] = apiData.entity_types || [];
+                }
+                else if (Array.isArray(apiData.component_guids)) {
+                    // Array response (component GUIDs)
+                    console.log('Processing array of component_guids:', apiData.component_guids.length);
+                    data.entities['Result'] = apiData.component_guids;
+                }
+                else if (Array.isArray(apiData)) {
+                    // Direct array response
+                    console.log('Processing direct array response:', apiData.length);
+                    data.entities['Result'] = apiData;
+                }
+                else {
+                    console.warn('Unknown response type, printing full response:', apiData);
+                }
+
+                // Extract model name from the query URL
+                try {
+                    const urlObj = new URL(url);
+                    data.modelName = urlObj.searchParams.get('models') || urlObj.searchParams.get('model');
+                    if (!data.modelName) {
+                        // Try to extract from path or use default
+                        const pathParts = urlObj.pathname.split('/');
+                        data.modelName = pathParts[pathParts.length - 1] || 'DefaultModel';
+                    }
+                } catch (e) {
+                    data.modelName = 'DefaultModel';
+                }
+                data.queryUrl = url;
+
+                updateUI(data);
+                console.log('FINAL DATA STRUCTURE:', {
+                    entities: Object.keys(data.entities),
+                    entityCount: Object.keys(data.entities).length,
+                    componentCount: Object.keys(data.components).length
+                });
+                status.textContent = `✓ Loaded ${Object.keys(data.components).length} components (${Object.keys(data.entities).length} entities)`;
+
+            } catch (error) {
+                console.error('Query failed:', error);
+                const errorMsg = error.message || 'Unknown error';
+                status.textContent = `✗ Error: ${errorMsg}`;
+                document.getElementById('treeContainer').innerHTML = 
+                    `<div class="empty-state">Error: ${errorMsg}<br><small style="color: #aaa;">Check browser console (F12) for details</small></div>`;
+            }
+
+            console.log('=== FINAL SUMMARY ===');
+            console.log('Query URL:', input);
+            console.log('Final data entities:', Object.keys(currentData?.entities || {}).length);
+            console.log('Final data components:', Object.keys(currentData?.components || {}).length);
+        }
+
+        function clearResults() {
+            document.getElementById('queryInput').value = '';
+            document.getElementById('statusText').textContent = 'Ready';
+            document.getElementById('treeContainer').innerHTML = 
+                '<div class="empty-state">Execute a query to load data</div>';
+            updateTable([]);
+            selectedGuids.clear();
+            objects3d.forEach(mesh => scene.remove(mesh));
+            objects3d.clear();
+        }
+
+        // ============================================
+        // EVENT HANDLERS
+        // ============================================
+        document.getElementById('executeBtn').addEventListener('click', executeQuery);
+        document.getElementById('clearBtn').addEventListener('click', clearResults);
+
+        document.getElementById('queryInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                executeQuery();
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            console.log('📍 Page loaded');
+            console.log('   THREE available:', typeof THREE !== 'undefined');
+            console.log('✓ Viewer initialized with custom OBJ parser');
+            init3DViewer();
+        });
+    </script>
+</body>
+</html>

@@ -18,7 +18,7 @@ from utils import toLowerCamelcase, generateDeterministicGuid, expandGuid
 INCLUDE_EMPTY_PROPERTIES = False
 
 
-ALLOWED_TYPES = {'IfcPropertySet', 'IfcObjectDefinition', 'IfcRelationship'}
+ALLOWED_TYPES = {'IfcObjectDefinition', 'IfcPropertySet', 'IfcRelationship'}
 # ALLOWED_TYPES = {'IfcObjectDefinition', 'IfcPropertySet'}
 
 
@@ -152,6 +152,11 @@ class IFC2JSONSimple:
         if hasattr(entity, 'GlobalId') and entity.GlobalId: fc = True
         else: fc = False
 
+        if(entity.is_a('IfcObjectDefinition')):
+            isEntityDefinition = True
+        else:            
+            isEntityDefinition = False
+
         if 'Representation' in entityAttributes:
                 obj = self.toObj(entity)
 
@@ -163,10 +168,10 @@ class IFC2JSONSimple:
                     # ref['ref'] = id
                     # entityAttributes['representations'] = [ref]
                     entityGuid = expandGuid(entity.GlobalId)
-                    guid_str = generateDeterministicGuid("ShapeRepresentationComponent", entityGuid)    
+                    componentGuid = generateDeterministicGuid("ShapeRepresentationComponent", entityGuid)    
                     self.representations.append(
                         {
-                            "guid": guid_str,
+                            "componentGuid": componentGuid,
                             "componentType": "IfcShapeRepresentationComponent",
                             "entityGuid": entityGuid,
                             "representationIdentifier": "Body",
@@ -180,7 +185,7 @@ class IFC2JSONSimple:
                 # # (!) delete original representation, even if OBJ generation fails
                 # del entityAttributes['Representation']
 
-        returnedAttributes = self.appendAttributes(entityAttributes, entity_type, fc)
+        returnedAttributes = self.appendAttributes(entityAttributes, entity_type, fc, isEntityDefinition)
         entity_dict.update(returnedAttributes)
         
         # Sort entity_dict alphabetically by keys
@@ -188,7 +193,7 @@ class IFC2JSONSimple:
 
         return entity_dict
 
-    def appendAttributes(self, entityAttributes, entity_type, isFirstClass=False):
+    def appendAttributes(self, entityAttributes, entity_type, isFirstClass=False, isEntityDefinition=False):
 
         entity_dict = {}        
         
@@ -196,6 +201,9 @@ class IFC2JSONSimple:
             # Extract component type for GUID generation and output
             componentType = entity_type + 'Component'
             entity_dict['componentType'] = componentType
+        
+        if isEntityDefinition:
+            entity_dict['entityType'] = entity_type         
 
         keys = sorted(entityAttributes.keys())  
             
@@ -251,8 +259,8 @@ class IFC2JSONSimple:
                 entity_dict['componentType'],
                 entity_dict['entityGuid']
             )
-            # Create new dict with guid first, then all existing entries
-            ordered_dict = {'guid': deterministic_guid}
+            # Create new dict with componentGuid first, then all existing entries
+            ordered_dict = {'componentGuid': deterministic_guid}
             ordered_dict.update(entity_dict)
             entity_dict = ordered_dict
 

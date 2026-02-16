@@ -10,7 +10,7 @@ class MemoryTree:
     
     def __init__(self):
         """Initialize the memory tree"""
-        self.models: Dict = {}  # models[model_name] = {by_entity, by_type, by_guid}
+        self.models: Dict = {}  # models[model_name] = {by_entity, by_type, by_componentGuid}
     
     def refresh_from_store(self, store_path: str):
         """Refresh memory tree from file-based store
@@ -32,9 +32,9 @@ class MemoryTree:
             
             # Initialize model structure
             self.models[model_name] = {
-                'by_entity': {},      # entity_guid -> [component_guids]
-                'by_type': {},        # component_type -> [component_guids]
-                'by_guid': {}         # component_guid -> component_data
+                'by_entity': {},      # entity_guid -> [componentGuids]
+                'by_type': {},        # component_type -> [componentGuids]
+                'by_componentGuid': {}         # componentGuid -> component_data
             }
             
             # Load all components for this model
@@ -48,12 +48,12 @@ class MemoryTree:
                         component = json.load(f)
                     
                     # Get component GUID
-                    component_guid = component.get('guid')
+                    component_guid = component.get('componentGuid')
                     if not component_guid:
                         continue
                     
                     # Store by GUID
-                    self.models[model_name]['by_guid'][component_guid] = component
+                    self.models[model_name]['by_componentGuid'][component_guid] = component
                     
                     # Index by entity GUID
                     entity_guid = component.get('entityGuid')
@@ -107,7 +107,7 @@ class MemoryTree:
                         model_guids.update(model['by_type'][entity_type])
             else:
                 # Get all component GUIDs in this model
-                model_guids.update(model['by_guid'].keys())
+                model_guids.update(model['by_componentGuid'].keys())
             
             # If components specified, intersect with those
             if components:
@@ -129,8 +129,8 @@ class MemoryTree:
             model = self.models[model_name]
             
             for component_guid in (result_guids or set()):
-                if component_guid in model['by_guid']:
-                    entity_guid = model['by_guid'][component_guid].get('entityGuid')
+                if component_guid in model['by_componentGuid']:
+                    entity_guid = model['by_componentGuid'][component_guid].get('entityGuid')
                     if entity_guid:
                         entity_guids.add(entity_guid)
         
@@ -182,7 +182,7 @@ class MemoryTree:
             
             # If neither filter specified, get all components
             if not entity_types and not entity_guids:
-                model_guids = set(model['by_guid'].keys())
+                model_guids = set(model['by_componentGuid'].keys())
             
             # Union with result from other models
             if result_guids is None:
@@ -208,8 +208,8 @@ class MemoryTree:
             model = self.models[model_name]
             
             for guid in guids:
-                if guid in model['by_guid']:
-                    components.append(model['by_guid'][guid])
+                if guid in model['by_componentGuid']:
+                    components.append(model['by_componentGuid'][guid])
         
         return components
     

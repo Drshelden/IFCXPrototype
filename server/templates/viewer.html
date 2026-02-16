@@ -134,6 +134,51 @@
             background: #252525;
         }
 
+        /* Tab Navigation */
+        .tab-bar {
+            display: flex;
+            background: #252525;
+            border-bottom: 1px solid #444;
+            gap: 0;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 10px 12px;
+            background: #2d2d2d;
+            border: none;
+            border-bottom: 2px solid #444;
+            color: #999;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 0;
+        }
+
+        .tab-button:hover {
+            background: #383838;
+            color: #bbb;
+        }
+
+        .tab-button.active {
+            background: #252525;
+            color: #0098ff;
+            border-bottom: 2px solid #0098ff;
+        }
+
+        .tab-content {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
         .tree-content {
             flex: 1;
             overflow-y: auto;
@@ -433,11 +478,34 @@
 
         <!-- Main Content: Tree + 3D Viewer + Data Table -->
         <div class="content-section">
-            <!-- Left: Entity/Component Tree -->
+            <!-- Left: Entity/Component Tree with Tabs -->
             <div class="left-panel">
-                <div class="tree-header">Entities & Components</div>
-                <div class="tree-content" id="treeContainer">
-                    <div class="empty-state">Execute a query to load data</div>
+                <!-- Tab Navigation -->
+                <div class="tab-bar">
+                    <button class="tab-button active" data-tab="entities">E/C</button>
+                    <button class="tab-button" data-tab="information">ℹ️ Info</button>
+                    <button class="tab-button" data-tab="settings">⚙️</button>
+                </div>
+
+                <!-- Tab Content: Entities & Components -->
+                <div class="tab-content active" id="entitiesTab">
+                    <div class="tree-content" id="treeContainer">
+                        <div class="empty-state">Execute a query to load data</div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Information -->
+                <div class="tab-content" id="informationTab">
+                    <div style="padding: 12px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: flex-start;">
+                        <div id="infoContainer" style="color: #666; font-size: 13px;">Execute a query to see information</div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Settings -->
+                <div class="tab-content" id="settingsTab">
+                    <div style="padding: 12px; flex: 1; overflow-y: auto;">
+                        <div style="color: #999; font-size: 12px;">Settings coming soon</div>
+                    </div>
                 </div>
             </div>
 
@@ -481,7 +549,7 @@
         // 3D VIEWER SETUP (Three.js)
         // ============================================
         let scene, camera, renderer, controls;
-        const objects3d = new Map(); // guid -> mesh
+        const objects3d = new Map(); // componentGuid -> mesh
         const selectedGuids = new Set();
         let gridHelper, axesHelper;
         let panTarget; // Track the pan/orbit center point
@@ -950,6 +1018,26 @@
         // ============================================
         let currentData = null;
 
+        // Tab switching functionality
+        function setupTabSwitching() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabName = button.dataset.tab;
+                    
+                    // Deactivate all tabs
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Activate selected tab
+                    button.classList.add('active');
+                    document.getElementById(tabName + 'Tab').classList.add('active');
+                });
+            });
+        }
+
         function updateUI(data) {
             console.log('updateUI called with data:', data);
             console.log('  - entities:', Object.keys(data.entities || {}).length);
@@ -957,6 +1045,25 @@
             currentData = data;
             buildTree(data);
             updateTable([]);
+            updateInformationView(data);
+        }
+
+        function updateInformationView(data) {
+            const infoContainer = document.getElementById('infoContainer');
+            if (!data) {
+                infoContainer.innerHTML = '<div style="color: #666; font-size: 13px;">No data available</div>';
+                return;
+            }
+
+            const info = {
+                'Total Entities': Object.keys(data.entities || {}).length,
+                'Total Components': Object.keys(data.components || {}).length,
+                'Query Info': data.queryInfo || 'No query info',
+                'Raw Entities': Object.keys(data.entities || {}),
+                'Sample Component': Object.values(data.components || {})[0] || null
+            };
+
+            infoContainer.innerHTML = `<pre style="color: #0098ff; font-size: 11px; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; line-height: 1.4; margin: 0;">${JSON.stringify(info, null, 2)}</pre>`;
         }
 
         function extractModelName(url) {
@@ -1302,7 +1409,7 @@
             `;
 
             rows.forEach(row => {
-                const guidShort = row.guid.substring(0, 8) + '...';
+                const guidShort = row.componentGuid.substring(0, 8) + '...';
                 const valueStr = String(row.value).length > 100 
                     ? String(row.value).substring(0, 97) + '...'
                     : row.value;
@@ -1390,7 +1497,7 @@
                         console.log('Component data response:', compData.components ? compData.components.length : 0, 'components');
                         if (compData.components) {
                             compData.components.forEach(comp => {
-                                data.components[comp.guid] = comp;
+                                data.components[comp.componentGuid] = comp;
                             });
                         }
                     }
@@ -1469,14 +1576,14 @@
                         if (compData.components) {
                             compData.components.forEach(comp => {
                                 const entityId = comp.entityGuid || Object.keys(data.entities)[0];
-                                console.log('Adding component', comp.guid.substring(0, 8), 'to entity', entityId.substring(0, 20));
+                                console.log('Adding component', comp.componentGuid.substring(0, 8), 'to entity', entityId.substring(0, 20));
                                 if (data.entities[entityId]) {
-                                    data.entities[entityId].push(comp.guid);
+                                    data.entities[entityId].push(comp.componentGuid);
 
                                 } else if (data.entities['Components']) {
-                                    data.entities['Components'].push(comp.guid);
+                                    data.entities['Components'].push(comp.componentGuid);
                                 }
-                                data.components[comp.guid] = comp;
+                                data.components[comp.componentGuid] = comp;
                             });
                         }
                     }
@@ -1484,9 +1591,9 @@
                 else if (apiData.components) {
                     // Direct component data response
                     console.log('Processing direct components response:', apiData.components.length, 'components');
-                    data.entities['Result'] = apiData.components.map(c => c.guid);
+                    data.entities['Result'] = apiData.components.map(c => c.componentGuid);
                     apiData.components.forEach(comp => {
-                        data.components[comp.guid] = comp;
+                        data.components[comp.componentGuid] = comp;
                     });
                 }
                 else if (apiData.models) {
@@ -1578,6 +1685,7 @@
             console.log('   THREE available:', typeof THREE !== 'undefined');
             console.log('✓ Viewer initialized with custom OBJ parser');
             init3DViewer();
+            setupTabSwitching();
         });
     </script>
 </body>

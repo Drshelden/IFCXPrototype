@@ -47,10 +47,10 @@ class FileBasedStore:
         for component in components:
             # Get entityGuid and guid from component
             entity_guid = component.get('entityGuid', 'unknown')
-            guid = component.get('guid', 'unknown')
+            componentGuid = component.get('componentGuid', 'unknown')
             
             # Create filename: entityGuid_guid.json
-            component_filename = f"{entity_guid}_{guid}.json"
+            component_filename = f"{entity_guid}_{componentGuid}.json"
             component_path = os.path.join(dir_path, component_filename)
             
             # Write component to file

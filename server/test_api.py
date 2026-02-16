@@ -76,7 +76,10 @@ def main():
     
     # Test 5: Query Entities by Model
     print(f"\n{Colors.OKBLUE}Test 5: Query Entities by Model{Colors.ENDC}")
-    test_endpoint('GET', '/entities', params={'models': 'HelloWall'})
+    # First, get available models
+    models_response = requests.get(f"{BASE_URL}/models")
+    model_name = models_response.json().get('models', ['HelloWallIFCjsonC-2x3'])[0] if models_response.status_code == 200 else 'HelloWallIFCjsonC-2x3'
+    test_endpoint('GET', '/entities', params={'models': model_name})
     
     # Test 6: Query Entities by Type
     print(f"\n{Colors.OKBLUE}Test 6: Query Entities by Type{Colors.ENDC}")
@@ -84,12 +87,12 @@ def main():
     
     # Test 7: Query Component GUIDs
     print(f"\n{Colors.OKBLUE}Test 7: Query Component GUIDs{Colors.ENDC}")
-    test_endpoint('GET', '/guids', params={'models': 'HelloWall'})
+    test_endpoint('GET', '/guids', params={'models': model_name})
     
     # Test 8: Get Component Data
     print(f"\n{Colors.OKBLUE}Test 8: Get Component Data{Colors.ENDC}")
     # First get a GUID
-    response = requests.get(f"{BASE_URL}/guids", params={'models': 'HelloWall'})
+    response = requests.get(f"{BASE_URL}/guids", params={'models': model_name})
     if response.status_code == 200:
         data = response.json()
         if data.get('component_guids'):
@@ -107,7 +110,7 @@ def main():
     # Test 10: Complex Query
     print(f"\n{Colors.OKBLUE}Test 10: Complex Query (All Filters){Colors.ENDC}")
     test_endpoint('GET', '/guids', params={
-        'models': 'HelloWall',
+        'models': model_name,
         'entity_types': 'IfcPropertySet'
     })
     

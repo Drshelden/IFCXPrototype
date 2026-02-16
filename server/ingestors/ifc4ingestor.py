@@ -11,23 +11,49 @@ import json
 import sys
 import argparse
 import ifcopenshell
+import ifcopenshell.geom
 import ifcopenshell.guid as guid
+from utils import toLowerCamelcase, generateDeterministicGuid, expandGuid
 
-includeEmptyProperties = True
+INCLUDE_EMPTY_PROPERTIES = False
 
-def convertGuid(entityGuid):
-    expanded = guid.expand(entityGuid)
-    # Format as UUID with dashes: 8-4-4-4-12
-    return str(uuid.UUID(expanded))
 
-def toLowerCamelcase(self, string):
-    """Convert string from upper to lower camelCase"""
-    return string[0].lower() + string[1:]
+ALLOWED_TYPES = {'IfcPropertySet', 'IfcObjectDefinition', 'IfcRelationship'}
+# ALLOWED_TYPES = {'IfcObjectDefinition', 'IfcPropertySet'}
+
+
+# Define attributes to exclude
+EXCLUDE_ATTRIBUTES = {
+    'ownerhistory',
+    'id',
+    'step_id',
+    'objectplacement',
+    'representation',
+    'representations',
+    'representationmaps',
+    'representationcontexts',
+    'unitsincontext'
+}
+
+# Define attribute name substitutions
+ATTRIBUTE_SUBSTITUTIONS = {
+    'GlobalId': 'entityGuid',
+    'Name': 'componentName',
+    'Description': 'componentDescription',
+    'HasPropertySets': 'propertySets',
+    'type': 'componentType'
+}
+
+EXPAND_GUID_ATTRIBUTES = {'GlobalId'}
 
 class IFC2JSONSimple:
     """Simplified IFC to JSON converter that prints entity attributes"""
     
     SCHEMA_VERSION = '0.0.1'
+
+    settings = ifcopenshell.geom.settings()
+    # settings.set("iterator-output", ifcopenshell.ifcopenshell_wrapper.NATIVE)
+    settings.set("use-world-coords", True)
 
     def __init__(self, ifcModel, COMPACT=False, EMPTY_PROPERTIES=False):
         """IFC SPF simplified converter
@@ -46,40 +72,32 @@ class IFC2JSONSimple:
         # Dictionary referencing all objects with a GlobalId that are already created
         self.rootObjects = {}
 
+        # Dictionary referencing all objects with a GlobalId that are already created
+        self.includeObjects = {}
+
         # Representations are kept seperate to be added to the end of the list
-        self.representations = {}
+        self.representations = []
 
 
 
-    def createFullObject(self, entityAttributes):
-        """Create a full nested object from entity attributes
-        
-        Parameters:
-        entityAttributes (dict): Dictionary of IFC object data
-        
-        Returns:
-        dict: Full object representation
-        """
-        return entityAttributes
+    # def createReferenceObject(self, entityAttributes, COMPACT=False):
+    #     """Returns object reference
 
-    def createReferenceObject(self, entityAttributes, COMPACT=False):
-        """Returns object reference
+    #     Parameters:
+    #     entityAttributes (dict): Dictionary of IFC object data
+    #     COMPACT (boolean): verbose or non verbose IFC.JSON-5a output
 
-        Parameters:
-        entityAttributes (dict): Dictionary of IFC object data
-        COMPACT (boolean): verbose or non verbose IFC.JSON-5a output
+    #     Returns:
+    #     dict: object containing reference to another object
 
-        Returns:
-        dict: object containing reference to another object
+    #     """
+    #     ref = {}
+    #     if not COMPACT:
 
-        """
-        ref = {}
-        if not COMPACT:
-
-            # Entity names must be stripped of Ifc prefix
-            ref['type'] = entityAttributes['type'][3:]
-        ref['ref'] = convertGuid(entityAttributes['GlobalId']) if 'GlobalId' in entityAttributes else None
-        return ref
+    #         # Entity names must be stripped of Ifc prefix
+    #         ref['type'] = entityAttributes['type'][3:]
+    #     ref['ref'] = expandGuid(entityAttributes['GlobalId']) if 'GlobalId' in entityAttributes else None
+    #     return ref
 
     def spf2Json(self):
         """
@@ -88,7 +106,7 @@ class IFC2JSONSimple:
         Returns:
         list: List of dictionaries containing entity attributes
         """        
-        ALLOWED_TYPES = {'IfcPropertySet'}
+
 
         jsonObjects = []
 
@@ -96,204 +114,202 @@ class IFC2JSONSimple:
             if hasattr(entity, 'GlobalId') and entity.GlobalId:
                 self.rootObjects[entity.id()] = guid.split(
                     guid.expand(entity.GlobalId))[1:-1]
-            else:
-                print(f"Warning: Entity of type {entity.is_a()} with id {entity.id()} does not have a GlobalId and will not be referenced.")
+            # else:
+            #     print(f"Warning: Entity of type {entity.is_a()} with id {entity.id()} does not have a GlobalId and will not be referenced.")
         
-        # Define allowed base types to process
+        # Create a list of entities by querying for each allowed type
+        entity_list = []
+        # for allowed_type in reversed(list(ALLOWED_TYPES)):
+        for allowed_type in ALLOWED_TYPES:
+            entities_of_type = self.ifcModel.by_type(allowed_type)
+            entity_list.extend(entities_of_type)
+        
+        # Iterate through all queried entities
 
-        #ALLOWED_TYPES = {'IfcObjectDefinition'}
-        # Iterate through all entities in the IFC file
-        for entity in self.ifcModel:
-            # Get entity type
-            entity_type = entity.is_a()
-            
-            # Filter: only process if entity is a subclass of allowed types
-            is_allowed = False
-            for allowed_type in ALLOWED_TYPES:
-                if entity.is_a(allowed_type):
-                    is_allowed = True
-                    break
-            
-            if not is_allowed:
-                continue
-            
-            entity_dict = {}
-            
+        for entity in entity_list:
+            returnedValue = self.processEntry(entity, topLevel=True)
+            if returnedValue is not None:   
+                jsonObjects.append(returnedValue)
+
+        jsonObjects = jsonObjects + list(self.representations)
+        return jsonObjects
+    
+    def processEntry(self, entity, topLevel=False):
+        # Get entity type
+        if not topLevel and hasattr(entity, 'GlobalId') and entity.GlobalId:
+            entityGuid = expandGuid(entity.GlobalId)
+            return entityGuid
+        
+        entity_type = entity.is_a()
+        
+        entity_dict = {}
+        
+
+        
+        # Get all first-level attributes from __dict__
+        entityAttributes = entity.__dict__
+
+        if hasattr(entity, 'GlobalId') and entity.GlobalId: fc = True
+        else: fc = False
+
+        if 'Representation' in entityAttributes:
+                obj = self.toObj(entity)
+
+                if obj:
+                    # id = guid.split(guid.expand(guid.new()))[1:-1]
+                    # ref = {}
+                    # if not self.COMPACT:
+                    #     ref['type'] = "shapeRepresentation"
+                    # ref['ref'] = id
+                    # entityAttributes['representations'] = [ref]
+                    entityGuid = expandGuid(entity.GlobalId)
+                    guid_str = generateDeterministicGuid("ShapeRepresentationComponent", entityGuid)    
+                    self.representations.append(
+                        {
+                            "guid": guid_str,
+                            "componentType": "IfcShapeRepresentationComponent",
+                            "entityGuid": entityGuid,
+                            "representationIdentifier": "Body",
+                            "representationFormat": "OBJ",
+                            "items": [
+                                obj
+                            ]
+                        }
+                    )
+
+                # # (!) delete original representation, even if OBJ generation fails
+                # del entityAttributes['Representation']
+
+        returnedAttributes = self.appendAttributes(entityAttributes, entity_type, fc)
+        entity_dict.update(returnedAttributes)
+        
+        # Sort entity_dict alphabetically by keys
+        entity_dict = dict(sorted(entity_dict.items()))
+
+        return entity_dict
+
+    def appendAttributes(self, entityAttributes, entity_type, isFirstClass=False):
+
+        entity_dict = {}        
+        
+        if isFirstClass:
             # Extract component type for GUID generation and output
             componentType = entity_type + 'Component'
             entity_dict['componentType'] = componentType
+
+        keys = sorted(entityAttributes.keys())  
             
-            # Get all first-level attributes from __dict__
-            entityAttributes = entity.__dict__
+        for attr_name in keys:
+            # Skip excluded attributes
+            if attr_name.lower() in EXCLUDE_ATTRIBUTES:
+                continue
+
+            # Skip internal attributes
+            if attr_name.startswith('_'):
+                continue
             
-            # Define attributes to exclude
-            EXCLUDE_ATTRIBUTES = {
-                'OwnerHistory',
-                'id',
-                'step_id'
-            }
+            attr_value = entityAttributes[attr_name]
+                            
+            # Convert to JSON-serializable format using getAttributeValue
+            try:
+                json_value = self.getAttributeValueNew(attr_value)
+            except:
+                json_value = None
+            
+            # If this is GlobalId (converted to entityGuid), expand it to standard UUID format
+            if attr_name in EXPAND_GUID_ATTRIBUTES and json_value is not None:
+                json_value = expandGuid(json_value)
 
             
-            # Define attribute name substitutions
-            ATTRIBUTE_SUBSTITUTIONS = {
-                'GlobalId': 'entityGuid',
-                'Name': 'componentName',
-                'Description': 'componentDescription',
-                'type': 'componentType'
-            }
+            # If this is the type attribute being converted to componentType, append "Component"
+            if attr_name == 'type' and json_value is not None:
+                json_value = json_value + 'Component'
             
-            # print(f"\n{'='*80}")
-            # print(f"Entity Type: {entity_type}")
-            # print(f"{'='*80}")
+            # Print attribute name and type
+            attr_type = type(attr_value).__name__
 
-            keys = sorted(entityAttributes.keys())  
+            # Apply substitution to attribute name if it exists in ATTRIBUTE_SUBSTITUTIONS
+            if isFirstClass and attr_name in ATTRIBUTE_SUBSTITUTIONS:
+                display_attr_name = ATTRIBUTE_SUBSTITUTIONS[attr_name]
+            else:
+                display_attr_name = attr_name
+                            
+            # Convert to camelCase
+            display_attr_name = toLowerCamelcase(display_attr_name)
             
-            for attr_name in keys:
-                # Skip excluded attributes
-                if attr_name in EXCLUDE_ATTRIBUTES:
-                    continue
-                
-                attr_value = entityAttributes[attr_name]
-                
-                # Apply substitution and apply the substituted name for output
-                display_attr_name = ATTRIBUTE_SUBSTITUTIONS.get(attr_name, attr_name)
-                
-                # Skip internal attributes
-                if attr_name.startswith('_'):
-                    continue
-                
-                # Convert to JSON-serializable format using getAttributeValue
-                try:
-                    json_value = self.getAttributeValue(attr_name, attr_value, True)
-                except:
-                    json_value = None
-                
-                # If this is GlobalId (converted to entityGuid), expand it to standard UUID format
-                if attr_name == 'GlobalId' and json_value is not None:
-                    try:
-                        json_value = convertGuid(json_value)
-                    except:
-                        pass  # Keep original if expand fails
-                
-                # If this is the type attribute being converted to componentType, append "Component"
-                if attr_name == 'type' and json_value is not None:
-                    json_value = json_value + 'Component'
-                
-                # Print attribute name and type
-                attr_type = type(attr_value).__name__
-                
-                # Format the output (use display_attr_name for console output)
-                # if json_value is None:
-                #     print(f"  {display_attr_name}: None ({attr_type})")
-                # elif isinstance(json_value, (list, tuple)):
-                #     print(f"  {display_attr_name}: {type(json_value).__name__} with {len(json_value)} items")
-                # elif isinstance(json_value, dict):
-                #     print(f"  {display_attr_name}: {type(json_value).__name__} with {len(json_value)} keys")
-                # elif isinstance(json_value, str) and len(json_value) > 100:
-                #     print(f"  {display_attr_name}: {json_value[:100]}... ({type(json_value).__name__})")
-                # else:
-                #     print(f"  {display_attr_name}: {json_value} ({type(json_value).__name__})")
-                
-                # Only add to dict if it's not None (use display_attr_name as the key)
-                display_attr_name = self.toLowerCamelcase(display_attr_name)
+            # Only add to dict if there's a value or if empty properties should be included
+            # Skip if this key already exists in entity_dict (to avoid overwriting manually set values)
+            if display_attr_name not in entity_dict:
                 if json_value is not None:
-
                     entity_dict[display_attr_name] = json_value
-                else:
-                    if includeEmptyProperties:
-                        entity_dict[display_attr_name] = ""
-            
-            # Generate deterministic GUID and place it as the first attribute
-            if 'componentType' in entity_dict and 'entityGuid' in entity_dict:
-                deterministic_guid = self.generateDeterministicGuid(
-                    entity_dict['componentType'],
-                    entity_dict['entityGuid']
-                )
-                # Create new dict with guid first, then all existing entries
-                orderedObject = {'guid': deterministic_guid}
-                orderedObject.update(entity_dict)
-                jsonObjects.append(orderedObject)
-            else:
-                jsonObjects.append(entity_dict)
-
-        return jsonObjects
-
-    def generateDeterministicGuid(self, componentType, entityGuid):
-        """Generate a deterministic GUID based on component type and entity GUID
+                elif INCLUDE_EMPTY_PROPERTIES:
+                    entity_dict[display_attr_name] = ""
         
-        Parameters:
-        componentType (str): The component type string
-        entityGuid (str): The entity GUID
-        
-        Returns:
-        str: A GUID formatted as 01695e4-f7c6-46b0-8f70-8a0172df5a1
-        """
-        # Create a hash from the combination of componentType and entityGuid
-        hash_input = f"{componentType}:{entityGuid}".encode('utf-8')
-        hash_obj = hashlib.sha256(hash_input)
-        hash_hex = hash_obj.hexdigest()
-        
-        # Create a UUID from the hash (using namespace and name approach)
-        guid_obj = uuid.UUID(bytes=hash_obj.digest()[:16])
-        guid_str = str(guid_obj)
-        
-        # Format as the required format (removing dashes and re-adding in specific positions)
-        guid_clean = guid_str.replace('-', '')
-        formatted_guid = f"{guid_clean[0:8]}-{guid_clean[8:12]}-{guid_clean[12:16]}-{guid_clean[16:20]}-{guid_clean[20:32]}"
-        
-        return formatted_guid
+        # Generate deterministic GUID and place it as the first attribute
+        if 'componentType' in entity_dict and 'entityGuid' in entity_dict:
+            deterministic_guid = generateDeterministicGuid(
+                entity_dict['componentType'],
+                entity_dict['entityGuid']
+            )
+            # Create new dict with guid first, then all existing entries
+            ordered_dict = {'guid': deterministic_guid}
+            ordered_dict.update(entity_dict)
+            entity_dict = ordered_dict
 
-    def getAttributeValue(self, key_name, value, isRoot=False):
-        """Recursive method that walks through all nested objects of an attribute
-        and returns a IFC.JSON-4 model structure
+        return entity_dict
 
-        Parameters:
-        key_name (str): The name of the attribute being processed
-        value: The value of the attribute being processed
-
-        Returns:
-        attribute data converted to IFC.JSON-4 model structure
-        """
-        if value == None or value == '':
-            jsonValue = None
-
+    def getAttributeValueNew(self, value):
+        """Helper function to convert attribute values to JSON-serializable format"""
+        if value is None:
+            return None
         elif isinstance(value, ifcopenshell.entity_instance):
-            entity = value
-            entityAttributes = entity.__dict__
-
-            if not isRoot:
-                # If not root, do not process nested objects
-                return convertGuid(entityAttributes['GlobalId']) if 'GlobalId' in entityAttributes else None
-
-            # Handle entity references
-            if entity.is_a('IfcPropertySet'):
-                if isinstance(value, tuple):
-                    jsonValue = tuple(x for x in map(
-                    lambda v: self.getAttributeValue(key_name, v, False), value) if x is not None)
-                    return jsonValue
-                return self.createReferenceObject(entityAttributes, self.COMPACT)
-
-            # Handle wrapped values
-            if entity.is_a('IfcInteger') or entity.is_a('IfcReal') or entity.is_a('IfcBoolean') or entity.is_a('IfcLabel') or entity.is_a('IfcText'):
-                return value.wrappedValue
-
-            # All objects with a GlobalId must be referenced
-            entity_id = entity.id()
-            if self.rootObjects and entity_id in self.rootObjects:
-                entityAttributes["GlobalId"] = self.rootObjects[entity.id()]
-                return self.createReferenceObject(entityAttributes, self.COMPACT)
-            else:
-                if 'GlobalId' in entityAttributes:
-                    entityAttributes["GlobalId"] = guid.split(
-                        guid.expand(entity.GlobalId))[1:-1]
-
-            return self.createFullObject(entityAttributes)
+            return self.processEntry(value)
+            # Check if this is an IfcObject that should be processed
+            # if value.is_a('IfcObject'):
+            #     return self.processEntry(value)
+            # else:
+            #     return self.createReferenceObject(value.__dict__, self.COMPACT)
         elif isinstance(value, tuple):
-            jsonValue = tuple(x for x in map(
-                lambda v: self.getAttributeValue(key_name, v, False), value) if x is not None)
+            return tuple(self.getAttributeValueNew(v) for v in value)
         else:
-            jsonValue = value
-        return jsonValue
+            return value
+        
+    def toObj(self, entity):
+        """Convert IfcProduct to OBJ mesh
+
+        parameters:
+        entity: ifcopenshell ifcProduct instance
+
+        Returns:
+        string: OBJ string
+        """
+
+        if entity.Representation:
+            try:
+                shape = ifcopenshell.geom.create_shape(self.settings, entity)
+
+                # Check if geometry has verts and faces attributes
+                if not hasattr(shape.geometry, 'verts') or not hasattr(shape.geometry, 'faces'):
+                    return None
+
+                verts = shape.geometry.verts
+                vertsList = [' '.join(map(str, verts[x:x+3]))
+                             for x in range(0, len(verts), 3)]
+                vertString = 'v ' + '\nv '.join(vertsList) + '\n'
+
+                faces = shape.geometry.faces
+                facesList = [' '.join(map(str, faces[x:x+3]))
+                             for x in range(0, len(faces), 3)]
+                faceString = 'f ' + '\nf '.join(map(str, facesList)) + '\n'
+
+                return vertString + faceString
+            except Exception as e:
+                print(str(e) + ': Unable to generate OBJ data for ' +
+                      str(entity))
+                return None
+
+
+
 
 
 def main():
@@ -321,6 +337,8 @@ Examples:
                         help='Include empty properties in output')
     
     args = parser.parse_args()
+
+
     
     # Check if input file exists
     import os
@@ -340,11 +358,7 @@ Examples:
         json_objects = converter.spf2Json()
         
         # Prepare output
-        output_data = {
-            'version': converter.SCHEMA_VERSION,
-            'timestamp': datetime.now().isoformat(),
-            'entities': json_objects
-        }
+        output_data = json_objects
         
         # Output results
         if args.output:

@@ -1,110 +1,696 @@
-{
-  "version": "0.0.1",
-  "timestamp": "2026-02-15T16:29:15.522643",
-  "entities": [
-    {
-      "guid": "73792808-fc3d-38c9-bf4b-f9d786078f49",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "4654500a-a7c8-cf12-b8b4-15d40e744444",
-      "hasProperties": [],
-      "componentName": "Pset_BuildingStoreyCommon"
+[
+  {
+    "componentName": "Door-Passage-Single-Flush:36\" x 84\":1200277",
+    "componentType": "IfcDoorComponent",
+    "entityGuid": "5d5ebb4e-ce31-4562-84ca-7319910fb518",
+    "guid": "5e12c068-af96-58f5-24fc-14a107018001",
+    "objectType": "Door-Passage-Single-Flush:36\" x 84\"",
+    "overallHeight": 7.333333333333333,
+    "overallWidth": 3.333333333333333,
+    "tag": "1200277"
+  },
+  {
+    "componentName": "Basic Wall:Generic - 8\":1200238",
+    "componentType": "IfcWallStandardCaseComponent",
+    "entityGuid": "5d5ebb4e-ce31-4562-84ca-7319910fb5e3",
+    "guid": "adbe89d8-f059-3f77-1962-8d7bafb762b5",
+    "objectType": "Basic Wall:Generic - 8\"",
+    "tag": "1200238"
+  },
+  {
+    "componentName": "Door-Passage-Single-Flush:36\" x 84\":1200277:1",
+    "componentType": "IfcOpeningElementComponent",
+    "entityGuid": "101695e4-f7c6-46b0-8f70-8a0172df5a17",
+    "guid": "f8c0bd64-226c-c403-9970-0cc1c37df2dd",
+    "objectType": "Opening",
+    "tag": "1200277"
+  },
+  {
+    "buildingAddress": {
+      "addressLines": [
+        "Enter address hereAddress Line 2"
+      ],
+      "country": "MA",
+      "postalCode": "",
+      "region": "Boston",
+      "town": "",
+      "type": "IfcPostalAddressComponent"
     },
-    {
-      "guid": "4f12d893-de9d-c7f4-fb08-44f321b5f298",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "0fef9ff3-3118-a8fe-7057-674186238e33",
-      "hasProperties": [],
-      "componentName": "Pset_ProductRequirements"
-    },
-    {
-      "guid": "6e79883c-b0a6-c9ca-c8c5-25c3649bdd9e",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "b5c1672e-287a-a611-c765-055c553c8791",
-      "hasProperties": [],
-      "componentName": "Pset_AirSideSystemInformation"
-    },
-    {
-      "guid": "ee011be3-ad1c-ae20-7e02-64b4bae44883",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "710c4a31-8030-e3f8-36b4-099c01bad6a3",
-      "hasProperties": [],
-      "componentName": "Pset_BuildingStoreyCommon"
-    },
-    {
-      "guid": "a091002e-7985-0b5f-d3ed-22d58cc0d4ad",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "e50a448d-e49e-6463-9960-780adf83d910",
-      "hasProperties": [],
-      "componentName": "Pset_ProductRequirements"
-    },
-    {
-      "guid": "7a5d3a4d-2f5a-85b7-f6c9-c2533bbb1c5a",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "e3ba26fe-610c-1f96-a9fd-ec795a8571f3",
-      "hasProperties": [],
-      "componentName": "Pset_BuildingCommon"
-    },
-    {
-      "guid": "4256d507-b0f9-2480-97cd-83f98cd53b8e",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "d14afc37-e991-e5b2-fbce-2dd6b4745c3e",
-      "hasProperties": [],
-      "componentName": "Pset_DoorCommon"
-    },
-    {
-      "guid": "e7aded38-5204-253f-5781-ea28cbbf2709",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "ac6ee654-89a4-c57e-5a60-3161e2fd466b",
-      "hasProperties": [],
-      "componentName": "Pset_QuantityTakeOff"
-    },
-    {
-      "guid": "a105c32b-6497-7417-97e9-07ed54013c72",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "af139d38-0415-4c92-32bc-cde97debca24",
-      "hasProperties": [],
-      "componentName": "Pset_AirSideSystemInformation"
-    },
-    {
-      "guid": "492a7024-3dc8-431e-2117-51aa11ee6ff6",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "3625f980-f8d7-c67b-043c-b655f9896dd4",
-      "hasProperties": [],
-      "componentName": "Pset_QuantityTakeOff"
-    },
-    {
-      "guid": "10ff42c0-53d0-33c2-e651-3828d473ae94",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "236d8b84-def3-35a2-eb60-ecff3a7c8fca",
-      "hasProperties": [],
-      "componentName": "Pset_ReinforcementBarPitchOfWall"
-    },
-    {
-      "guid": "5129e96d-065f-0b6a-5bac-65a3bd190f85",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "d38b406c-7636-37ae-0ff8-06596cc45ad5",
-      "hasProperties": [],
-      "componentName": "Pset_WallCommon"
-    },
-    {
-      "guid": "4b881c84-4b80-12c4-013a-6c130c728f5a",
-      "componentType": "IfcPropertySetComponent",
-      "componentDescription": "",
-      "entityGuid": "951efe5d-db7c-52a2-8f27-a7af698e355b",
-      "hasProperties": [],
-      "componentName": "Pset_ReinforcementBarPitchOfWall"
+    "componentName": "Building Name",
+    "componentType": "IfcBuildingComponent",
+    "compositionType": "ELEMENT",
+    "entityGuid": "193055e6-d619-4b2e-8d41-095e989726a8",
+    "guid": "f0b622d8-e7c2-928f-9373-f5654987c005",
+    "longName": "Building Name"
+  },
+  {
+    "componentName": "L1",
+    "componentType": "IfcBuildingStoreyComponent",
+    "compositionType": "ELEMENT",
+    "elevation": 0.0,
+    "entityGuid": "933c4a06-93b8-11d3-80f8-00c04f8efc2c",
+    "guid": "fb7d09b0-95ac-71a8-806f-14636367aca7",
+    "longName": "L1",
+    "objectType": "Level:1/4\" Head"
+  },
+  {
+    "componentName": "L2",
+    "componentType": "IfcBuildingStoreyComponent",
+    "compositionType": "ELEMENT",
+    "elevation": 12.0,
+    "entityGuid": "6341822b-d4f3-11d3-a039-0000863f33f9",
+    "guid": "b6794e4c-94f8-0cd3-576c-ffcc2f2b2794",
+    "longName": "L2",
+    "objectType": "Level:1/4\" Head"
+  },
+  {
+    "componentName": "Default",
+    "componentType": "IfcSiteComponent",
+    "compositionType": "ELEMENT",
+    "entityGuid": "193055e6-d619-4b2e-8d41-095e989726ab",
+    "guid": "52fed766-8c1e-dac8-6b1c-8b6f77d9095e",
+    "refElevation": 0.0,
+    "refLatitude": [
+      42,
+      21,
+      31,
+      401672
+    ],
+    "refLongitude": [
+      -71,
+      -3,
+      -24,
+      -345703
+    ]
+  },
+  {
+    "componentName": "Project Number",
+    "componentType": "IfcProjectComponent",
+    "entityGuid": "193055e6-d619-4b2e-8d41-095e989726a9",
+    "guid": "a5541044-a95a-b297-93e7-12e35887d5ae",
+    "longName": "Project Name",
+    "phase": "Project Status"
+  },
+  {
+    "componentName": "Door-Passage-Single-Flush:36\" x 84\"",
+    "componentType": "IfcDoorStyleComponent",
+    "constructionType": "NOTDEFINED",
+    "entityGuid": "e6089b3a-de24-f8a0-1d4a-6947f6fb456a",
+    "guid": "2c9185cb-fa58-1a9a-4547-0b2c2990ce39",
+    "operationType": "SINGLE_SWING_RIGHT",
+    "parameterTakesPrecedence": false,
+    "propertySets": [
+      "5d5ebb4e-ce31-4562-84ca-7318910fb518",
+      "5d5ebb4e-ce31-4562-84ca-731b910fb518"
+    ],
+    "sizeable": false,
+    "tag": "387960"
+  },
+  {
+    "componentName": "Basic Wall:Generic - 8\"",
+    "componentType": "IfcWallTypeComponent",
+    "entityGuid": "7b8f559f-8b31-42c2-ba44-e16f7a04146e",
+    "guid": "2175f3de-a957-ce26-6954-c9c3b155f68d",
+    "predefinedType": "STANDARD",
+    "propertySets": [
+      "951efe5d-db7c-52a2-8f27-a7af698e355b"
+    ],
+    "tag": "441451"
+  },
+  {
+    "componentName": "Pset_QuantityTakeOff",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "3625f980-f8d7-c67b-043c-b655f9896dd4",
+    "guid": "492a7024-3dc8-431e-2117-51aa11ee6ff6",
+    "hasProperties": [
+      {
+        "name": "Reference",
+        "nominalValue": {
+          "type": "IfcIdentifierComponent",
+          "wrappedValue": "Generic - 8\""
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_ReinforcementBarPitchOfWall",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "236d8b84-def3-35a2-eb60-ecff3a7c8fca",
+    "guid": "10ff42c0-53d0-33c2-e651-3828d473ae94",
+    "hasProperties": [
+      {
+        "name": "Reference",
+        "nominalValue": {
+          "type": "IfcLabelComponent",
+          "wrappedValue": "Generic - 8\""
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_WallCommon",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "d38b406c-7636-37ae-0ff8-06596cc45ad5",
+    "guid": "5129e96d-065f-0b6a-5bac-65a3bd190f85",
+    "hasProperties": [
+      {
+        "name": "Reference",
+        "nominalValue": {
+          "type": "IfcIdentifierComponent",
+          "wrappedValue": "Generic - 8\""
+        },
+        "type": "IfcPropertySingleValueComponent"
+      },
+      {
+        "name": "IsExternal",
+        "nominalValue": {
+          "type": "IfcBooleanComponent",
+          "wrappedValue": true
+        },
+        "type": "IfcPropertySingleValueComponent"
+      },
+      {
+        "name": "ExtendToStructure",
+        "nominalValue": {
+          "type": "IfcBooleanComponent",
+          "wrappedValue": false
+        },
+        "type": "IfcPropertySingleValueComponent"
+      },
+      {
+        "name": "LoadBearing",
+        "nominalValue": {
+          "type": "IfcBooleanComponent",
+          "wrappedValue": false
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_ReinforcementBarPitchOfWall",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "951efe5d-db7c-52a2-8f27-a7af698e355b",
+    "guid": "4b881c84-4b80-12c4-013a-6c130c728f5a",
+    "hasProperties": [
+      {
+        "name": "Description",
+        "nominalValue": {
+          "type": "IfcTextComponent",
+          "wrappedValue": "Generic Wall (Material By Category), 8\" thick"
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_DoorCommon",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "d14afc37-e991-e5b2-fbce-2dd6b4745c3e",
+    "guid": "4256d507-b0f9-2480-97cd-83f98cd53b8e",
+    "hasProperties": [
+      {
+        "name": "IsExternal",
+        "nominalValue": {
+          "type": "IfcBooleanComponent",
+          "wrappedValue": true
+        },
+        "type": "IfcPropertySingleValueComponent"
+      },
+      {
+        "name": "Reference",
+        "nominalValue": {
+          "type": "IfcIdentifierComponent",
+          "wrappedValue": "36\" x 84\""
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_QuantityTakeOff",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "ac6ee654-89a4-c57e-5a60-3161e2fd466b",
+    "guid": "e7aded38-5204-253f-5781-ea28cbbf2709",
+    "hasProperties": [
+      {
+        "name": "Reference",
+        "nominalValue": {
+          "type": "IfcIdentifierComponent",
+          "wrappedValue": "36\" x 84\""
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_AirSideSystemInformation",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "af139d38-0415-4c92-32bc-cde97debca24",
+    "guid": "a105c32b-6497-7417-97e9-07ed54013c72",
+    "hasProperties": [
+      {
+        "name": "Name",
+        "nominalValue": {
+          "type": "IfcLabelComponent",
+          "wrappedValue": "L1"
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_BuildingStoreyCommon",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "4654500a-a7c8-cf12-b8b4-15d40e744444",
+    "guid": "73792808-fc3d-38c9-bf4b-f9d786078f49",
+    "hasProperties": [
+      {
+        "name": "AboveGround",
+        "nominalValue": {
+          "type": "IfcLogicalComponent",
+          "wrappedValue": "UNKNOWN"
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_ProductRequirements",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "0fef9ff3-3118-a8fe-7057-674186238e33",
+    "guid": "4f12d893-de9d-c7f4-fb08-44f321b5f298",
+    "hasProperties": [
+      {
+        "name": "Name",
+        "nominalValue": {
+          "type": "IfcLabelComponent",
+          "wrappedValue": "L1"
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_AirSideSystemInformation",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "b5c1672e-287a-a611-c765-055c553c8791",
+    "guid": "6e79883c-b0a6-c9ca-c8c5-25c3649bdd9e",
+    "hasProperties": [
+      {
+        "name": "Name",
+        "nominalValue": {
+          "type": "IfcLabelComponent",
+          "wrappedValue": "L2"
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_BuildingStoreyCommon",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "710c4a31-8030-e3f8-36b4-099c01bad6a3",
+    "guid": "ee011be3-ad1c-ae20-7e02-64b4bae44883",
+    "hasProperties": [
+      {
+        "name": "AboveGround",
+        "nominalValue": {
+          "type": "IfcLogicalComponent",
+          "wrappedValue": "UNKNOWN"
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_ProductRequirements",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "e50a448d-e49e-6463-9960-780adf83d910",
+    "guid": "a091002e-7985-0b5f-d3ed-22d58cc0d4ad",
+    "hasProperties": [
+      {
+        "name": "Name",
+        "nominalValue": {
+          "type": "IfcLabelComponent",
+          "wrappedValue": "L2"
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentName": "Pset_BuildingCommon",
+    "componentType": "IfcPropertySetComponent",
+    "entityGuid": "e3ba26fe-610c-1f96-a9fd-ec795a8571f3",
+    "guid": "7a5d3a4d-2f5a-85b7-f6c9-c2533bbb1c5a",
+    "hasProperties": [
+      {
+        "name": "NumberOfStoreys",
+        "nominalValue": {
+          "type": "IfcIntegerComponent",
+          "wrappedValue": 1
+        },
+        "type": "IfcPropertySingleValueComponent"
+      },
+      {
+        "name": "IsLandmarked",
+        "nominalValue": {
+          "type": "IfcLogicalComponent",
+          "wrappedValue": "UNKNOWN"
+        },
+        "type": "IfcPropertySingleValueComponent"
+      }
+    ]
+  },
+  {
+    "componentDescription": "Exterior Walls:B2010",
+    "componentName": "Exterior Walls",
+    "componentType": "IfcRelAssociatesClassificationComponent",
+    "entityGuid": "fe5b5f4a-ec41-9398-1b55-8e9c12e30423",
+    "guid": "97a9bdb3-88cd-7ef6-a5f7-a0e05e68fa27",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb5e3"
+    ],
+    "relatingClassification": {
+      "itemReference": "B2010",
+      "location": "https://www.csiresources.org/standards/uniformat",
+      "name": "Exterior Walls",
+      "referencedSource": {
+        "edition": "1998",
+        "name": "Uniformat",
+        "source": "CSI (Construction Specifications Institute)",
+        "type": "IfcClassificationComponent"
+      },
+      "type": "IfcClassificationReferenceComponent"
     }
-  ]
-}
+  },
+  {
+    "componentDescription": "Solid Exterior Doors:B2030200",
+    "componentName": "Solid Exterior Doors",
+    "componentType": "IfcRelAssociatesClassificationComponent",
+    "entityGuid": "01a495f9-40d1-f94d-2453-f474c25e9f1d",
+    "guid": "98dfc6c4-ccbb-6ce2-3ced-9fa011d56a4b",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb518"
+    ],
+    "relatingClassification": {
+      "itemReference": "B2030200",
+      "location": "https://www.csiresources.org/standards/uniformat",
+      "name": "Solid Exterior Doors",
+      "referencedSource": {
+        "edition": "1998",
+        "name": "Uniformat",
+        "source": "CSI (Construction Specifications Institute)",
+        "type": "IfcClassificationComponent"
+      },
+      "type": "IfcClassificationReferenceComponent"
+    }
+  },
+  {
+    "componentType": "IfcRelAssociatesMaterialComponent",
+    "entityGuid": "3964fd71-dde3-787d-2a1b-2763c1bd5c14",
+    "guid": "cea4923b-25cb-7ef9-fbd8-eed6a04330cb",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb5e3"
+    ],
+    "relatingMaterial": {
+      "directionSense": "NEGATIVE",
+      "forLayerSet": {
+        "layerSetName": "Basic Wall:Generic - 8\"",
+        "materialLayers": [
+          {
+            "layerThickness": 0.6666666666666666,
+            "material": {
+              "name": "Default Wall",
+              "type": "IfcMaterialComponent"
+            },
+            "type": "IfcMaterialLayerComponent"
+          }
+        ],
+        "type": "IfcMaterialLayerSetComponent"
+      },
+      "layerSetDirection": "AXIS2",
+      "offsetFromReferenceLine": 0.3333333333333333,
+      "type": "IfcMaterialLayerSetUsageComponent"
+    }
+  },
+  {
+    "componentType": "IfcRelAssociatesMaterialComponent",
+    "entityGuid": "ddfd90f6-aad7-a3e6-4bfc-c935c76e526b",
+    "guid": "c504e55f-76fc-e321-d024-dacb5e8fcc7f",
+    "relatedObjects": [
+      "e6089b3a-de24-f8a0-1d4a-6947f6fb456a",
+      "5d5ebb4e-ce31-4562-84ca-7319910fb518"
+    ],
+    "relatingMaterial": {
+      "materials": [
+        {
+          "name": "Aluminum",
+          "type": "IfcMaterialComponent"
+        },
+        {
+          "name": "Metal - Paint Finish - Grey",
+          "type": "IfcMaterialComponent"
+        },
+        {
+          "name": "Wood - Birch",
+          "type": "IfcMaterialComponent"
+        }
+      ],
+      "type": "IfcMaterialListComponent"
+    }
+  },
+  {
+    "componentType": "IfcRelAssociatesMaterialComponent",
+    "entityGuid": "5f895803-f8e7-6880-6ab2-d26057434d68",
+    "guid": "d7e17a75-f687-8413-d9fb-de9919d440de",
+    "relatedObjects": [
+      "7b8f559f-8b31-42c2-ba44-e16f7a04146e"
+    ],
+    "relatingMaterial": {
+      "layerSetName": "Basic Wall:Generic - 8\"",
+      "materialLayers": [
+        {
+          "layerThickness": 0.6666666666666666,
+          "material": {
+            "name": "Default Wall",
+            "type": "IfcMaterialComponent"
+          },
+          "type": "IfcMaterialLayerComponent"
+        }
+      ],
+      "type": "IfcMaterialLayerSetComponent"
+    }
+  },
+  {
+    "componentType": "IfcRelContainedInSpatialStructureComponent",
+    "entityGuid": "933c4a06-93b8-11d3-80f8-00c14f8efc2c",
+    "guid": "fea464e8-1e28-8717-de16-90877aa591a2",
+    "relatedElements": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb5e3",
+      "5d5ebb4e-ce31-4562-84ca-7319910fb518"
+    ],
+    "relatingStructure": "933c4a06-93b8-11d3-80f8-00c04f8efc2c"
+  },
+  {
+    "componentType": "IfcRelFillsElementComponent",
+    "entityGuid": "763ab0d0-e5b8-577f-d211-84bc1f62bbdb",
+    "guid": "e7baed1c-a7f8-8072-dfed-ea68331e4ff9",
+    "relatedBuildingElement": "5d5ebb4e-ce31-4562-84ca-7319910fb518",
+    "relatingOpeningElement": "101695e4-f7c6-46b0-8f70-8a0172df5a17"
+  },
+  {
+    "componentType": "IfcRelVoidsElementComponent",
+    "entityGuid": "5d5ebb4e-ce31-4562-84ca-730d910fb518",
+    "guid": "b946e753-86d0-72d5-db49-15765784da27",
+    "relatedOpeningElement": "101695e4-f7c6-46b0-8f70-8a0172df5a17",
+    "relatingBuildingElement": "5d5ebb4e-ce31-4562-84ca-7319910fb5e3"
+  },
+  {
+    "componentType": "IfcRelAggregatesComponent",
+    "entityGuid": "c9b34056-2cfb-8e83-199c-c0fa219dbdc6",
+    "guid": "f9a36159-56e0-99f6-899d-da932255706d",
+    "relatedObjects": [
+      "193055e6-d619-4b2e-8d41-095e989726ab"
+    ],
+    "relatingObject": "193055e6-d619-4b2e-8d41-095e989726a9"
+  },
+  {
+    "componentType": "IfcRelAggregatesComponent",
+    "entityGuid": "8cdc5ebb-9a1c-e7a7-0e52-23a5d9e1eb19",
+    "guid": "6edee2e5-c749-9992-647d-62528074f102",
+    "relatedObjects": [
+      "193055e6-d619-4b2e-8d41-095e989726a8"
+    ],
+    "relatingObject": "193055e6-d619-4b2e-8d41-095e989726ab"
+  },
+  {
+    "componentType": "IfcRelAggregatesComponent",
+    "entityGuid": "7cacd49c-ac17-4591-ad0a-cbcabb412ad9",
+    "guid": "e680a5c5-2214-8009-0f18-c44d4a4f821b",
+    "relatedObjects": [
+      "933c4a06-93b8-11d3-80f8-00c04f8efc2c",
+      "6341822b-d4f3-11d3-a039-0000863f33f9"
+    ],
+    "relatingObject": "193055e6-d619-4b2e-8d41-095e989726a8"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "f72c2c2b-0983-9133-817b-ec13aa1a85eb",
+    "guid": "c39c18f5-b8a5-8238-24f9-fede315758c6",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb5e3"
+    ],
+    "relatingPropertyDefinition": "3625f980-f8d7-c67b-043c-b655f9896dd4"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "7ac53bb1-9d64-12a7-115b-5491c58bb5cc",
+    "guid": "35ef607e-8b01-1992-0f3d-97e5deec000e",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb5e3"
+    ],
+    "relatingPropertyDefinition": "236d8b84-def3-35a2-eb60-ecff3a7c8fca"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "ba0c91d5-42aa-0ca9-46f5-3196265ee4b3",
+    "guid": "4ffe145d-01e8-1621-ba9d-fd5710619896",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb5e3"
+    ],
+    "relatingPropertyDefinition": "d38b406c-7636-37ae-0ff8-06596cc45ad5"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "b7934436-8150-7566-d5dd-871e748b72ac",
+    "guid": "609b9d6f-b60d-8615-b27c-f7c17e6b49db",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb518"
+    ],
+    "relatingPropertyDefinition": "d14afc37-e991-e5b2-fbce-2dd6b4745c3e"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "05e75d8f-9348-d25a-0f18-c80239d4b7b4",
+    "guid": "c6c66f85-7cc1-529b-0555-277a29acf8c3",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb518"
+    ],
+    "relatingPropertyDefinition": "ac6ee654-89a4-c57e-5a60-3161e2fd466b"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "d73e8d87-30b7-c805-101b-45fce0e058cf",
+    "guid": "9152c051-54c5-623a-af80-6db883c053b2",
+    "relatedObjects": [
+      "933c4a06-93b8-11d3-80f8-00c04f8efc2c"
+    ],
+    "relatingPropertyDefinition": "af139d38-0415-4c92-32bc-cde97debca24"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "9f9e9729-baaf-50ca-3b3e-0dcabd388fc0",
+    "guid": "d9dfc0c9-f733-2492-00f5-beffbc3c81f2",
+    "relatedObjects": [
+      "933c4a06-93b8-11d3-80f8-00c04f8efc2c"
+    ],
+    "relatingPropertyDefinition": "4654500a-a7c8-cf12-b8b4-15d40e744444"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "1feef250-04e2-de8f-37a7-5bf9bce301d3",
+    "guid": "d0383b75-4697-e391-67f6-00b5e9e30ad4",
+    "relatedObjects": [
+      "933c4a06-93b8-11d3-80f8-00c04f8efc2c"
+    ],
+    "relatingPropertyDefinition": "0fef9ff3-3118-a8fe-7057-674186238e33"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "6e91c622-bea2-2ccb-1c88-b29bfdd516fd",
+    "guid": "24f8178b-1c86-76bf-1cfe-2e84f3266129",
+    "relatedObjects": [
+      "6341822b-d4f3-11d3-a039-0000863f33f9"
+    ],
+    "relatingPropertyDefinition": "b5c1672e-287a-a611-c765-055c553c8791"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "c6c9622a-f156-85fa-31a1-c90505e1904e",
+    "guid": "37534f61-80bd-8627-8295-bc2c0de52f70",
+    "relatedObjects": [
+      "6341822b-d4f3-11d3-a039-0000863f33f9"
+    ],
+    "relatingPropertyDefinition": "710c4a31-8030-e3f8-36b4-099c01bad6a3"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "b5fc52af-bccb-847f-3b4e-71bbe4fd3f51",
+    "guid": "1f374b78-3d6b-a4c7-3abb-cc6482a014eb",
+    "relatedObjects": [
+      "6341822b-d4f3-11d3-a039-0000863f33f9"
+    ],
+    "relatingPropertyDefinition": "e50a448d-e49e-6463-9960-780adf83d910"
+  },
+  {
+    "componentType": "IfcRelDefinesByPropertiesComponent",
+    "entityGuid": "fa34417f-4f56-c95e-3129-89010b639abb",
+    "guid": "a2a2fa4c-9b16-d917-e5f1-2001f44cf6c3",
+    "relatedObjects": [
+      "193055e6-d619-4b2e-8d41-095e989726a8"
+    ],
+    "relatingPropertyDefinition": "e3ba26fe-610c-1f96-a9fd-ec795a8571f3"
+  },
+  {
+    "componentType": "IfcRelDefinesByTypeComponent",
+    "entityGuid": "16734fac-b783-05d0-465e-53911ab98d8a",
+    "guid": "f9011a30-eee7-81a8-8aae-f955aa80ae43",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb5e3"
+    ],
+    "relatingType": "7b8f559f-8b31-42c2-ba44-e16f7a04146e"
+  },
+  {
+    "componentType": "IfcRelDefinesByTypeComponent",
+    "entityGuid": "ec67b1c2-7bbc-64d8-77cb-a4f583a037fb",
+    "guid": "2edaa1f9-8daf-4d6e-9347-3f3a3bd23a69",
+    "relatedObjects": [
+      "5d5ebb4e-ce31-4562-84ca-7319910fb518"
+    ],
+    "relatingType": "e6089b3a-de24-f8a0-1d4a-6947f6fb456a"
+  },
+  {
+    "guid": "5fbc2d4c-6303-719e-0448-42cc0bfcb787",
+    "componentType": "IfcShapeRepresentationComponent",
+    "entityGuid": "5d5ebb4e-ce31-4562-84ca-7319910fb518",
+    "representationIdentifier": "Body",
+    "representationFormat": "OBJ",
+    "items": [
+      "v 1.9132616928118815 -0.023749999999997037 1.0089289321881372\nv 1.9148508790378604 -0.023749999999997037 1.0110000000000026\nv 1.9158498832629067 -0.023749999999997037 1.0134118095489775\nv 1.916190625000016 -0.023749999999997037 1.0160000000000027\nv 1.9158498832629067 -0.023749999999997037 1.0185881904510279\nv 1.9148508790378602 -0.023749999999997037 1.0210000000000028\nv 1.9132616928118815 -0.023749999999997037 1.0230710678118682\nv 1.911190625000016 -0.023749999999997037 1.024660254037847\nv 1.908778815451041 -0.023749999999997037 1.0256592582628934\nv 1.9061906250000158 -0.023749999999997037 1.0260000000000027\nv 1.9036024345489906 -0.023749999999997037 1.0256592582628932\nv 1.901190625000016 -0.023749999999997037 1.0246602540378469\nv 1.8991195571881503 -0.023749999999997037 1.023071067811868\nv 1.8975303709621714 -0.023749999999997037 1.0210000000000026\nv 1.896531366737125 -0.023749999999997037 1.0185881904510277\nv 1.8961906250000158 -0.023749999999997037 1.0160000000000025\nv 1.896531366737125 -0.023749999999997037 1.013411809548977\nv 1.8975303709621716 -0.023749999999997037 1.0110000000000023\nv 1.8991195571881505 -0.023749999999997037 1.008928932188137\nv 1.901190625000016 -0.023749999999997037 1.007339745962158\nv 1.9036024345489908 -0.023749999999997037 1.0063407417371117\nv 1.906190625000016 -0.023749999999997037 1.0060000000000024\nv 1.9087788154510412 -0.023749999999997037 1.0063407417371117\nv 1.9111906250000161 -0.023749999999997037 1.0073397459621583\nv 1.916190625000016 0.006250000000002601 1.0160000000000025\nv 1.9158498832629067 0.006250000000002601 1.0134118095489775\nv 1.9148508790378604 0.006250000000002601 1.0110000000000026\nv 1.9111906250000161 0.006250000000002601 1.0073397459621583\nv 1.9132616928118815 0.006250000000002601 1.0089289321881372\nv 1.9087788154510412 0.006250000000002601 1.0063407417371117\nv 1.906190625000016 0.006250000000002601 1.0060000000000024\nv 1.9036024345489908 0.006250000000002601 1.0063407417371117\nv 1.901190625000016 0.006250000000002601 1.007339745962158\nv 1.8991195571881505 0.006250000000002601 1.008928932188137\nv 1.896531366737125 0.006250000000002601 1.013411809548977\nv 1.8975303709621716 0.006250000000002601 1.0110000000000023\nv 1.8961906250000158 0.006250000000002601 1.0160000000000025\nv 1.896531366737125 0.006250000000002601 1.0185881904510277\nv 1.8975303709621714 0.006250000000002601 1.0210000000000026\nv 1.901190625000016 0.006250000000002601 1.0246602540378469\nv 1.8991195571881503 0.006250000000002601 1.023071067811868\nv 1.9036024345489906 0.006250000000002601 1.0256592582628932\nv 1.9061906250000158 0.006250000000002601 1.0260000000000027\nv 1.908778815451041 0.006250000000002601 1.0256592582628934\nv 1.911190625000016 0.006250000000002601 1.024660254037847\nv 1.9132616928118813 0.006250000000002601 1.0230710678118682\nv 1.9158498832629067 0.006250000000002601 1.0185881904510279\nv 1.9148508790378602 0.006250000000002601 1.0210000000000026\nv 1.915764170614145 0.007841549435184156 1.0160000000000025\nv 1.9144848074565317 0.012616197740728807 1.0160000000000025\nv 1.9112189627404121 0.012210135520636378 1.0079233031030748\nv 1.8985669946580732 0.010268457615125626 1.008487405145911\nv 1.9049435394118814 0.015787671169814874 1.006151922490439\nv 1.9072257117136955 0.01283387558711635 1.0062762186771979\nv 1.912841260094626 0.018750000000006206 1.0160000000000025\nv 1.913663033775579 0.015683098870367507 1.0160000000000025\nv 1.9153377162282739 0.009433098870365697 1.0160000000000025\nv 1.899691907932882 0.014751282594619261 1.0064535208478036\nv 1.9007282968951502 0.02000291504670207 1.0061519226553053\nv 1.906111134638687 0.020921761869539368 1.0079447626545728\nv 1.8982012428092423 0.02492037631829934 1.007307206842552\nv 1.9036906250000125 0.027900635094619805 1.0160000000000025\nv 1.8952090825378836 0.013626369365486196 1.0084874054040975\nv 1.8947261589059465 0.009785533905940294 1.0160000000000025\nv 1.8911906250000088 0.0112500000000096 1.0160000000000022\nv 1.8911906250000088 0.012589745962165291 1.0110000000000021\nv 1.8911906250000088 0.011590741737118965 1.013411809548977\nv 1.8911906250000088 0.023838190451035052 1.0063407417371117\nv 1.8975568227813544 0.02954418244564147 1.0160000000000025\nv 1.9006237238906833 0.02872240877013063 1.0160000000000025\nv 1.8911906250000088 0.03090925826290053 1.0134118095489775\nv 1.8927821744453452 0.03082354561141773 1.0160000000000025\nv 1.8911906250000088 0.029910254037854245 1.0110000000000023\nv 1.8911906250000088 0.016250000000009757 1.0073397459621578\nv 1.8911906250000088 0.014178932188144241 1.0089289321881367\nv 1.9105536013209725 0.021037658773659595 1.0160000000000025\nv 1.9059782837736658 0.025612976320966402 1.0160000000000025\nv 1.8911906250000088 0.026250000000009863 1.007339745962158\nv 1.8911906250000088 0.021250000000009817 1.0060000000000022\nv 1.8911906250000088 0.028321067811875336 1.008928932188137\nv 1.8943737238906817 0.030397091222825634 1.0160000000000025\nv 1.8911906250000088 0.03125000000000981 1.0160000000000025\nv 1.9082659425473192 0.023325317547313 1.0160000000000025\nv 1.8911906250000088 0.01866180954898458 1.0063407417371115\nv 1.9112189627404184 0.012210135520657084 1.0240766968969215\nv 1.899691907933273 0.014751282594959822 1.0255464791523625\nv 1.8985669946581418 0.010268457615166815 1.0235125948541643\nv 1.9049435394119936 0.015787671169934334 1.0258480775095378\nv 1.8952090825378738 0.01362636936548034 1.0235125945958987\nv 1.907225711713716 0.012833875587145438 1.0257237813228\nv 1.9007282968956096 0.020002915046812092 1.0258480773446375\nv 1.8911906250000088 0.012589745962165208 1.0210000000000026\nv 1.905862387262931 0.02117050930575448 1.02405523731716\nv 1.8911906250000088 0.01159074173711891 1.0185881904510277\nv 1.8982012428093262 0.024920376318335075 1.024692793157417\nv 1.8911906250000088 0.02383819045103487 1.0256592582628932\nv 1.8911906250000088 0.021250000000009622 1.0260000000000025\nv 1.8911906250000088 0.014178932188144117 1.023071067811868\nv 1.8911906250000088 0.028321067811875197 1.023071067811868\nv 1.8911906250000088 0.01625000000000959 1.0246602540378469\nv 1.8911906250000088 0.0186618095489844 1.0256592582628932\nv 1.8911906250000088 0.029910254037854148 1.0210000000000026\nv 1.8911906250000088 0.030909258262900474 1.0185881904510277\nv 1.8911906250000088 0.026250000000009696 1.0246602540378469\nv 1.7861906250000013 0.02383819045103497 1.0063407417371115\nv 1.7861906250000013 0.02125000000000972 1.006000000000002\nv 1.7861906250000013 0.018661809548984498 1.0063407417371113\nv 1.7861906250000013 0.01625000000000966 1.0073397459621576\nv 1.7861906250000013 0.014178932188144158 1.0089289321881365\nv 1.7861906250000013 0.012589745962165208 1.011000000000002\nv 1.7861906250000013 0.011590741737118881 1.0134118095489768\nv 1.7861906250000013 0.011250000000009516 1.0160000000000022\nv 1.7861906250000013 0.01159074173711884 1.0185881904510274\nv 1.7861906250000013 0.012589745962165139 1.0210000000000021\nv 1.7861906250000013 0.014178932188144075 1.0230710678118677\nv 1.7861906250000013 0.016250000000009562 1.0246602540378467\nv 1.7861906250000013 0.018661809548984373 1.025659258262893\nv 1.7861906250000013 0.02125000000000961 1.0260000000000022\nv 1.7861906250000013 0.02383819045103483 1.025659258262893\nv 1.7861906250000013 0.026250000000009654 1.0246602540378467\nv 1.7861906250000013 0.028321067811875142 1.0230710678118677\nv 1.7861906250000013 0.029910254037854092 1.0210000000000021\nv 1.7861906250000013 0.03090925826290039 1.0185881904510274\nv 1.7861906250000013 0.031250000000009714 1.0160000000000022\nv 1.7861906250000013 0.03090925826290042 1.013411809548977\nv 1.7861906250000013 0.02991025403785416 1.0110000000000021\nv 1.7861906250000013 0.028321067811875225 1.0089289321881365\nv 1.7861906250000013 0.02625000000000975 1.0073397459621578\nv 1.8874774215644194 -0.023749999999997037 1.0372132034355994\nv 1.893690625000016 -0.023749999999997037 1.0419807621135362\nv 1.9009260536469403 -0.023749999999997037 1.044977774788675\nv 1.908690625000016 -0.023749999999997037 1.046000000000003\nv 1.9164551963530916 -0.023749999999997037 1.0449777747886748\nv 1.9236906250000159 -0.023749999999997037 1.0419807621135362\nv 1.9299038284356123 -0.023749999999997037 1.0372132034355992\nv 1.934671387113549 -0.023749999999997037 1.0310000000000028\nv 1.9376683997886879 -0.023749999999997037 1.0237645713530785\nv 1.9386906250000158 -0.023749999999997037 1.016000000000003\nv 1.9376683997886879 -0.023749999999997037 1.0082354286469273\nv 1.934671387113549 -0.023749999999997037 1.0010000000000028\nv 1.9299038284356123 -0.023749999999997037 0.9947867965644065\nv 1.9236906250000159 -0.023749999999997037 0.9900192378864698\nv 1.9164551963530914 -0.023749999999997037 0.9870222252113309\nv 1.9086906250000157 -0.023749999999997037 0.986000000000003\nv 1.9009260536469401 -0.023749999999997037 0.9870222252113309\nv 1.8936906250000158 -0.023749999999997037 0.9900192378864698\nv 1.8874774215644194 -0.023749999999997037 0.9947867965644066\nv 1.8827098628864827 -0.023749999999997037 1.001000000000003\nv 1.8797128502113438 -0.023749999999997037 1.0082354286469273\nv 1.878690625000016 -0.023749999999997037 1.0160000000000031\nv 1.8797128502113438 -0.023749999999997037 1.0237645713530787\nv 1.8827098628864827 -0.023749999999997037 1.031000000000003\nv 1.9086906250000157 -0.031749999999997044 0.986000000000003\nv 1.9164551963530914 -0.031749999999997044 0.9870222252113309\nv 1.9236906250000159 -0.031749999999997044 0.9900192378864698\nv 1.9299038284356123 -0.031749999999997044 0.9947867965644065\nv 1.934671387113549 -0.031749999999997044 1.0010000000000028\nv 1.9376683997886879 -0.031749999999997044 1.0082354286469273\nv 1.9386906250000158 -0.031749999999997044 1.016000000000003\nv 1.9376683997886879 -0.031749999999997044 1.0237645713530785\nv 1.934671387113549 -0.031749999999997044 1.0310000000000028\nv 1.9299038284356123 -0.031749999999997044 1.0372132034355992\nv 1.9236906250000159 -0.031749999999997044 1.0419807621135362\nv 1.9164551963530916 -0.031749999999997044 1.0449777747886748\nv 1.908690625000016 -0.031749999999997044 1.046000000000003\nv 1.9009260536469403 -0.031749999999997044 1.044977774788675\nv 1.893690625000016 -0.031749999999997044 1.0419807621135362\nv 1.8874774215644194 -0.031749999999997044 1.0372132034355994\nv 1.8827098628864827 -0.031749999999997044 1.031000000000003\nv 1.8797128502113438 -0.031749999999997044 1.0237645713530787\nv 1.878690625000016 -0.031749999999997044 1.016000000000003\nv 1.8797128502113438 -0.031749999999997044 1.0082354286469273\nv 1.8827098628864827 -0.031749999999997044 1.001000000000003\nv 1.8874774215644194 -0.031749999999997044 0.9947867965644066\nv 1.8936906250000158 -0.031749999999997044 0.9900192378864698\nv 1.9009260536469401 -0.031749999999997044 0.9870222252113309\nv 1.9087788154510412 -0.08419999999999676 1.0063407417371117\nv 1.906190625000016 -0.08419999999999676 1.0060000000000024\nv 1.9036024345489908 -0.08419999999999676 1.0063407417371117\nv 1.901190625000016 -0.08419999999999676 1.007339745962158\nv 1.8991195571881505 -0.08419999999999676 1.008928932188137\nv 1.8975303709621716 -0.08419999999999676 1.0110000000000023\nv 1.896531366737125 -0.08419999999999676 1.013411809548977\nv 1.8961906250000158 -0.08419999999999676 1.0160000000000025\nv 1.896531366737125 -0.08419999999999676 1.0185881904510277\nv 1.8975303709621714 -0.08419999999999676 1.0210000000000026\nv 1.8991195571881503 -0.08419999999999676 1.023071067811868\nv 1.9011906250000157 -0.08419999999999676 1.0246602540378469\nv 1.9036024345489906 -0.08419999999999676 1.0256592582628932\nv 1.9061906250000158 -0.08419999999999676 1.0260000000000027\nv 1.908778815451041 -0.08419999999999676 1.0256592582628934\nv 1.911190625000016 -0.08419999999999676 1.024660254037847\nv 1.9132616928118813 -0.08419999999999676 1.0230710678118682\nv 1.9148508790378602 -0.08419999999999676 1.0210000000000028\nv 1.9158498832629065 -0.08419999999999676 1.0185881904510279\nv 1.916190625000016 -0.08419999999999676 1.0160000000000025\nv 1.9158498832629067 -0.08419999999999676 1.0134118095489775\nv 1.9148508790378604 -0.08419999999999676 1.0110000000000026\nv 1.9132616928118815 -0.08419999999999676 1.0089289321881372\nv 1.9111906250000161 -0.08419999999999676 1.0073397459621583\nv 1.9158498832629067 -0.11419999999999643 1.0134118095489775\nv 1.916190625000016 -0.11419999999999643 1.0160000000000027\nv 1.9148508790378604 -0.11419999999999643 1.0110000000000026\nv 1.9132616928118815 -0.11419999999999643 1.0089289321881372\nv 1.9111906250000161 -0.11419999999999643 1.0073397459621583\nv 1.9087788154510412 -0.11419999999999643 1.0063407417371117\nv 1.906190625000016 -0.11419999999999643 1.0060000000000024\nv 1.901190625000016 -0.11419999999999643 1.007339745962158\nv 1.9036024345489908 -0.11419999999999643 1.0063407417371117\nv 1.8991195571881505 -0.11419999999999643 1.008928932188137\nv 1.8975303709621716 -0.11419999999999643 1.0110000000000023\nv 1.896531366737125 -0.11419999999999643 1.013411809548977\nv 1.8961906250000158 -0.11419999999999643 1.0160000000000025\nv 1.896531366737125 -0.11419999999999643 1.0185881904510277\nv 1.8975303709621714 -0.11419999999999643 1.0210000000000026\nv 1.8991195571881503 -0.11419999999999643 1.023071067811868\nv 1.901190625000016 -0.11419999999999643 1.0246602540378469\nv 1.9036024345489906 -0.11419999999999643 1.0256592582628932\nv 1.9061906250000158 -0.11419999999999643 1.0260000000000027\nv 1.911190625000016 -0.11419999999999643 1.024660254037847\nv 1.908778815451041 -0.11419999999999643 1.0256592582628934\nv 1.9132616928118813 -0.11419999999999643 1.0230710678118682\nv 1.9148508790378602 -0.11419999999999643 1.0210000000000026\nv 1.9158498832629067 -0.11419999999999643 1.0185881904510279\nv 1.9157641706141448 -0.11579154943517796 1.0160000000000027\nv 1.9112189627404121 -0.12016013552063019 1.0079233031030748\nv 1.9144848074565315 -0.12056619774072262 1.0160000000000025\nv 1.9072257117136953 -0.12078387558711014 1.0062762186771979\nv 1.9049435394118814 -0.12373767116980867 1.006151922490439\nv 1.898566994658073 -0.11821845761511941 1.008487405145911\nv 1.9136630337755787 -0.12363309887036127 1.0160000000000025\nv 1.912841260094626 -0.12669999999999998 1.0160000000000025\nv 1.9153377162282736 -0.11738309887035951 1.0160000000000025\nv 1.906111134638687 -0.12887176186953314 1.0079447626545728\nv 1.9007282968951502 -0.12795291504669587 1.0061519226553053\nv 1.8996919079328818 -0.12270128259461309 1.0064535208478036\nv 1.9036906250000123 -0.1358506350946136 1.0160000000000025\nv 1.8982012428092423 -0.13287037631829313 1.007307206842552\nv 1.8911906250000088 -0.11920000000000337 1.0160000000000025\nv 1.8947261589059465 -0.1177355339059341 1.0160000000000025\nv 1.8952090825378836 -0.12157636936547996 1.0084874054040975\nv 1.8911906250000088 -0.11954074173711278 1.013411809548977\nv 1.8911906250000088 -0.12053974596215909 1.0110000000000021\nv 1.9006237238906833 -0.13667240877012443 1.0160000000000025\nv 1.8975568227813544 -0.13749418244563527 1.0160000000000025\nv 1.8911906250000088 -0.13178819045102885 1.0063407417371117\nv 1.8911906250000088 -0.12212893218813807 1.0089289321881367\nv 1.8911906250000088 -0.12420000000000354 1.0073397459621578\nv 1.9105536013209725 -0.12898765877365342 1.0160000000000025\nv 1.9059782837736658 -0.1335629763209602 1.0160000000000025\nv 1.8911906250000088 -0.13420000000000365 1.007339745962158\nv 1.8911906250000088 -0.1292000000000036 1.0060000000000022\nv 1.8943737238906815 -0.13834709122281946 1.0160000000000025\nv 1.8911906250000088 -0.13627106781186915 1.008928932188137\nv 1.8911906250000088 -0.1388592582628943 1.0134118095489775\nv 1.8927821744453452 -0.13877354561141153 1.0160000000000025\nv 1.8911906250000088 -0.13920000000000365 1.0160000000000025\nv 1.9082659425473192 -0.13127531754730676 1.0160000000000025\nv 1.8911906250000088 -0.13786025403784807 1.0110000000000023\nv 1.8911906250000088 -0.12661180954897838 1.0063407417371115\nv 1.9112189627404184 -0.1201601355206509 1.0240766968969215\nv 1.9049435394119936 -0.12373767116992813 1.0258480775095378\nv 1.8985669946581418 -0.1182184576151606 1.0235125948541643\nv 1.899691907933273 -0.12270128259495365 1.0255464791523625\nv 1.8952090825378738 -0.12157636936547415 1.0235125945958987\nv 1.9072257117137157 -0.12078387558713925 1.0257237813228\nv 1.8911906250000088 -0.12053974596215901 1.0210000000000026\nv 1.9007282968956096 -0.1279529150468059 1.0258480773446375\nv 1.905862387262931 -0.1291205093057483 1.02405523731716\nv 1.8911906250000088 -0.1195407417371127 1.0185881904510277\nv 1.8982012428093262 -0.13287037631832888 1.024692793157417\nv 1.8911906250000088 -0.12920000000000342 1.0260000000000025\nv 1.8911906250000088 -0.1317881904510287 1.0256592582628932\nv 1.8911906250000088 -0.12212893218813793 1.023071067811868\nv 1.8911906250000088 -0.13627106781186898 1.023071067811868\nv 1.8911906250000088 -0.12661180954897822 1.0256592582628932\nv 1.8911906250000088 -0.12420000000000338 1.0246602540378469\nv 1.8911906250000088 -0.13786025403784796 1.0210000000000026\nv 1.8911906250000088 -0.13420000000000348 1.0246602540378469\nv 1.8911906250000088 -0.13885925826289425 1.0185881904510277\nv 1.7861906250000013 -0.1362710678118691 1.0089289321881365\nv 1.786190625000001 -0.13786025403784796 1.0110000000000021\nv 1.786190625000001 -0.13885925826289425 1.013411809548977\nv 1.786190625000001 -0.13920000000000354 1.0160000000000022\nv 1.786190625000001 -0.13885925826289425 1.0185881904510274\nv 1.786190625000001 -0.1378602540378479 1.0210000000000021\nv 1.786190625000001 -0.13627106781186893 1.0230710678118677\nv 1.786190625000001 -0.13420000000000348 1.0246602540378467\nv 1.786190625000001 -0.13178819045102863 1.025659258262893\nv 1.786190625000001 -0.12920000000000342 1.0260000000000022\nv 1.786190625000001 -0.12661180954897816 1.025659258262893\nv 1.786190625000001 -0.12420000000000338 1.0246602540378467\nv 1.786190625000001 -0.12212893218813785 1.0230710678118677\nv 1.786190625000001 -0.12053974596215895 1.0210000000000021\nv 1.786190625000001 -0.11954074173711264 1.0185881904510274\nv 1.786190625000001 -0.11920000000000329 1.016000000000002\nv 1.786190625000001 -0.1195407417371127 1.0134118095489768\nv 1.786190625000001 -0.12053974596215901 1.011000000000002\nv 1.7861906250000013 -0.12212893218813796 1.0089289321881365\nv 1.7861906250000013 -0.12420000000000346 1.0073397459621576\nv 1.7861906250000013 -0.12661180954897833 1.0063407417371113\nv 1.7861906250000013 -0.12920000000000353 1.006000000000002\nv 1.7861906250000013 -0.13178819045102874 1.0063407417371115\nv 1.7861906250000013 -0.13420000000000354 1.0073397459621578\nv 1.9009260536469403 -0.08419999999999676 1.044977774788675\nv 1.8936906250000158 -0.08419999999999676 1.0419807621135362\nv 1.8874774215644194 -0.08419999999999676 1.0372132034355994\nv 1.8827098628864827 -0.08419999999999676 1.031000000000003\nv 1.8797128502113438 -0.08419999999999676 1.0237645713530787\nv 1.8786906250000157 -0.08419999999999676 1.016000000000003\nv 1.8797128502113436 -0.08419999999999676 1.0082354286469273\nv 1.8827098628864825 -0.08419999999999676 1.001000000000003\nv 1.8874774215644192 -0.08419999999999676 0.9947867965644066\nv 1.8936906250000158 -0.08419999999999676 0.9900192378864698\nv 1.9009260536469401 -0.08419999999999676 0.9870222252113309\nv 1.9086906250000157 -0.08419999999999676 0.986000000000003\nv 1.9164551963530914 -0.08419999999999676 0.9870222252113309\nv 1.9236906250000156 -0.08419999999999676 0.9900192378864698\nv 1.929903828435612 -0.08419999999999676 0.9947867965644065\nv 1.9346713871135488 -0.08419999999999676 1.0010000000000028\nv 1.9376683997886879 -0.08419999999999676 1.0082354286469273\nv 1.9386906250000158 -0.08419999999999676 1.016000000000003\nv 1.9376683997886879 -0.08419999999999676 1.0237645713530785\nv 1.934671387113549 -0.08419999999999676 1.0310000000000028\nv 1.9299038284356123 -0.08419999999999676 1.0372132034355992\nv 1.9236906250000159 -0.08419999999999676 1.0419807621135362\nv 1.9164551963530916 -0.08419999999999676 1.0449777747886748\nv 1.9086906250000157 -0.08419999999999676 1.046000000000003\nv 1.9009260536469401 -0.07619999999999676 0.9870222252113309\nv 1.8936906250000158 -0.07619999999999676 0.9900192378864698\nv 1.8874774215644192 -0.07619999999999676 0.9947867965644066\nv 1.8827098628864825 -0.07619999999999676 1.001000000000003\nv 1.8797128502113436 -0.07619999999999676 1.0082354286469273\nv 1.8786906250000157 -0.07619999999999676 1.0160000000000031\nv 1.8797128502113438 -0.07619999999999676 1.0237645713530787\nv 1.8827098628864827 -0.07619999999999676 1.031000000000003\nv 1.8874774215644194 -0.07619999999999676 1.0372132034355994\nv 1.8936906250000158 -0.07619999999999676 1.0419807621135362\nv 1.9009260536469403 -0.07619999999999676 1.044977774788675\nv 1.9086906250000157 -0.07619999999999676 1.046000000000003\nv 1.9164551963530916 -0.07619999999999676 1.0449777747886748\nv 1.9236906250000159 -0.07619999999999676 1.0419807621135362\nv 1.9299038284356123 -0.07619999999999676 1.0372132034355992\nv 1.934671387113549 -0.07619999999999676 1.0310000000000028\nv 1.9376683997886879 -0.07619999999999676 1.0237645713530785\nv 1.9386906250000158 -0.07619999999999676 1.016000000000003\nv 1.9376683997886879 -0.07619999999999676 1.0082354286469273\nv 1.9346713871135488 -0.07619999999999676 1.0010000000000028\nv 1.929903828435612 -0.07619999999999676 0.9947867965644065\nv 1.9236906250000156 -0.07619999999999676 0.9900192378864698\nv 1.9164551963530914 -0.07619999999999676 0.9870222252113309\nv 1.9086906250000157 -0.07619999999999676 0.986000000000003\nv 1.0668000000000029 -0.026987499999999012 0.0\nv 1.0668000000000029 -0.07619999999999914 0.0\nv 1.0160000000000025 -0.07619999999999914 0.0\nv 1.0160000000000025 0.06985000000000113 0.0\nv 1.0668000000000029 0.06985000000000113 0.0\nv 1.0668000000000029 0.020637500000001252 0.0\nv 1.0826750000000032 0.020637500000001252 0.0\nv 1.0826750000000032 -0.026987499999999012 0.0\nv 1.066800000000003 -0.02698749999999904 2.1336\nv 1.066800000000003 -0.07619999999999914 2.1336\nv 1.9811999999999999 -0.07619999999999914 2.1336\nv 1.9811999999999999 -0.07619999999999914 0.0\nv 2.0320000000000014 -0.07619999999999914 0.0\nv 2.0320000000000014 -0.07619999999999745 2.2352000000000003\nv 1.0160000000000025 -0.07619999999999745 2.2352000000000003\nv 1.0160000000000025 0.0698500000000034 2.2352000000000003\nv 2.0320000000000014 0.06985000000000337 2.2352000000000003\nv 2.0320000000000014 0.06985000000000113 0.0\nv 1.9811999999999999 0.06985000000000113 0.0\nv 1.9811999999999999 0.06985000000000115 2.1336\nv 1.0668000000000029 0.06985000000000115 2.1336\nv 1.0668000000000029 0.020637500000001238 2.1336\nv 1.9811999999999999 0.020637500000001238 2.1336\nv 1.9811999999999999 0.020637500000001252 0.0\nv 1.9653249999999998 0.020637500000001252 0.0\nv 1.9653249999999998 0.020637500000001238 2.1177250000000023\nv 1.0826750000000032 0.020637500000001238 2.1177250000000023\nv 1.0826750000000032 -0.02698749999999904 2.1177250000000023\nv 1.965325 -0.02698749999999904 2.1177250000000023\nv 1.965325 -0.026987499999999012 0.0\nv 1.9811999999999999 -0.026987499999999012 0.0\nv 1.9811999999999999 -0.02698749999999904 2.1336\nv 1.9812000000000016 -0.03174999999999566 2.1336\nv 1.9812000000000016 -0.03174999999999566 0.0\nv 1.0668000000000017 -0.03174999999999566 0.0\nv 1.0668000000000017 -0.03174999999999566 2.1336\nv 1.9812000000000016 -0.07619999999999603 2.1336\nv 1.0668000000000017 -0.07619999999999603 2.1336\nv 1.0668000000000017 -0.07619999999999603 0.0\nv 1.9812000000000016 -0.07619999999999603 0.0\nf 12 0 1\nf 12 1 2\nf 12 2 3\nf 12 3 4\nf 12 4 5\nf 12 5 6\nf 12 6 7\nf 12 7 8\nf 12 8 9\nf 12 9 10\nf 12 10 11\nf 12 13 14\nf 12 14 15\nf 12 15 16\nf 12 16 17\nf 12 17 18\nf 12 18 19\nf 12 19 20\nf 12 20 21\nf 12 21 22\nf 12 22 23\nf 12 23 0\nf 25 24 3\nf 25 3 2\nf 26 25 2\nf 26 2 1\nf 0 27 28\nf 0 23 27\nf 28 1 0\nf 28 26 1\nf 23 29 27\nf 23 22 29\nf 22 21 30\nf 22 30 29\nf 20 19 32\nf 20 32 31\nf 19 18 33\nf 19 33 32\nf 34 35 17\nf 34 17 16\nf 35 18 17\nf 35 33 18\nf 36 34 16\nf 36 16 15\nf 21 31 30\nf 21 20 31\nf 37 36 15\nf 37 15 14\nf 38 37 14\nf 38 14 13\nf 12 39 40\nf 12 11 39\nf 40 13 12\nf 40 38 13\nf 11 41 39\nf 11 10 41\nf 10 9 42\nf 10 42 41\nf 8 7 44\nf 8 44 43\nf 7 6 45\nf 7 45 44\nf 46 47 5\nf 46 5 4\nf 47 6 5\nf 47 45 6\nf 24 46 4\nf 24 4 3\nf 9 43 42\nf 9 8 43\nf 25 26 48\nf 29 50 49\nf 53 51 52\nf 50 54 55\nf 50 55 49\nf 27 49 28\nf 56 26 28\nf 27 29 49\nf 53 54 50\nf 50 31 32\nf 59 57 58\nf 60 61 58\nf 50 29 30\nf 50 30 31\nf 64 62 63\nf 50 32 53\nf 62 66 65\nf 67 68 69\nf 72 70 71\nf 53 35 51\nf 32 33 53\nf 57 59 52\nf 73 60 74\nf 51 63 57\nf 52 59 75\nf 59 58 76\nf 67 77 68\nf 52 51 57\nf 69 60 78\nf 67 69 78\nf 79 80 68\nf 61 76 58\nf 79 68 77\nf 60 69 61\nf 70 81 71\nf 58 57 62\nf 53 52 75\nf 79 72 80\nf 36 51 34\nf 59 76 82\nf 59 82 75\nf 62 65 58\nf 56 28 49\nf 62 64 66\nf 25 48 24\nf 60 58 74\nf 71 80 72\nf 65 74 58\nf 48 26 56\nf 83 60 73\nf 78 60 83\nf 33 35 53\nf 57 63 62\nf 34 51 35\nf 75 54 53\nf 36 63 51\nf 55 84 49\nf 54 84 55\nf 87 85 86\nf 88 64 63\nf 40 89 38\nf 87 86 89\nf 91 88 90\nf 89 86 38\nf 87 92 85\nf 38 86 37\nf 85 88 63\nf 92 90 85\nf 88 93 64\nf 24 48 46\nf 61 94 90\nf 61 69 94\nf 49 45 56\nf 42 43 84\nf 61 90 76\nf 45 49 44\nf 44 49 43\nf 89 54 75\nf 96 69 95\nf 43 49 84\nf 88 85 90\nf 85 63 86\nf 88 91 93\nf 97 91 90\nf 56 45 47\nf 92 76 90\nf 36 37 86\nf 68 80 98\nf 94 100 99\nf 80 71 101\nf 56 47 48\nf 97 94 99\nf 71 81 102\nf 100 94 96\nf 87 75 92\nf 92 75 82\nf 92 82 76\nf 103 68 98\nf 68 103 95\nf 39 41 84\nf 69 68 95\nf 102 101 71\nf 75 87 89\nf 94 69 96\nf 42 84 41\nf 97 90 94\nf 80 101 98\nf 46 48 47\nf 54 89 84\nf 40 39 89\nf 86 63 36\nf 89 39 84\nf 120 104 105\nf 120 105 106\nf 120 106 107\nf 120 107 108\nf 120 108 109\nf 120 109 110\nf 120 110 111\nf 120 111 112\nf 120 112 113\nf 120 113 114\nf 120 114 115\nf 120 115 116\nf 120 116 117\nf 120 117 118\nf 120 118 119\nf 120 121 122\nf 120 122 123\nf 120 123 124\nf 120 124 125\nf 120 125 126\nf 120 126 127\nf 120 127 104\nf 124 123 81\nf 124 81 70\nf 125 124 70\nf 125 70 72\nf 79 77 127\nf 79 127 126\nf 126 125 72\nf 126 72 79\nf 77 67 104\nf 77 104 127\nf 67 78 105\nf 67 105 104\nf 73 74 108\nf 73 108 107\nf 83 73 107\nf 83 107 106\nf 111 66 64\nf 111 110 66\nf 110 65 66\nf 110 109 65\nf 109 74 65\nf 109 108 74\nf 78 106 105\nf 78 83 106\nf 112 111 64\nf 112 64 93\nf 113 112 93\nf 113 93 91\nf 99 100 116\nf 99 116 115\nf 97 99 115\nf 97 115 114\nf 114 113 91\nf 114 91 97\nf 100 96 117\nf 100 117 116\nf 103 98 120\nf 103 120 119\nf 95 103 119\nf 95 119 118\nf 123 122 102\nf 123 102 81\nf 122 101 102\nf 122 121 101\nf 121 98 101\nf 121 120 98\nf 96 95 118\nf 96 118 117\nf 132 133 134\nf 146 128 129\nf 146 129 130\nf 146 130 131\nf 146 131 132\nf 146 134 135\nf 146 135 136\nf 146 136 137\nf 146 137 138\nf 146 138 139\nf 146 139 140\nf 146 140 141\nf 146 141 142\nf 146 142 143\nf 146 143 144\nf 146 144 145\nf 146 147 148\nf 146 148 149\nf 146 149 150\nf 146 150 151\nf 146 151 128\nf 146 132 134\nf 163 161 162\nf 167 152 153\nf 167 153 154\nf 167 154 155\nf 167 155 156\nf 167 156 157\nf 167 157 158\nf 167 158 159\nf 167 159 160\nf 167 160 161\nf 167 163 164\nf 167 164 165\nf 167 165 166\nf 167 168 169\nf 167 169 170\nf 167 170 171\nf 167 171 172\nf 167 172 173\nf 167 173 174\nf 167 174 175\nf 167 175 152\nf 167 161 163\nf 137 136 159\nf 137 159 158\nf 136 135 160\nf 136 160 159\nf 162 161 134\nf 162 134 133\nf 135 134 161\nf 135 161 160\nf 163 162 133\nf 163 133 132\nf 164 163 132\nf 164 132 131\nf 165 164 131\nf 165 131 130\nf 166 165 130\nf 166 130 129\nf 128 168 167\nf 128 151 168\nf 167 166 129\nf 167 129 128\nf 151 169 168\nf 151 150 169\nf 150 149 170\nf 150 170 169\nf 149 148 171\nf 149 171 170\nf 148 147 172\nf 148 172 171\nf 174 173 146\nf 174 146 145\nf 147 146 173\nf 147 173 172\nf 175 174 145\nf 175 145 144\nf 152 175 144\nf 152 144 143\nf 153 152 143\nf 153 143 142\nf 154 153 142\nf 154 142 141\nf 140 156 155\nf 140 139 156\nf 155 154 141\nf 155 141 140\nf 139 157 156\nf 139 138 157\nf 138 137 158\nf 138 158 157\nf 180 176 177\nf 180 177 178\nf 180 178 179\nf 180 181 182\nf 180 182 183\nf 180 183 184\nf 180 184 185\nf 180 185 186\nf 180 186 187\nf 180 187 188\nf 180 188 189\nf 180 189 190\nf 180 190 191\nf 180 191 192\nf 180 192 193\nf 180 193 194\nf 180 194 195\nf 180 195 196\nf 180 196 197\nf 180 197 198\nf 180 198 199\nf 180 199 176\nf 196 195 201\nf 196 201 200\nf 197 196 200\nf 197 200 202\nf 203 204 199\nf 203 199 198\nf 198 202 203\nf 198 197 202\nf 204 205 176\nf 204 176 199\nf 205 206 177\nf 205 177 176\nf 208 207 179\nf 208 179 178\nf 207 209 180\nf 207 180 179\nf 182 181 210\nf 182 210 211\nf 181 209 210\nf 181 180 209\nf 183 182 211\nf 183 211 212\nf 206 178 177\nf 206 208 178\nf 184 183 212\nf 184 212 213\nf 185 184 213\nf 185 213 214\nf 215 216 187\nf 215 187 186\nf 186 214 215\nf 186 185 214\nf 216 217 188\nf 216 188 187\nf 217 218 189\nf 217 189 188\nf 220 219 191\nf 220 191 190\nf 219 221 192\nf 219 192 191\nf 194 193 222\nf 194 222 223\nf 193 221 222\nf 193 192 221\nf 195 194 223\nf 195 223 201\nf 218 190 189\nf 218 220 190\nf 202 200 224\nf 225 205 226\nf 228 229 227\nf 225 226 230\nf 225 230 231\nf 203 226 204\nf 202 232 203\nf 204 226 205\nf 231 227 225\nf 207 208 225\nf 233 234 235\nf 237 234 236\nf 205 225 206\nf 206 225 208\nf 240 238 239\nf 225 227 207\nf 240 242 241\nf 244 245 243\nf 201 224 200\nf 229 210 227\nf 227 209 207\nf 228 233 235\nf 247 246 237\nf 235 239 229\nf 233 228 248\nf 233 249 234\nf 250 245 244\nf 235 229 228\nf 243 251 237\nf 251 243 245\nf 244 252 253\nf 234 249 236\nf 250 244 253\nf 236 243 237\nf 254 255 256\nf 240 235 234\nf 228 227 248\nf 226 203 232\nf 212 211 229\nf 233 257 249\nf 233 248 257\nf 234 242 240\nf 258 253 252\nf 241 238 240\nf 258 255 254\nf 246 234 237\nf 202 224 232\nf 246 242 234\nf 258 252 255\nf 247 237 259\nf 259 237 251\nf 209 227 210\nf 235 240 239\nf 229 211 210\nf 227 231 248\nf 239 212 229\nf 230 260 231\nf 226 260 230\nf 261 262 263\nf 239 238 264\nf 265 215 214\nf 265 262 261\nf 264 266 267\nf 265 214 262\nf 263 268 261\nf 262 214 213\nf 263 239 264\nf 263 267 268\nf 269 264 238\nf 224 201 223\nf 236 267 270\nf 236 270 243\nf 232 221 226\nf 218 260 220\nf 249 267 236\nf 226 221 219\nf 220 226 219\nf 248 231 265\nf 271 272 243\nf 260 226 220\nf 267 263 264\nf 263 262 239\nf 264 269 266\nf 267 266 273\nf 244 274 252\nf 268 267 249\nf 213 212 262\nf 232 222 221\nf 276 275 270\nf 222 232 224\nf 252 277 255\nf 270 273 276\nf 224 223 222\nf 271 270 275\nf 268 248 261\nf 257 248 268\nf 249 257 268\nf 274 244 278\nf 244 272 278\nf 217 216 260\nf 243 272 244\nf 277 279 255\nf 248 265 261\nf 270 271 243\nf 260 218 217\nf 270 267 273\nf 277 252 274\nf 256 255 279\nf 265 231 260\nf 216 215 265\nf 262 212 239\nf 216 265 260\nf 292 280 281\nf 292 281 282\nf 292 282 283\nf 292 283 284\nf 292 284 285\nf 292 285 286\nf 292 286 287\nf 292 287 288\nf 292 288 289\nf 292 289 290\nf 292 290 291\nf 292 293 294\nf 292 294 295\nf 292 295 296\nf 292 296 297\nf 292 297 298\nf 292 298 299\nf 292 299 300\nf 292 300 301\nf 292 301 302\nf 292 302 303\nf 292 303 280\nf 283 282 254\nf 283 254 256\nf 282 281 258\nf 282 258 254\nf 250 253 280\nf 250 280 303\nf 281 280 253\nf 281 253 258\nf 245 250 303\nf 245 303 302\nf 251 245 302\nf 251 302 301\nf 246 299 298\nf 246 247 299\nf 247 300 299\nf 247 259 300\nf 296 295 238\nf 296 238 241\nf 297 296 241\nf 297 241 242\nf 298 297 242\nf 298 242 246\nf 259 251 301\nf 259 301 300\nf 295 294 269\nf 295 269 238\nf 294 293 266\nf 294 266 269\nf 275 291 290\nf 275 276 291\nf 276 292 291\nf 276 273 292\nf 293 292 273\nf 293 273 266\nf 271 275 290\nf 271 290 289\nf 274 287 286\nf 274 278 287\nf 278 288 287\nf 278 272 288\nf 284 283 256\nf 284 256 279\nf 285 284 279\nf 285 279 277\nf 286 285 277\nf 286 277 274\nf 272 271 289\nf 272 289 288\nf 326 324 325\nf 306 304 305\nf 306 307 308\nf 306 308 309\nf 306 309 310\nf 306 310 311\nf 306 311 312\nf 306 312 313\nf 306 313 314\nf 306 314 315\nf 306 315 316\nf 306 316 317\nf 306 317 318\nf 306 318 319\nf 306 319 320\nf 306 320 321\nf 306 321 322\nf 306 322 323\nf 306 323 324\nf 306 326 327\nf 306 327 304\nf 306 324 326\nf 340 341 342\nf 330 328 329\nf 330 331 332\nf 330 332 333\nf 330 333 334\nf 330 334 335\nf 330 335 336\nf 330 336 337\nf 330 337 338\nf 330 338 339\nf 330 339 340\nf 330 342 343\nf 330 343 344\nf 330 344 345\nf 330 345 346\nf 330 346 347\nf 330 347 348\nf 330 348 349\nf 330 349 350\nf 330 350 351\nf 330 351 328\nf 330 340 342\nf 345 344 322\nf 345 322 321\nf 344 343 323\nf 344 323 322\nf 325 324 342\nf 325 342 341\nf 343 342 324\nf 343 324 323\nf 326 325 341\nf 326 341 340\nf 327 326 340\nf 327 340 339\nf 304 327 339\nf 304 339 338\nf 305 304 338\nf 305 338 337\nf 336 307 306\nf 336 335 307\nf 306 337 336\nf 306 305 337\nf 335 308 307\nf 335 334 308\nf 334 309 308\nf 334 333 309\nf 333 332 310\nf 333 310 309\nf 332 331 311\nf 332 311 310\nf 313 312 330\nf 313 330 329\nf 331 330 312\nf 331 312 311\nf 314 313 329\nf 314 329 328\nf 315 314 328\nf 315 328 351\nf 316 315 351\nf 316 351 350\nf 317 316 350\nf 317 350 349\nf 348 319 318\nf 348 347 319\nf 318 349 348\nf 318 317 349\nf 347 320 319\nf 347 346 320\nf 346 321 320\nf 346 345 321\nf 357 355 356\nf 352 354 355\nf 352 355 357\nf 359 357 358\nf 359 352 357\nf 353 354 352\nf 352 360 361\nf 352 361 353\nf 362 363 364\nf 365 362 364\nf 361 354 353\nf 366 361 362\nf 366 362 365\nf 366 354 361\nf 367 355 354\nf 367 354 366\nf 367 368 371\nf 372 367 371\nf 369 371 368\nf 370 371 369\nf 355 372 356\nf 355 367 372\nf 356 372 373\nf 356 373 357\nf 373 377 378\nf 373 374 377\nf 375 377 374\nf 376 377 375\nf 357 378 358\nf 357 373 378\nf 358 378 379\nf 358 379 359\nf 380 381 382\nf 380 382 383\nf 379 352 359\nf 360 379 380\nf 360 380 383\nf 360 352 379\nf 362 361 360\nf 362 360 383\nf 374 372 371\nf 374 373 372\nf 380 378 377\nf 380 379 378\nf 369 375 370\nf 382 381 376\nf 382 376 375\nf 364 363 382\nf 364 382 375\nf 364 375 369\nf 383 363 362\nf 383 382 363\nf 369 365 364\nf 369 368 365\nf 374 371 370\nf 374 370 375\nf 380 377 376\nf 380 376 381\nf 366 365 368\nf 366 368 367\nf 386 384 385\nf 386 387 384\nf 389 390 391\nf 389 391 388\nf 385 384 388\nf 385 388 391\nf 391 386 385\nf 391 390 386\nf 387 386 390\nf 387 390 389\nf 389 384 387\nf 389 388 384\n"
+    ]
+  },
+  {
+    "guid": "6294080d-c5f6-a763-9310-2f5ea1b7a2d5",
+    "componentType": "IfcShapeRepresentationComponent",
+    "entityGuid": "5d5ebb4e-ce31-4562-84ca-7319910fb5e3",
+    "representationIdentifier": "Body",
+    "representationFormat": "OBJ",
+    "items": [
+      "v 0.0 -0.1016 0.0\nv 0.0 0.1016 0.0\nv 1.0160000000000013 0.1016 0.0\nv 1.0160000000000013 -0.1016 0.0\nv 1.0160000000000013 -0.1016 2.2352\nv 1.0160000000000013 0.1016 2.2352\nv 2.0320000000000014 -0.1016 2.2352\nv 2.0320000000000014 0.1016 2.2352\nv 2.0320000000000014 -0.1016 0.0\nv 2.0320000000000014 0.1016 0.0\nv 3.048 0.1016 0.0\nv 3.048 -0.1016 0.0\nv 3.048 0.1016 6.096\nv 3.048 -0.1016 6.096\nv 0.0 -0.1016 6.096\nv 0.0 0.1016 6.096\nf 3 0 1\nf 3 1 2\nf 5 4 3\nf 2 5 3\nf 7 6 4\nf 5 7 4\nf 9 8 6\nf 7 9 6\nf 11 8 9\nf 11 9 10\nf 13 11 10\nf 13 10 12\nf 15 14 13\nf 12 15 13\nf 1 0 14\nf 15 1 14\nf 13 14 6\nf 14 4 6\nf 4 14 0\nf 4 0 3\nf 6 8 11\nf 13 6 11\nf 7 15 12\nf 7 5 15\nf 1 15 5\nf 2 1 5\nf 10 9 7\nf 10 7 12\n"
+    ]
+  },
+  {
+    "guid": "fd5eaf75-98e8-f95b-0ad4-5e27e911da0c",
+    "componentType": "IfcShapeRepresentationComponent",
+    "entityGuid": "101695e4-f7c6-46b0-8f70-8a0172df5a17",
+    "representationIdentifier": "Body",
+    "representationFormat": "OBJ",
+    "items": [
+      "v 2.0320000000000014 0.10160000000000065 0.0\nv 2.0320000000000014 -0.10159999999999934 0.0\nv 2.0320000000000014 -0.10159999999999934 2.2352\nv 2.0320000000000014 0.10160000000000065 2.2352\nv 1.0160000000000013 -0.10159999999999934 2.2352\nv 1.0160000000000013 0.10160000000000065 2.2352\nv 1.0160000000000013 -0.10159999999999934 0.0\nv 1.0160000000000013 0.10160000000000065 0.0\nf 1 0 3\nf 2 1 3\nf 2 3 5\nf 4 2 5\nf 4 5 7\nf 6 4 7\nf 6 7 0\nf 1 6 0\nf 3 0 5\nf 0 7 5\nf 4 1 2\nf 4 6 1\n"
+    ]
+  }
+]

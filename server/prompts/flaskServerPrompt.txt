@@ -1,0 +1,44 @@
+You have done this part already:
+I want to create a basic Flask server with the following characteristics.
+The server should run as a headless server, but there should be a uh an admin web page that can perform certain activities on the server.
+The server should allow an operation where a file can be uploaded from the admin page, and that file will be processed through the IFC4 ingester.py to generate a series of component, an array of component objects.
+the server can potentially deliver those objects to one of a number of different data stores that are developed in the data stores directory.
+The first data store's code will be developed in dataStores\fileBased.
+The first data source functionality will be defined as follows.
+When a file is uploaded to the server from the admin page, the file based store will create a new subdirectory in the data store's file based data directory. The name of that folder will be the name of the file that was uploaded.
+The files that are uploaded will be JSON files containing an array of components in the root of the JSON file. The service will write out in the folder named for that file a separate file for each of the components contained in that root array.
+The name of each file will be its entity GUID concatenated with its GUID with an underscore in between them.The type of this file will be specified as .JSON
+
+Now do this: 
+Once a new file has been uploaded and every time the server starts, there is a refresh action. Refresh stores the all the components in memory in a number of different ways.
+The data is developed in a Python memory tree structure with the following organization at the root level. We have the individual files, which we will call models from now on.
+Within each model, there will be a by entity list and a by type list.
+
+The by_entity dictionary, not list will simply uh have as each entry the entity GUID of that object. And then the value is just a list of all the component IDs or GUIs whose entity GUID is the GUID of this dictionary dictionary item.
+
+The by type dictionary will be populated by each components component type with the trailing component on the component type string removed. So an IfcDoorStyleComponent will be listed under the IfcDoorStyle entry. In this way we are inferring the type of the entity pointed to by that component. 
+And for each class listing we will have an array of components of that type.
+
+Additionally there is a by_guid list that lists each component on a dictionary by its internal guid parameter.
+
+The server should have an end point where I can query for objects, in these and related manners: 
+
+/entities?models=[HelloWallIFCjsonC-2x3]&entity_types=[IfcWallAttributes, IfcObjectDefinition, ...] => [EntityGUID1, EntityGUID2, ...]
+
+the entities endpoing accepts, optionally:
+models=[nameOfModelOnServer1, nameOfModelOnServer2]. If no models are specified, all models are used, queried, etc.
+entity_types=[IfcWallAttributes, IfcObjectDefinition, ...]. If no entity_types parameter is given, all entity_types are processed.
+entities=[GUID1, GUID2, ...] a list of entities. If no entities parameter is included, all entites are used.
+components=[GUID1, GUID2, ...] a list of component IDs per above
+
+similarly once I have a set of entities I can issue the following
+
+/guids?models=[HelloWallIFCjsonC-2x3]&entity_guids=[GUID1, GUId2, ...]&entity_types=[IfcWallAttributes, IfcObjectDefinition, ...] => [EntityGUID1, EntityGUID2, ...]
+
+The components end point retrieves a list of component IDs, filtered by the specifed parameters.
+
+components?guids=[GUID1, GUI2, ...] returns the data associated with these GUIDs as a json string, with an array of the component contents as dictionaries in this array
+
+
+
+

@@ -109,7 +109,6 @@ def upload_file():
             os.remove(json_path)
             
             return jsonify({
-                'success': True,
                 'filename': json_filename,
                 'entities_count': len(json_objects),
                 'stored_count': result.get('count', 0),
@@ -135,7 +134,6 @@ def upload_file():
             os.remove(file_path)
             
             return jsonify({
-                'success': True,
                 'filename': filename,
                 'entities_count': len(json_objects),
                 'stored_count': result.get('count', 0),
@@ -158,53 +156,51 @@ def status():
 @app.route('/api/stores', methods=['GET'])
 def list_stores():
     """List available data stores"""
-    return jsonify({
-        'stores': [
-            {
-                'name': 'fileBased',
-                'description': 'File-based data store'
-            }
-        ]
-    })
+    return jsonify([
+        {
+            'name': 'fileBased',
+            'description': 'File-based data store'
+        }
+    ])
 
-@app.route('/api/entities', methods=['GET'])
-def query_entities():
+@app.route('/api/entityGuids', methods=['GET'])
+def query_entity_guids():
     """Query for entity GUIDs
     
     Parameters:
     - models: comma-separated list of model names (optional)
     - entity_types: comma-separated list of entity types (optional)
-    - components: comma-separated list of component GUIDs (optional)
     
-    Returns: List of entity GUIDs matching criteria
+    Returns: Dictionary mapping model names to arrays of entity GUIDs
     """
     try:
         # Parse query parameters
         models = request.args.get('models', '')
         entity_types = request.args.get('entity_types', '')
-        components = request.args.get('components', '')
         
         models = [m.strip() for m in models.split(',')] if models else None
         entity_types = [t.strip() for t in entity_types.split(',')] if entity_types else None
-        components = [c.strip() for c in components.split(',')] if components else None
         
-        # Query memory tree
-        entity_guids = memory_tree.get_entity_guids(
-            models=models,
-            entity_types=entity_types,
-            components=components
-        )
+        # If no specific models requested, use all available models
+        if not models:
+            models = memory_tree.get_models()
         
-        return jsonify({
-            'success': True,
-            'count': len(entity_guids),
-            'entity_guids': entity_guids
-        })
+        # Query and organize results by model
+        result_by_model = {}
+        for model_name in models:
+            entity_guids = memory_tree.get_entity_guids(
+                models=[model_name],
+                entity_types=entity_types
+            )
+            if entity_guids:
+                result_by_model[model_name] = entity_guids
+        
+        return jsonify(result_by_model)
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-@app.route('/api/guids', methods=['GET'])
-def query_guids():
+@app.route('/api/componentGuids', methods=['GET'])
+def query_component_guids():
     """Query for component GUIDs
     
     Parameters:
@@ -212,7 +208,7 @@ def query_guids():
     - entity_guids: comma-separated list of entity GUIDs (optional)
     - entity_types: comma-separated list of entity types (optional)
     
-    Returns: List of component GUIDs matching criteria
+    Returns: Dictionary mapping model names to arrays of component GUIDs
     """
     try:
         # Parse query parameters
@@ -224,18 +220,22 @@ def query_guids():
         entity_guids = [e.strip() for e in entity_guids.split(',')] if entity_guids else None
         entity_types = [t.strip() for t in entity_types.split(',')] if entity_types else None
         
-        # Query memory tree
-        component_guids = memory_tree.get_component_guids(
-            models=models,
-            entity_guids=entity_guids,
-            entity_types=entity_types
-        )
+        # If no specific models requested, use all available models
+        if not models:
+            models = memory_tree.get_models()
         
-        return jsonify({
-            'success': True,
-            'count': len(component_guids),
-            'component_guids': component_guids
-        })
+        # Query and organize results by model
+        result_by_model = {}
+        for model_name in models:
+            component_guids = memory_tree.get_component_guids(
+                models=[model_name],
+                entity_guids=entity_guids,
+                entity_types=entity_types
+            )
+            if component_guids:
+                result_by_model[model_name] = component_guids
+        
+        return jsonify(result_by_model)
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
@@ -244,27 +244,23 @@ def get_components():
     """Retrieve component data by GUIDs
     
     Parameters:
-    - guids: comma-separated list of component GUIDs
+    - componentGuids: comma-separated list of component GUIDs
     
     Returns: Array of component dictionaries
     """
     try:
         # Parse query parameters
-        guids = request.args.get('guids', '')
+        component_guids = request.args.get('componentGuids', '')
         
-        if not guids:
-            return jsonify({'error': 'guids parameter is required'}), 400
+        if not component_guids:
+            return jsonify({'error': 'componentGuids parameter is required'}), 400
         
-        guids = [g.strip() for g in guids.split(',')]
+        component_guids = [g.strip() for g in component_guids.split(',')]
         
         # Retrieve components
-        components = memory_tree.get_components(guids)
+        components = memory_tree.get_components(component_guids)
         
-        return jsonify({
-            'success': True,
-            'count': len(components),
-            'components': components
-        })
+        return jsonify(components)
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
@@ -274,7 +270,6 @@ def refresh_memory():
     try:
         count = refresh_memory_tree()
         return jsonify({
-            'success': True,
             'models_loaded': count,
             'message': f'Memory tree refreshed with {count} model(s)'
         })
@@ -285,11 +280,7 @@ def refresh_memory():
 def list_models():
     """List all loaded models"""
     models = memory_tree.get_models()
-    return jsonify({
-        'success': True,
-        'count': len(models),
-        'models': models
-    })
+    return jsonify(models)
 
 @app.route('/api/entity_types', methods=['GET'])
 def list_entity_types():
@@ -306,11 +297,7 @@ def list_entity_types():
         
         types = memory_tree.get_entity_types(models=models)
         
-        return jsonify({
-            'success': True,
-            'count': len(types),
-            'entity_types': types
-        })
+        return jsonify(types)
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
@@ -325,8 +312,8 @@ if __name__ == '__main__':
     print("🔍 Viewer Page: http://localhost:5000/viewer")
     print("\n📡 API Endpoints:")
     print("   POST   /api/upload                  - Upload & process IFC/JSON files")
-    print("   GET    /api/entities                - Query entity GUIDs")
-    print("   GET    /api/guids                   - Query component GUIDs")
+    print("   GET    /api/entityGuids             - Query entity GUIDs")
+    print("   GET    /api/componentGuids         - Query component GUIDs")
     print("   GET    /api/components              - Retrieve component data")
     print("   GET    /api/models                  - List all models")
     print("   GET    /api/entity_types            - List entity types")

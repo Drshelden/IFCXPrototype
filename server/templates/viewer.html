@@ -465,7 +465,7 @@
                 <input 
                     type="text" 
                     id="queryInput" 
-                    placeholder="Enter REST query (e.g., http://localhost:5000/api/entities?entity_types=IfcWall,IfcShapeRepresentation or /api/guids?models=HelloWall)"
+                    placeholder="Enter REST query (e.g., http://localhost:5000/api/entities?entity_types=IfcWall,IfcShapeRepresentation or /api/componentGuids?models=HelloWall)"
                 >
                 <button id="executeBtn">Execute</button>
                 <button id="clearBtn" title="Clear results">Clear</button>
@@ -879,6 +879,18 @@
             console.log(`   Full component data:`, componentData);
             console.log(`   Component data keys:`, Object.keys(componentData));
 
+            // CHECK IF SHAPES ALREADY RENDERED: If any mesh for this component exists in objects3d, skip rendering
+            let alreadyRendered = false;
+            objects3d.forEach((mesh, meshId) => {
+                if (meshId.startsWith(componentGuid + '-item-')) {
+                    alreadyRendered = true;
+                }
+            });
+            if (alreadyRendered) {
+                console.log(`✓ Shapes for ${componentGuid} already rendered, skipping`);
+                return;
+            }
+
             // Check if component has Items array (IfcShapeRepresentationComponent)
             const items = componentData.Items || componentData.items;
             if (!Array.isArray(items) || items.length === 0) {
@@ -1055,15 +1067,8 @@
                 return;
             }
 
-            const info = {
-                'Total Entities': Object.keys(data.entities || {}).length,
-                'Total Components': Object.keys(data.components || {}).length,
-                'Query Info': data.queryInfo || 'No query info',
-                'Raw Entities': Object.keys(data.entities || {}),
-                'Sample Component': Object.values(data.components || {})[0] || null
-            };
-
-            infoContainer.innerHTML = `<pre style="color: #0098ff; font-size: 11px; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; line-height: 1.4; margin: 0;">${JSON.stringify(info, null, 2)}</pre>`;
+            // Just display the raw response data as returned by the API
+            infoContainer.innerHTML = `<pre style="color: #0098ff; font-size: 11px; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; line-height: 1.4; margin: 0;">${JSON.stringify(data, null, 2)}</pre>`;
         }
 
         function extractModelName(url) {
@@ -1090,33 +1095,79 @@
                 return;
             }
 
-            const entities = Object.keys(data.entities);
-            console.log('buildTree: Building tree with', entities.length, 'entities');
+            // Support for both old single-model and new multi-model formats
+            let models = data.models || [];
+            let entitiesByModel = data.entities || {};
             
-            if (entities.length === 0) {
-                console.warn('buildTree: No entities found');
-                container.innerHTML = `<div class="empty-state">
-                    <div>
-                        <div style="margin-bottom: 12px;"><strong>No results found</strong></div>
-                        <div style="margin: 8px 0; font-size: 12px; color: #666;">
-                            Try one of these:<br>
-                            <code>/api/guids</code> - All components<br>
-                            <code>/api/guids?entity_types=IfcDoor</code> - Different type
-                        </div>
-                    </div>
-                </div>`;
-                return;
+            console.log('buildTree DEBUG INCOMING:');
+            console.log('  data.models:', data.models);
+            console.log('  entitiesByModel keys:', Object.keys(entitiesByModel));
+            console.log('  full entitiesByModel:', JSON.stringify(entitiesByModel, null, 2).substring(0, 2000));
+            
+            // If no models array, reconstruct from entity keys
+            if (!data.models || data.models.length === 0) {
+                console.log('  No data.models provided, attempting to derive from data.entities...');
+                // When data.entities is {modelName: {entityGuid: [compGuids]}} format
+                const firstKey = Object.keys(entitiesByModel)[0];
+                if (firstKey) {
+                    const firstValue = entitiesByModel[firstKey];
+                    console.log('  First key:', firstKey, 'First value type:', typeof firstValue);
+                    
+                    if (typeof firstValue === 'object' && !Array.isArray(firstValue)) {
+                        // Model-organized format
+                        models = Object.keys(entitiesByModel);
+                        console.log('  ✓ Detected model-organized: models =', models);
+                    } else {
+                        // Fallback: wrap in a default model
+                        console.log('  ⚠ Not model-organized, wrapping in default model');
+                        const modelName = data.modelName || 'DefaultModel';
+                        entitiesByModel = { [modelName]: entitiesByModel };
+                        models = [modelName];
+                        console.log('  Wrapped as:', { [modelName]: { ...Object.keys(entitiesByModel[modelName]) } });
+                    }
+                }
             }
             
-            const componentCount = Object.values(data.entities).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
-            if (componentCount === 0) {
-                console.warn('buildTree: No components found');
+            console.log('buildTree: After normalization - models:', models, ', entitiesByModel:', Object.keys(entitiesByModel));
+            
+            // SAFETY CHECK: If models list is empty but we have entities, use entity keys as models
+            if (models.length === 0 && Object.keys(entitiesByModel).length > 0) {
+                console.log('  SAFETY: models array empty, deriving from entitiesByModel...');
+                models = Object.keys(entitiesByModel);
+                console.log('  → Derived models:', models);
+            }
+            
+            // Calculate total component count across all models
+            let totalComponentCount = 0;
+            let totalEntityCount = 0;
+            let debugInfo = [];
+            models.forEach(modelName => {
+                const modelEntities = entitiesByModel[modelName] || {};
+                const entityCount = Object.keys(modelEntities).length;
+                totalEntityCount += entityCount;
+                debugInfo.push(`Model "${modelName}": entities=${entityCount}`);
+                Object.keys(modelEntities).forEach(entityGuid => {
+                    const comps = modelEntities[entityGuid];
+                    const isArray = Array.isArray(comps);
+                    const count = isArray ? comps.length : 0;
+                    totalComponentCount += count;
+                });
+            });
+            
+            console.log('Total entity count:', totalEntityCount);
+            console.log('Total component count:', totalComponentCount);
+            console.log('Debug breakdown:', debugInfo.join('\n'));
+            
+            // If we have entities but no components, that's OK - just show the entities
+            const displayCount = totalComponentCount > 0 ? totalComponentCount : totalEntityCount;
+            
+            if (totalEntityCount === 0 && totalComponentCount === 0) {
+                console.warn('buildTree: No entities or components found');
                 container.innerHTML = `<div class="empty-state">
                     <div>
-                        <div style="margin-bottom: 12px;"><strong>No components found</strong></div>
+                        <div style="margin-bottom: 12px;"><strong>No data found</strong></div>
                         <div style="margin: 8px 0; font-size: 12px; color: #666;">
-                            Your query returned entities but no data.<br>
-                            Try: <code>/api/guids</code> or check 
+                            Try: <code>/api/componentGuids</code> or check 
                             <code>/api/entity_types</code> for available types
                         </div>
                     </div>
@@ -1125,34 +1176,40 @@
             }
 
             // Create root node
-            const rootItem = createTreeItem('IFCxPrototype', 'root', componentCount);
+            const rootItem = createTreeItem('IFCxPrototype', 'root', displayCount);
             const rootChildren = document.createElement('div');
             rootChildren.className = 'tree-children';
 
-            // Get model name from current query or data
-            const modelName = data.modelName || extractModelName(data.queryUrl || '');
-            
-            // Create model node
-            const modelItem = createTreeItem(modelName, 'model', componentCount);
-            const modelChildren = document.createElement('div');
-            modelChildren.className = 'tree-children';
+            // LOOP THROUGH EACH MODEL AND CREATE BRANCHES
+            models.forEach(modelName => {
+                const modelEntities = entitiesByModel[modelName] || {};
+                const entityGuids = Object.keys(modelEntities);
+                const modelComponentCount = entityGuids.reduce((sum, entityGuid) => {
+                    const comps = modelEntities[entityGuid];
+                    return sum + (Array.isArray(comps) ? comps.length : 0);
+                }, 0);
+                
+                // Create model node
+                const modelItem = createTreeItem(modelName, 'model', modelComponentCount);
+                const modelChildren = document.createElement('div');
+                modelChildren.className = 'tree-children';
 
-            // Build entity → component tree under model
-            Object.keys(data.entities).sort().forEach(entityGuid => {
-                const entityItem = createTreeItem(entityGuid, 'entity', data.entities[entityGuid].length);
-                const entityChildren = document.createElement('div');
-                entityChildren.className = 'tree-children';
+                // Build entity → component tree under model
+                entityGuids.sort().forEach(entityGuid => {
+                    const entityItem = createTreeItem(entityGuid, 'entity', modelEntities[entityGuid].length);
+                    const entityChildren = document.createElement('div');
+                    entityChildren.className = 'tree-children';
 
-                data.entities[entityGuid].forEach((componentGuid, idx) => {
-                    const componentItem = createTreeItem(componentGuid, 'component', null);
-                    const componentChildren = document.createElement('div');
-                    componentChildren.className = 'tree-children';
+                    modelEntities[entityGuid].forEach((componentGuid, idx) => {
+                        const componentItem = createTreeItem(componentGuid, 'component', null);
+                        const componentChildren = document.createElement('div');
+                        componentChildren.className = 'tree-children';
 
-                    // Add component properties
-                    if (data.components && data.components[componentGuid]) {
-                        const comp = data.components[componentGuid];
-                        Object.keys(comp).slice(0, 10).forEach(key => {
-                            const propItem = createPropertyItem(key, comp[key]);
+                        // Add component properties
+                        if (data.components && data.components[componentGuid]) {
+                            const comp = data.components[componentGuid];
+                            Object.keys(comp).slice(0, 10).forEach(key => {
+                                const propItem = createPropertyItem(key, comp[key]);
                             componentChildren.appendChild(propItem);
                         });
                         if (Object.keys(comp).length > 10) {
@@ -1217,13 +1274,13 @@
                 const checkbox = entityItem.querySelector('.tree-checkbox');
                 checkbox.addEventListener('change', (e) => {
                     if (e.target.checked) {
-                        data.entities[entityGuid].forEach(guid => {
+                        modelEntities[entityGuid].forEach(guid => {
                             selectedGuids.add(guid);
                             // Render shapes for all components in this entity
                             renderComponentShapes(guid, data.components?.[guid]);
                         });
                     } else {
-                        data.entities[entityGuid].forEach(guid => selectedGuids.delete(guid));
+                        modelEntities[entityGuid].forEach(guid => selectedGuids.delete(guid));
                     }
                     // Update child checkboxes visually
                     const childCheckboxes = entityItem.querySelectorAll('.tree-children .tree-item .tree-checkbox');
@@ -1231,50 +1288,47 @@
                     updateComponentVisibility();
                     updateTableForSelection();
                 });
-            });
+                });
 
-            modelItem.appendChild(modelChildren);
-            rootChildren.appendChild(modelItem);
+                modelItem.appendChild(modelChildren);
+                rootChildren.appendChild(modelItem);
 
-            // Toggle expand on arrow click for model
-            const modelToggle = modelItem.querySelector('.tree-toggle');
-            if (modelToggle) {
-                modelToggle.addEventListener('click', (e) => {
+                // Toggle expand on arrow click for model
+                const modelToggle = modelItem.querySelector('.tree-toggle');
+                if (modelToggle) {
+                    modelToggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        modelItem.classList.toggle('expanded');
+                    });
+                }
+
+                // Toggle expand on text click for model
+                modelItem.addEventListener('click', (e) => {
+                    if (e.target.closest('.tree-toggle, .tree-checkbox')) return;
                     e.stopPropagation();
                     modelItem.classList.toggle('expanded');
                 });
-            }
 
-            // Toggle expand on text click for model
-            modelItem.addEventListener('click', (e) => {
-                if (e.target.closest('.tree-toggle, .tree-checkbox')) return;
-                e.stopPropagation();
-                modelItem.classList.toggle('expanded');
-            });
-
-            // Checkbox for model (select/deselect all components in model)
-            const modelCheckbox = modelItem.querySelector('.tree-checkbox');
-            modelCheckbox.addEventListener('change', (e) => {
-                Object.keys(data.entities).forEach(entityGuid => {
-                    data.entities[entityGuid].forEach(guid => {
-                        if (e.target.checked) {
-                            selectedGuids.add(guid);
-                            renderComponentShapes(guid, data.components?.[guid]);
-                        } else {
-                            selectedGuids.delete(guid);
-                        }
+                // Checkbox for model (select/deselect all components in model)
+                const modelCheckbox = modelItem.querySelector('.tree-checkbox');
+                modelCheckbox.addEventListener('change', (e) => {
+                    Object.keys(modelEntities).forEach(entityGuid => {
+                        modelEntities[entityGuid].forEach(guid => {
+                            if (e.target.checked) {
+                                selectedGuids.add(guid);
+                                renderComponentShapes(guid, data.components?.[guid]);
+                            } else {
+                                selectedGuids.delete(guid);
+                            }
+                        });
                     });
+                    // Update child checkboxes visually
+                    const childCheckboxes = modelItem.querySelectorAll('.tree-children .tree-checkbox');
+                    childCheckboxes.forEach(cb => cb.checked = e.target.checked);
+                    updateComponentVisibility();
+                    updateTableForSelection();
                 });
-                // Update child checkboxes visually
-                const childCheckboxes = modelItem.querySelectorAll('.tree-children .tree-checkbox');
-                childCheckboxes.forEach(cb => cb.checked = e.target.checked);
-                updateComponentVisibility();
-                updateTableForSelection();
-            });
-
-            rootItem.appendChild(rootChildren);
-            container.appendChild(rootItem);
-
+            }); // CLOSE: models.forEach
             // Toggle expand on arrow click for root
             const rootToggle = rootItem.querySelector('.tree-toggle');
             if (rootToggle) {
@@ -1294,14 +1348,18 @@
             // Checkbox for root (select/deselect all)
             const rootCheckbox = rootItem.querySelector('.tree-checkbox');
             rootCheckbox.addEventListener('change', (e) => {
-                Object.keys(data.entities).forEach(entityGuid => {
-                    data.entities[entityGuid].forEach(guid => {
-                        if (e.target.checked) {
-                            selectedGuids.add(guid);
-                            renderComponentShapes(guid, data.components?.[guid]);
-                        } else {
-                            selectedGuids.delete(guid);
-                        }
+                // Iterate through all models and select/deselect all components
+                models.forEach(modelName => {
+                    const modelEntities = entitiesByModel[modelName] || {};
+                    Object.keys(modelEntities).forEach(entityGuid => {
+                        modelEntities[entityGuid].forEach(guid => {
+                            if (e.target.checked) {
+                                selectedGuids.add(guid);
+                                renderComponentShapes(guid, data.components?.[guid]);
+                            } else {
+                                selectedGuids.delete(guid);
+                            }
+                        });
                     });
                 });
                 // Update child checkboxes visually
@@ -1311,9 +1369,14 @@
                 updateTableForSelection();
             });
 
-            // Expand root and model by default
+            // Append tree to container
+            rootItem.appendChild(rootChildren);
+            container.appendChild(rootItem);
+            
+            // Expand root and all models by default
             rootItem.classList.add('expanded');
-            modelItem.classList.add('expanded');
+            const modelItems = rootChildren.querySelectorAll('.tree-item');
+            modelItems.forEach(item => item.classList.add('expanded'));
         }
 
         function createTreeItem(label, type, count) {
@@ -1355,16 +1418,48 @@
         }
 
         function updateComponentVisibility() {
+            console.log('updateComponentVisibility called, selectedGuids:', Array.from(selectedGuids));
+            // Remove meshes that are no longer selected
+            const meshesToRemove = [];
             objects3d.forEach((mesh, guid) => {
-                // Handle both direct component GUIDs and shape mesh IDs
+                // Check if this mesh should be visible
+                let shouldBeVisible = false;
+                
                 if (selectedGuids.has(guid)) {
-                    mesh.visible = true;
+                    shouldBeVisible = true;
+                    console.log(`  ${guid}: directly selected - VISIBLE`);
                 } else {
                     // Check if this is a shape mesh (format: componentGuid-item-idx)
-                    const componentGuid = guid.split('-item-')[0];
-                    mesh.visible = selectedGuids.has(componentGuid);
+                    const componentGuid = guid.includes('-item-') ? guid.split('-item-')[0] : guid;
+                    if (selectedGuids.has(componentGuid)) {
+                        shouldBeVisible = true;
+                        console.log(`  ${guid}: component selected - VISIBLE`);
+                    } else {
+                        console.log(`  ${guid}: NOT selected - REMOVING`);
+                    }
+                }
+                
+                if (!shouldBeVisible) {
+                    // Mark mesh for removal
+                    meshesToRemove.push(guid);
+                    console.log(`  Removing mesh from scene: ${guid}`);
+                    scene.remove(mesh);
+                } else {
+                    // Make visible
+                    mesh.visible = true;
                 }
             });
+            
+            // Remove meshes from tracking
+            meshesToRemove.forEach(guid => {
+                objects3d.delete(guid);
+                console.log(`  Deleted from objects3d: ${guid}`);
+            });
+            
+            console.log(`Total meshes remaining: ${objects3d.size}, selectedGuids size: ${selectedGuids.size}`);
+            
+            // Force an immediate render after visibility changes
+            renderer.render(scene, camera);
         }
 
         function updateTableForSelection() {
@@ -1438,6 +1533,18 @@
             status.innerHTML = 'Loading<span class="loading"></span>';
 
             try {
+                // CLEAR ALL PRIOR DATA AND MESHES
+                // Remove all 3D objects from scene
+                objects3d.forEach(mesh => scene.remove(mesh));
+                objects3d.clear();
+                selectedGuids.clear();
+                
+                // Clear UI
+                document.getElementById('treeContainer').innerHTML = '';
+                updateInformationView(null);
+                updateTable([]);
+                currentData = null;
+
                 // Parse the query - support full URLs with server/port
                 let url = input;
                 
@@ -1470,177 +1577,161 @@
                     throw new Error(apiData.error);
                 }
 
+                // Display raw API response in Info tab
+                updateInformationView(apiData);
+
                 // Build data structure for tree
                 const data = {
                     entities: {},
                     components: {}
                 };
 
-                // Determine response type and handle accordingly
-                if (apiData.component_guids) {
-                    // This is from /guids or /entities endpoint returning component GUIDs
-                    const componentGuids = apiData.component_guids;
-                    console.log('Processing component_guids response:', componentGuids.length, 'guids');
-                    data.entities['Result'] = componentGuids;
+                // Detect response type and handle accordingly
+                let allEntityGuids = [];
+                const urlObj = new URL(url);
+                const endpoint = urlObj.pathname;
 
-                    // Fetch component data
-                    if (componentGuids.length > 0) {
-                        // Extract server from current URL
-                        const urlObj = new URL(url);
-                        const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
-                        
-                        const compResponse = await fetch(
-                            baseUrl + '/api/components?guids=' + 
-                            componentGuids.slice(0, 100).join(',')
-                        );
-                        const compData = await compResponse.json();
-                        console.log('Component data response:', compData.components ? compData.components.length : 0, 'components');
-                        if (compData.components) {
-                            compData.components.forEach(comp => {
-                                data.components[comp.componentGuid] = comp;
+                // Handle entityGuids endpoint (model-organized dictionary)
+                if (endpoint.includes('/entityGuids')) {
+                    // Format: {modelName: [guid1, guid2, ...]}
+                    // This endpoint returns just entity GUIDs, no component data
+                    console.log('Processing entityGuids response:', Object.keys(apiData));
+                    
+                    // ORGANIZE DATA BY MODEL: entities structure will be {modelName: {entityGuid: []}}
+                    data.entities = {};
+                    data.models = Object.keys(apiData).filter(key => Array.isArray(apiData[key]));
+                    console.log('Set data.models to:', data.models);
+                    
+                    // Populate entity guids from all models
+                    for (const [modelName, guids] of Object.entries(apiData)) {
+                        if (Array.isArray(guids)) {
+                            console.log(`Found ${guids.length} entity guids in model ${modelName}`);
+                            // Initialize model entry in entities with each entity guid as a key
+                            data.entities[modelName] = {};
+                            guids.forEach(entityGuid => {
+                                data.entities[modelName][entityGuid] = []; // Empty array - no component data from this endpoint
                             });
+                            console.log(`Initialized data.entities[${modelName}] with ${guids.length} entity keys`);
                         }
                     }
+                    console.log('✓ Entity GUIDs loaded - no component data expected from /api/entityGuids endpoint');
                 }
-                else if (apiData.entity_guids !== undefined) {
-                    // This is from /entities endpoint returning entity GUIDs
-                    const entityGuids = apiData.entity_guids;
-                    console.log('Processing entity_guids response:', entityGuids.length, 'entities');
+                // Handle componentGuids endpoint (model-organized dictionary)
+                else if (endpoint.includes('/componentGuids')) {
+                    // Format: {modelName: [guid1, guid2, ...]}
+                    console.log('Processing model-organized componentGuids response:', Object.keys(apiData));
                     
-                    if (entityGuids.length === 0) {
-                        // Entity guids is empty - check if there's a component_context 
-                        // or fetch based on the query parameters
-                        console.log('No entity GUIDs returned, treating as result group');
-                        data.entities['Components'] = [];
-                    } else {
-                        // Build the tree with entities as top level
-                        for (let i = 0; i < entityGuids.length; i++) {
-                            data.entities[entityGuids[i]] = [];
+                    // ORGANIZE DATA BY MODEL
+                    data.entities = {};
+                    data.models = Object.keys(apiData).filter(key => Array.isArray(apiData[key]));
+                    console.log('Set data.models to:', data.models);
+                    
+                    // Collect all component guids from all models
+                    let allComponentGuids = [];
+                    for (const [modelName, guids] of Object.entries(apiData)) {
+                        if (Array.isArray(guids)) {
+                            allComponentGuids.push(...guids);
+                            console.log(`Found ${guids.length} component guids in model ${modelName}`);
+                            // Initialize model entry in entities
+                            data.entities[modelName] = {};
                         }
                     }
                     
-                    // Now fetch all components for these entities
-                    const urlObj = new URL(url);
                     const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
                     
-                    // If we have entity GUIDs, query for their components
-                    // Otherwise, just fetch based on the query parameters
-                    let componentGuidsToFetch = [];
-                    
-                    if (entityGuids.length > 0) {
-                        console.log('Fetching components for', entityGuids.length, 'entities');
-                        const entityGuidsParam = entityGuids.slice(0, 50).join(',');
-                        const compResponse = await fetch(
-                            baseUrl + '/api/guids?entity_guids=' + entityGuidsParam
-                        );
-                        const guidsData = await compResponse.json();
-                        console.log('Component guids for entities:', guidsData.component_guids ? guidsData.component_guids.length : 0, 'guids');
-                        componentGuidsToFetch = guidsData.component_guids || [];
-                    } else {
-                        // Try alternate approach - use the same query params but for /api/guids
-                        const urlObj = new URL(url);
-                        const queryParams = urlObj.search;
-                        console.log('EntityGuids empty, trying fallback. Query params:', queryParams);
-                        console.log('Will fetch from:', baseUrl + '/api/guids' + queryParams);
-                        
-                        if (queryParams && queryParams.length > 1) {
-                            try {
-                                const guidsUrl = baseUrl + '/api/guids' + queryParams;
-                                console.log('Fetching from:', guidsUrl);
-                                const guidsResponse = await fetch(guidsUrl);
-                                const guidsData = await guidsResponse.json();
-                                console.log('Full response from /api/guids:', guidsData);
-                                console.log('Component guids from query params:', guidsData.component_guids ? guidsData.component_guids.length : 0, 'guids');
-                                componentGuidsToFetch = guidsData.component_guids || [];
-                            } catch (e) {
-                                console.error('Error fetching guids:', e);
+                    if (allComponentGuids.length > 0) {
+                        const compUrl = baseUrl + '/api/components?componentGuids=' + 
+                            allComponentGuids.slice(0, 100).join(',');
+                        try {
+                            const compResponse = await fetch(compUrl);
+                            const compData = await compResponse.json();
+                            
+                            if (Array.isArray(compData)) {
+                                compData.forEach(comp => {
+                                    const entityGuid = comp.entityGuid || 'Unknown';
+                                    const modelName = comp.model || 'DefaultModel';
+                                    
+                                    // Organize by model, then by entity
+                                    if (!data.entities[modelName]) {
+                                        data.entities[modelName] = {};
+                                    }
+                                    if (!data.entities[modelName][entityGuid]) {
+                                        data.entities[modelName][entityGuid] = [];
+                                    }
+                                    if (!data.entities[modelName][entityGuid].includes(comp.componentGuid)) {
+                                        data.entities[modelName][entityGuid].push(comp.componentGuid);
+                                    }
+                                    data.components[comp.componentGuid] = comp;
+                                });
                             }
-                        } else {
-                            console.log('No query params to use for fallback');
+                        } catch (e) {
+                            console.error('Error fetching component data:', e);
                         }
                     }
-                    
-                    console.log('Total component guids to fetch:', componentGuidsToFetch.length);
-                    
-                    if (componentGuidsToFetch.length > 0) {
-                        // Now fetch the actual component data
-                        const compUrl = baseUrl + '/api/components?guids=' + 
-                            componentGuidsToFetch.slice(0, 100).join(',');
-                        console.log('Fetching component data from:', compUrl.substring(0, 100) + '...');
-                        
-                        const dataResponse = await fetch(compUrl);
-                        const compData = await dataResponse.json();
-                        console.log('Component data response:', compData);
-                        console.log('Final component data:', compData.components ? compData.components.length : 0, 'components');
-                        
-                        if (compData.components) {
-                            compData.components.forEach(comp => {
-                                const entityId = comp.entityGuid || Object.keys(data.entities)[0];
-                                console.log('Adding component', comp.componentGuid.substring(0, 8), 'to entity', entityId.substring(0, 20));
-                                if (data.entities[entityId]) {
-                                    data.entities[entityId].push(comp.componentGuid);
-
-                                } else if (data.entities['Components']) {
-                                    data.entities['Components'].push(comp.componentGuid);
-                                }
-                                data.components[comp.componentGuid] = comp;
-                            });
-                        }
-                    }
-                }
-                else if (apiData.components) {
-                    // Direct component data response
-                    console.log('Processing direct components response:', apiData.components.length, 'components');
-                    data.entities['Result'] = apiData.components.map(c => c.componentGuid);
-                    apiData.components.forEach(comp => {
-                        data.components[comp.componentGuid] = comp;
-                    });
-                }
-                else if (apiData.models) {
-                    // Models list response
-                    console.log('Processing models response:', apiData.models.length, 'models');
-                    data.entities['Models'] = apiData.models || [];
-                }
-                else if (apiData.entity_types) {
-                    // Entity types response
-                    console.log('Processing entity_types response:', apiData.entity_types.length, 'types');
-                    data.entities['Entity Types'] = apiData.entity_types || [];
-                }
-                else if (Array.isArray(apiData.component_guids)) {
-                    // Array response (component GUIDs)
-                    console.log('Processing array of component_guids:', apiData.component_guids.length);
-                    data.entities['Result'] = apiData.component_guids;
                 }
                 else if (Array.isArray(apiData)) {
-                    // Direct array response
-                    console.log('Processing direct array response:', apiData.length);
-                    data.entities['Result'] = apiData;
+                    // Direct array response (models, entity_types, or components)
+                    console.log('Processing array response:', apiData.length);
+                    
+                    if (endpoint.includes('/components') && apiData.length > 0 && apiData[0].componentGuid) {
+                        // Component data array - organize by model and entity GUID
+                        // Collect models from the component data
+                        const modelsInData = [...new Set(apiData.map(comp => comp.model || 'DefaultModel'))];
+                        data.models = modelsInData;
+                        
+                        // Organize by model, then by entity
+                        apiData.forEach(comp => {
+                            const entityGuid = comp.entityGuid || 'Unknown';
+                            const modelName = comp.model || 'DefaultModel';
+                            
+                            if (!data.entities[modelName]) {
+                                data.entities[modelName] = {};
+                            }
+                            if (!data.entities[modelName][entityGuid]) {
+                                data.entities[modelName][entityGuid] = [];
+                            }
+                            if (!data.entities[modelName][entityGuid].includes(comp.componentGuid)) {
+                                data.entities[modelName][entityGuid].push(comp.componentGuid);
+                            }
+                            data.components[comp.componentGuid] = comp;
+                        });
+                    } else if (endpoint.includes('/models')) {
+                        // Models list
+                        data.entities['Models'] = apiData;
+                        data.models = ['Models'];
+                    } else if (endpoint.includes('/entity_types')) {
+                        // Entity types list
+                        data.entities['Entity Types'] = apiData;
+                        data.models = ['Entity Types'];
+                    } else {
+                        // Unknown array
+                        data.entities['Result'] = apiData;
+                        data.models = ['Result'];
+                    }
                 }
                 else {
-                    console.warn('Unknown response type, printing full response:', apiData);
+                    console.warn('Unknown response type, data structure will be empty');
+                    data.modelName = 'Unknown';
                 }
 
-                // Extract model name from the query URL
-                try {
-                    const urlObj = new URL(url);
-                    data.modelName = urlObj.searchParams.get('models') || urlObj.searchParams.get('model');
-                    if (!data.modelName) {
-                        // Try to extract from path or use default
-                        const pathParts = urlObj.pathname.split('/');
-                        data.modelName = pathParts[pathParts.length - 1] || 'DefaultModel';
-                    }
-                } catch (e) {
-                    data.modelName = 'DefaultModel';
-                }
-                data.queryUrl = url;
-
-                updateUI(data);
+                // Only update tree, not info (info is already updated with raw response)
+                console.log('=== BEFORE buildTree ===');
+                console.log('data.models:', data.models);
+                console.log('data.entities keys:', Object.keys(data.entities));
+                console.log('data.entities:', JSON.stringify(data.entities, null, 2).substring(0, 3000));
+                console.log('data.components count:', Object.keys(data.components).length);
+                console.log('======================');
+                
+                buildTree(data);
+                updateTable([]);
+                currentData = data;
                 console.log('FINAL DATA STRUCTURE:', {
-                    entities: Object.keys(data.entities),
+                    models: data.models,
+                    entityKeys: Object.keys(data.entities),
                     entityCount: Object.keys(data.entities).length,
                     componentCount: Object.keys(data.components).length
                 });
-                status.textContent = `✓ Loaded ${Object.keys(data.components).length} components (${Object.keys(data.entities).length} entities)`;
+                status.textContent = `✓ Loaded ${Object.keys(data.components).length} components (${Object.keys(data.entities).length} entities/models)`;
 
             } catch (error) {
                 console.error('Query failed:', error);

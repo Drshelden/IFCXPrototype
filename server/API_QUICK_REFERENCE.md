@@ -10,34 +10,34 @@ Content-Type: multipart/form-data
 curl -F "file=@model.ifc" http://localhost:5000/api/upload
 ```
 
-### Query Entities
+### Query Entity GUIDs
 ```bash
-GET /api/entities?models=MODEL&entity_types=TYPE&components=GUID
+GET /api/entityGuids?models=MODEL&entity_types=TYPE
 
 # Examples:
-curl "http://localhost:5000/api/entities"
-curl "http://localhost:5000/api/entities?models=HelloWall"
-curl "http://localhost:5000/api/entities?entity_types=IfcPropertySet"
-curl "http://localhost:5000/api/entities?components=abc123,def456"
+curl "http://localhost:5000/api/entityGuids"
+curl "http://localhost:5000/api/entityGuids?models=HelloWall-2x3"
+curl "http://localhost:5000/api/entityGuids?entity_types=IfcPropertySet"
+curl "http://localhost:5000/api/entityGuids?models=HelloWall-2x3&entity_types=IfcWall"
 ```
 
-### Query Components
+### Query Component GUIDs
 ```bash
-GET /api/guids?models=MODEL&entity_guids=GUID&entity_types=TYPE
+GET /api/componentGuids?models=MODEL&entity_guids=GUID&entity_types=TYPE
 
 # Examples:
-curl "http://localhost:5000/api/guids"
-curl "http://localhost:5000/api/guids?models=HelloWall"
-curl "http://localhost:5000/api/guids?entity_types=IfcWallAttributes"
-curl "http://localhost:5000/api/guids?entity_guids=12345678-1234-5678-1234-567812345678"
+curl "http://localhost:5000/api/componentGuids"
+curl "http://localhost:5000/api/componentGuids?models=HelloWall-2x3"
+curl "http://localhost:5000/api/componentGuids?entity_types=IfcWallAttributes"
+curl "http://localhost:5000/api/componentGuids?entity_guids=12345678-1234-5678-1234-567812345678"
 ```
 
 ### Get Component Data
 ```bash
-GET /api/components?guids=GUID1,GUID2,GUID3
+GET /api/components?componentGuids=GUID1,GUID2,GUID3
 
 # Example:
-curl "http://localhost:5000/api/components?guids=abc123,def456,ghi789"
+curl "http://localhost:5000/api/components?componentGuids=abc123,def456,ghi789"
 ```
 
 ## Helper Endpoints
@@ -54,7 +54,7 @@ GET /api/entity_types?models=MODEL1,MODEL2
 
 # Examples:
 curl http://localhost:5000/api/entity_types
-curl "http://localhost:5000/api/entity_types?models=HelloWall"
+curl "http://localhost:5000/api/entity_types?models=HelloWall-2x3"
 ```
 
 ### Server Status
@@ -73,22 +73,22 @@ curl -X POST http://localhost:5000/api/refresh
 
 ### All walls in a model
 ```bash
-curl "http://localhost:5000/api/guids?models=HelloWall&entity_types=IfcWallAttributes"
+curl "http://localhost:5000/api/entityGuids?models=HelloWall-2x3&entity_types=IfcWall"
 ```
 
 ### All property sets across models
 ```bash
-curl "http://localhost:5000/api/guids?entity_types=IfcPropertySet"
+curl "http://localhost:5000/api/entityGuids?entity_types=IfcPropertySet"
 ```
 
 ### Components for multiple entities
 ```bash
-curl "http://localhost:5000/api/guids?entity_guids=guid1,guid2,guid3"
+curl "http://localhost:5000/api/componentGuids?entity_guids=guid1,guid2,guid3"
 ```
 
 ### Specific types in multiple models
 ```bash
-curl "http://localhost:5000/api/guids?models=Model1,Model2&entity_types=IfcPropertySet,IfcObjectDefinition"
+curl "http://localhost:5000/api/componentGuids?models=Model1,Model2&entity_types=IfcPropertySet"
 ```
 
 ## Python Examples
@@ -100,25 +100,32 @@ BASE_URL = 'http://localhost:5000/api'
 
 # Get all models
 response = requests.get(f'{BASE_URL}/models')
-models = response.json()['models']
+models = response.json()  # Returns list of model names
 
 # Get entity types
 response = requests.get(f'{BASE_URL}/entity_types', 
-                       params={'models': 'HelloWall'})
-types = response.json()['entity_types']
+                       params={'models': 'HelloWall-2x3'})
+types = response.json()  # Returns list of type names
 
-# Query components
-response = requests.get(f'{BASE_URL}/guids',
+# Query entity GUIDs
+response = requests.get(f'{BASE_URL}/entityGuids',
                        params={
-                           'models': 'HelloWall',
+                           'models': 'HelloWall-2x3',
                            'entity_types': 'IfcPropertySet'
                        })
-component_guids = response.json()['component_guids']
+entity_data = response.json()  # Returns {modelName: [guid1, guid2, ...]}
+
+# Query component GUIDs
+response = requests.get(f'{BASE_URL}/componentGuids',
+                       params={
+                           'models': 'HelloWall-2x3'
+                       })
+component_data = response.json()  # Returns {modelName: [guid1, guid2, ...]}
 
 # Get component data
 response = requests.get(f'{BASE_URL}/components',
-                       params={'guids': ','.join(component_guids[:10])})
-components = response.json()['components']
+                       params={'componentGuids': 'guid1,guid2,guid3'})
+components = response.json()  # Returns [component1, component2, ...]
 
 # Upload file
 with open('myfile.ifc', 'rb') as f:
@@ -129,19 +136,35 @@ result = response.json()
 
 ## Response Format
 
-All endpoints return JSON:
+### List Endpoints
+Returns a JSON array:
+```json
+["Model1", "Model2", "Model3"]
+```
 
-**Success:**
+### Query Endpoints (entityGuids, componentGuids)
+Returns a dictionary organized by model name:
 ```json
 {
-  "success": true,
-  "count": 10,
-  "data": [...],
-  ...
+  "ModelName": ["guid1", "guid2", "guid3"]
 }
 ```
 
-**Error:**
+### Components Endpoint
+Returns a JSON array of component objects:
+```json
+[
+  {
+    "componentGuid": "...",
+    "entityGuid": "...",
+    "type": "IfcWall",
+    "model": "ModelName",
+    "properties": {...}
+  }
+]
+```
+
+### Error Response
 ```json
 {
   "error": "Error message"
@@ -151,24 +174,45 @@ All endpoints return JSON:
 ## Parameter Types
 
 - **models**: Comma-separated model names
-- **entity_types**: Comma-separated type names
+- **entity_types**: Comma-separated IFC type names
 - **entity_guids**: Comma-separated entity GUIDs
-- **components**: Comma-separated component GUIDs
-- **guids**: Comma-separated component GUIDs
+- **componentGuids**: Comma-separated component GUIDs
 
 ## Common Filters
 
 | Parameter | Values | Example |
 |-----------|--------|---------|
-| `models` | Model names | `HelloWall,AnotherModel` |
-| `entity_types` | IFC types sans "Component" | `IfcWallAttributes,IfcDoor` |
+| `models` | Model names | `HelloWall-2x3,AnotherModel` |
+| `entity_types` | IFC types | `IfcWall,IfcDoor,IfcPropertySet` |
 | `entity_guids` | UUID format | `12345678-1234-5678-1234-567812345678` |
-| `components` | 32-char hex GUIDs | `abc123def456abc123def456abc123de` |
-| `guids` | Same as components | `abc123,def456` |
+| `componentGuids` | Component GUIDs | `abc123def456abc123def456abc123de` |
+
+## Quick Start
+
+1. **Check available models:**
+   ```bash
+   curl http://localhost:5000/api/models
+   ```
+
+2. **Get entity GUIDs for a model:**
+   ```bash
+   curl "http://localhost:5000/api/entityGuids?models=HelloWall-2x3"
+   ```
+
+3. **Get components for those entities:**
+   ```bash
+   curl "http://localhost:5000/api/componentGuids?models=HelloWall-2x3"
+   ```
+
+4. **Get full component data:**
+   ```bash
+   curl "http://localhost:5000/api/components?componentGuids=guid1,guid2"
+   ```
 
 ## Status Codes
 
 - `200` - Success
 - `400` - Bad request (invalid parameters)
 - `413` - File too large
+- `404` - Model or endpoint not found
 - `500` - Server error

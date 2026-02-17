@@ -94,7 +94,7 @@ curl "http://localhost:5000/api/entities?models=HelloWall&entity_types=IfcWallAt
 
 ---
 
-#### GET `/api/guids`
+#### GET `/api/componentGuids`
 
 Query for component GUIDs based on filters.
 
@@ -251,12 +251,12 @@ Manually refresh the in-memory component tree from disk.
 
 ### Get all property sets
 ```bash
-curl "http://localhost:5000/api/guids?entity_types=IfcPropertySet"
+curl "http://localhost:5000/api/componentGuids?entity_types=IfcPropertySet"
 ```
 
 ### Get components for specific entity
 ```bash
-curl "http://localhost:5000/api/guids?entity_guids=12345678-1234-5678-1234-567812345678"
+curl "http://localhost:5000/api/componentGuids?entity_guids=12345678-1234-5678-1234-567812345678"
 ```
 
 ### Get all entities in a model
@@ -271,7 +271,7 @@ curl "http://localhost:5000/api/components?guids=abc123,def456,ghi789"
 
 ### Complex query: Walls in specific model
 ```bash
-curl "http://localhost:5000/api/guids?models=HelloWall&entity_types=IfcWallAttributes"
+curl "http://localhost:5000/api/componentGuids?models=HelloWall&entity_types=IfcWallAttributes"
 ```
 
 ---

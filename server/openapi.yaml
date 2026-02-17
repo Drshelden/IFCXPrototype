@@ -1,0 +1,449 @@
+openapi: 3.0.0
+info:
+  title: IFC Processing Server API
+  description: REST API for IFC file processing and component querying with in-memory indexing
+  version: 0.0.1
+  contact:
+    name: IFC Processing Team
+
+servers:
+  - url: http://localhost:5000
+    description: Development server
+  - url: https://api.example.com
+    description: Production server
+
+tags:
+  - name: System
+    description: Server status and configuration endpoints
+  - name: File Management
+    description: File upload and processing endpoints
+  - name: Queries
+    description: Query and retrieval endpoints
+  - name: Data Management
+    description: Data store and refresh endpoints
+
+paths:
+  /api/status:
+    get:
+      tags:
+        - System
+      summary: Get server status
+      description: Returns the current status of the server
+      operationId: getStatus
+      responses:
+        '200':
+          description: Server is running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: running
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: '2026-02-16T14:30:00.000000'
+                  version:
+                    type: string
+                    example: '0.0.1'
+
+  /api/stores:
+    get:
+      tags:
+        - System
+      summary: List available data stores
+      description: Returns a list of available data store implementations
+      operationId: listStores
+      responses:
+        '200':
+          description: List of available stores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: fileBased
+                    description:
+                      type: string
+                      example: File-based data store
+
+  /api/upload:
+    post:
+      tags:
+        - File Management
+      summary: Upload and process IFC or JSON file
+      description: |
+        Upload an IFC (Industry Foundation Classes) or JSON file for processing.
+        IFC files are automatically converted to JSON format and stored.
+        Maximum file size is 500MB.
+      operationId: uploadFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The IFC or JSON file to upload
+              required:
+                - file
+      responses:
+        '200':
+          description: File successfully processed and stored
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filename:
+                    type: string
+                    example: HelloWallIFCjsonC-2x3.json
+                  entities_count:
+                    type: integer
+                    example: 42
+                  stored_count:
+                    type: integer
+                    example: 42
+                  store_path:
+                    type: string
+                    example: /path/to/datastores/HelloWallIFCjsonC-2x3
+                  message:
+                    type: string
+                    example: Successfully processed 42 entities
+        '400':
+          description: Invalid input (missing file, invalid format, or invalid JSON)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'No file provided'
+        '413':
+          description: File is too large (maximum 500MB)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'File is too large. Maximum size is 500MB'
+        '500':
+          description: Server error during processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /api/models:
+    get:
+      tags:
+        - Queries
+      summary: List all loaded models
+      description: Returns a list of all available models that have been loaded
+      operationId: listModels
+      responses:
+        '200':
+          description: List of loaded models
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - HelloWallIFCjsonC-2x3
+
+  /api/entity_types:
+    get:
+      tags:
+        - Queries
+      summary: List entity types
+      description: Returns all entity types available in specified models
+      operationId: listEntityTypes
+      parameters:
+        - name: models
+          in: query
+          description: Comma-separated list of model names (optional - returns types from all models if omitted)
+          schema:
+            type: string
+            example: HelloWallIFCjsonC-2x3
+      responses:
+        '200':
+          description: List of entity types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - IfcPropertySet
+                  - IfcWall
+                  - IfcRelDefinesByProperties
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /api/entityGuids:
+    get:
+      tags:
+        - Queries
+      summary: Query for entity GUIDs
+      description: |
+        Query entity GUIDs based on optional filters.
+        Results are organized by model name.
+        - Filter by model name(s) (optional)
+        - Filter by entity type(s) (optional)
+      operationId: queryEntityGuids
+      parameters:
+        - name: models
+          in: query
+          description: Comma-separated list of model names to filter by (optional - includes all models if omitted)
+          schema:
+            type: string
+            example: HelloWallIFCjsonC-2x3
+        - name: entity_types
+          in: query
+          description: Comma-separated list of entity types to filter by
+          schema:
+            type: string
+            example: IfcWall,IfcPropertySet
+      responses:
+        '200':
+          description: Dictionary mapping model names to arrays of entity GUIDs
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                example:
+                  HelloWallIFCjsonC-2x3:
+                    - entity-guid-1
+                    - entity-guid-2
+                    - entity-guid-3
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /api/componentGuids:
+    get:
+      tags:
+        - Queries
+      summary: Query for component GUIDs
+      description: |
+        Query component GUIDs based on optional filters.
+        Results are organized by model name.
+        - Filter by model name(s) (optional)
+        - Filter by entity GUID(s) (optional)
+        - Filter by entity type(s) (optional)
+      operationId: queryComponentGuids
+      parameters:
+        - name: models
+          in: query
+          description: Comma-separated list of model names to filter by (optional - includes all models if omitted)
+          schema:
+            type: string
+            example: HelloWallIFCjsonC-2x3
+        - name: entity_guids
+          in: query
+          description: Comma-separated list of entity GUIDs to filter components by
+          schema:
+            type: string
+            example: 'entity-guid-1,entity-guid-2'
+        - name: entity_types
+          in: query
+          description: Comma-separated list of entity types to filter by
+          schema:
+            type: string
+            example: IfcWall
+      responses:
+        '200':
+          description: Dictionary mapping model names to arrays of component GUIDs
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                example:
+                  HelloWallIFCjsonC-2x3:
+                    - component-guid-1
+                    - component-guid-2
+                    - component-guid-3
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /api/components:
+    get:
+      tags:
+        - Queries
+      summary: Retrieve full component data
+      description: |
+        Retrieve complete component data (including all properties and metadata)
+        for specified component GUIDs.
+      operationId: getComponents
+      parameters:
+        - name: componentGuids
+          in: query
+          required: true
+          description: Comma-separated list of component GUIDs to retrieve
+          schema:
+            type: string
+            example: 'component-guid-1,component-guid-2'
+      responses:
+        '200':
+          description: Array of component objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                example:
+                  - componentGuid: component-guid-1
+                    entityGuid: entity-guid-1
+                    type: IfcWall
+                    model: HelloWallIFCjsonC-2x3
+                    properties: {}
+                  - componentGuid: component-guid-2
+                    entityGuid: entity-guid-1
+                    type: IfcWall
+                    model: HelloWallIFCjsonC-2x3
+                    properties: {}
+        '400':
+          description: Invalid request (missing or invalid componentGuids parameter)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'componentGuids parameter is required'
+
+  /api/refresh:
+    post:
+      tags:
+        - Data Management
+      summary: Manually refresh the in-memory component tree
+      description: |
+        Triggers a full refresh of the in-memory component tree from the file-based data store.
+        This is useful after manually adding files to the data store directory.
+      operationId: refreshMemory
+      responses:
+        '200':
+          description: Memory tree successfully refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  models_loaded:
+                    type: integer
+                    example: 1
+                  message:
+                    type: string
+                    example: 'Memory tree refreshed with 1 model(s)'
+        '500':
+          description: Server error during refresh
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+components:
+  schemas:
+    Component:
+      type: object
+      description: A single IFC component with metadata and properties
+      properties:
+        componentGuid:
+          type: string
+          description: Unique identifier for the component
+        entityGuid:
+          type: string
+          description: Reference to the parent entity
+        type:
+          type: string
+          description: IFC entity type (e.g., IfcWall, IfcPropertySet)
+        model:
+          type: string
+          description: Name of the model this component belongs to
+        properties:
+          type: object
+          description: Component properties and attributes
+          additionalProperties: true
+
+    ErrorResponse:
+      type: object
+      description: Standard error response
+      properties:
+        error:
+          type: string
+          description: Error message
+
+    SuccessResponse:
+      type: object
+      description: Standard success response wrapper
+      properties:
+        success:
+          type: boolean
+          description: Whether the request was successful
+        count:
+          type: integer
+          description: Number of items returned
+
+x-metadata:
+  apiTitle: IFC Processing Server
+  apiDescription: RESTful API for processing IFC files and querying component data
+  apiVersion: 0.0.1
+  baseUrl: http://localhost:5000
+  dataStore: File-based storage (one JSON file per component)
+  indexing: In-memory tree indexed by componentGuid, entityGuid, and entity type
+  fileUploadLimit: 500MB
+  supportedFormats:
+    - application/ifc
+    - application/json

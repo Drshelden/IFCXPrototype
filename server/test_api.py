@@ -72,32 +72,32 @@ def main():
     
     # Test 4: Query Entities (all)
     print(f"\n{Colors.OKBLUE}Test 4: Query All Entities{Colors.ENDC}")
-    test_endpoint('GET', '/entities')
+    test_endpoint('GET', '/entityGuids')
     
     # Test 5: Query Entities by Model
     print(f"\n{Colors.OKBLUE}Test 5: Query Entities by Model{Colors.ENDC}")
     # First, get available models
     models_response = requests.get(f"{BASE_URL}/models")
-    model_name = models_response.json().get('models', ['HelloWallIFCjsonC-2x3'])[0] if models_response.status_code == 200 else 'HelloWallIFCjsonC-2x3'
-    test_endpoint('GET', '/entities', params={'models': model_name})
+    model_name = models_response.json()[0] if models_response.status_code == 200 and models_response.json() else 'HelloWallIFCjsonC-2x3'
+    test_endpoint('GET', '/entityGuids', params={'models': model_name})
     
     # Test 6: Query Entities by Type
     print(f"\n{Colors.OKBLUE}Test 6: Query Entities by Type{Colors.ENDC}")
-    test_endpoint('GET', '/entities', params={'entity_types': 'IfcPropertySet'})
+    test_endpoint('GET', '/entityGuids', params={'entity_types': 'IfcPropertySet'})
     
     # Test 7: Query Component GUIDs
     print(f"\n{Colors.OKBLUE}Test 7: Query Component GUIDs{Colors.ENDC}")
-    test_endpoint('GET', '/guids', params={'models': model_name})
+    test_endpoint('GET', '/componentGuids', params={'models': model_name})
     
     # Test 8: Get Component Data
     print(f"\n{Colors.OKBLUE}Test 8: Get Component Data{Colors.ENDC}")
     # First get a GUID
-    response = requests.get(f"{BASE_URL}/guids", params={'models': model_name})
+    response = requests.get(f"{BASE_URL}/componentGuids", params={'models': model_name})
     if response.status_code == 200:
         data = response.json()
-        if data.get('component_guids'):
-            guids = ','.join(data['component_guids'][:2])
-            test_endpoint('GET', '/components', params={'guids': guids})
+        if data and model_name in data and len(data[model_name]) > 0:
+            guids = ','.join(data[model_name][:2])
+            test_endpoint('GET', '/components', params={'componentGuids': guids})
         else:
             print(f"{Colors.WARNING}⚠️  No component GUIDs found to test{Colors.ENDC}")
     else:
@@ -109,7 +109,7 @@ def main():
     
     # Test 10: Complex Query
     print(f"\n{Colors.OKBLUE}Test 10: Complex Query (All Filters){Colors.ENDC}")
-    test_endpoint('GET', '/guids', params={
+    test_endpoint('GET', '/componentGuids', params={
         'models': model_name,
         'entity_types': 'IfcPropertySet'
     })

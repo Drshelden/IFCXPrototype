@@ -34,10 +34,15 @@ curl "http://localhost:5000/api/componentGuids?entity_guids=12345678-1234-5678-1
 
 ### Get Component Data
 ```bash
-GET /api/components?componentGuids=GUID1,GUID2,GUID3
+GET /api/components?[componentGuids=GUID1,GUID2] | [models=MODEL] | [entity_types=TYPE] | [entity_guids=GUID]
 
-# Example:
-curl "http://localhost:5000/api/components?componentGuids=abc123,def456,ghi789"
+# Examples:
+curl "http://localhost:5000/api/components"  # All components
+curl "http://localhost:5000/api/components?componentGuids=abc123,def456"  # Specific components
+curl "http://localhost:5000/api/components?models=HelloWall-01"  # All components in model
+curl "http://localhost:5000/api/components?entity_types=IfcWallStandardCase"  # By entity type
+curl "http://localhost:5000/api/components?models=HelloWall-01&entity_types=IfcWallStandardCase"  # Combined filters
+curl "http://localhost:5000/api/components?entity_guids=guid1,guid2"  # For specific entities
 ```
 
 ## Helper Endpoints
@@ -73,7 +78,12 @@ curl -X POST http://localhost:5000/api/refresh
 
 ### All walls in a model
 ```bash
-curl "http://localhost:5000/api/entityGuids?models=HelloWall-2x3&entity_types=IfcWall"
+curl "http://localhost:5000/api/entityGuids?models=HelloWall-01&entity_types=IfcWallStandardCase"
+```
+
+### All wall components with full data
+```bash
+curl "http://localhost:5000/api/components?models=HelloWall-01&entity_types=IfcWallStandardCase"
 ```
 
 ### All property sets across models
@@ -86,9 +96,19 @@ curl "http://localhost:5000/api/entityGuids?entity_types=IfcPropertySet"
 curl "http://localhost:5000/api/componentGuids?entity_guids=guid1,guid2,guid3"
 ```
 
+### Full component data for multiple entities
+```bash
+curl "http://localhost:5000/api/components?entity_guids=guid1,guid2,guid3"
+```
+
 ### Specific types in multiple models
 ```bash
 curl "http://localhost:5000/api/componentGuids?models=Model1,Model2&entity_types=IfcPropertySet"
+```
+
+### Full component data for specific types across models
+```bash
+curl "http://localhost:5000/api/components?models=Model1,Model2&entity_types=IfcPropertySet"
 ```
 
 ## Python Examples
@@ -122,10 +142,33 @@ response = requests.get(f'{BASE_URL}/componentGuids',
                        })
 component_data = response.json()  # Returns {modelName: [guid1, guid2, ...]}
 
-# Get component data
+# Get component data by specific GUIDs
 response = requests.get(f'{BASE_URL}/components',
                        params={'componentGuids': 'guid1,guid2,guid3'})
-components = response.json()  # Returns [component1, component2, ...]
+components_by_model = response.json()  # Returns {modelName: [component1, component2, ...]}
+
+# Get all components in a model
+response = requests.get(f'{BASE_URL}/components',
+                       params={'models': 'HelloWall-01'})
+components_by_model = response.json()
+
+# Get components by entity type
+response = requests.get(f'{BASE_URL}/components',
+                       params={'entity_types': 'IfcWallStandardCase'})
+components_by_model = response.json()
+
+# Get components for specific entities
+response = requests.get(f'{BASE_URL}/components',
+                       params={'entity_guids': 'guid1,guid2'})
+components_by_model = response.json()
+
+# Combined filters
+response = requests.get(f'{BASE_URL}/components',
+                       params={
+                           'models': 'HelloWall-01',
+                           'entity_types': 'IfcWallStandardCase'
+                       })
+components_by_model = response.json()
 
 # Upload file
 with open('myfile.ifc', 'rb') as f:
@@ -151,17 +194,29 @@ Returns a dictionary organized by model name:
 ```
 
 ### Components Endpoint
-Returns a JSON array of component objects:
+Returns a dictionary organized by model name, with each model containing an array of component objects:
 ```json
-[
-  {
-    "componentGuid": "...",
-    "entityGuid": "...",
-    "type": "IfcWall",
-    "model": "ModelName",
-    "properties": {...}
-  }
-]
+{
+  "HelloWall-01": [
+    {
+      "componentGuid": "5d7be3a6-fe8b-0924-729b-33cd0f175b6a",
+      "componentName": "Basic Wall:Generic - 8\"",
+      "componentType": "IfcWallStandardCaseComponent",
+      "entityGuid": "0d68ad35-29c7-484d-907c-65a3fbc0eadb",
+      "entityType": "IfcWallStandardCase",
+      "objectType": "Basic Wall:Generic - 8\"",
+      "tag": "1240542",
+      "model": "HelloWall-01"
+    },
+    {
+      "componentGuid": "abc123...",
+      ...
+    }
+  ],
+  "HelloWall-02": [
+    {...}
+  ]
+}
 ```
 
 ### Error Response
@@ -196,16 +251,18 @@ Returns a JSON array of component objects:
 
 2. **Get entity GUIDs for a model:**
    ```bash
-   curl "http://localhost:5000/api/entityGuids?models=HelloWall-2x3"
+   curl "http://localhost:5000/api/entityGuids?models=HelloWall-01"
    ```
 
 3. **Get components for those entities:**
    ```bash
-   curl "http://localhost:5000/api/componentGuids?models=HelloWall-2x3"
+   curl "http://localhost:5000/api/componentGuids?models=HelloWall-01"
    ```
 
-4. **Get full component data:**
+4. **Get full component data (with filtering):**
    ```bash
+   curl "http://localhost:5000/api/components?models=HelloWall-01"
+   curl "http://localhost:5000/api/components?entity_types=IfcWallStandardCase"
    curl "http://localhost:5000/api/components?componentGuids=guid1,guid2"
    ```
 

@@ -1669,12 +1669,53 @@
                         }
                     }
                 }
+                // Handle components endpoint (model-organized dictionary with component details)
+                else if (endpoint.includes('/components') && typeof apiData === 'object' && !Array.isArray(apiData)) {
+                    // Format: {modelName: [component1, component2, ...]}
+                    console.log('Processing components response (model-organized):', Object.keys(apiData));
+                    
+                    // ORGANIZE DATA BY MODEL: entities structure will be {modelName: {entityGuid: [compGuids]}}
+                    data.entities = {};
+                    data.models = Object.keys(apiData).filter(key => Array.isArray(apiData[key]));
+                    console.log('Set data.models to:', data.models);
+                    
+                    // Process each model's components
+                    for (const [modelName, components] of Object.entries(apiData)) {
+                        if (Array.isArray(components)) {
+                            console.log(`Found ${components.length} components in model ${modelName}`);
+                            // Initialize model entry in entities
+                            data.entities[modelName] = {};
+                            
+                            // Organize components by entity GUID
+                            components.forEach(comp => {
+                                const entityGuid = comp.entityGuid || 'Unknown';
+                                const componentGuid = comp.componentGuid;
+                                
+                                // Create entity entry if needed
+                                if (!data.entities[modelName][entityGuid]) {
+                                    data.entities[modelName][entityGuid] = [];
+                                }
+                                
+                                // Add component GUID to entity's component list
+                                if (!data.entities[modelName][entityGuid].includes(componentGuid)) {
+                                    data.entities[modelName][entityGuid].push(componentGuid);
+                                }
+                                
+                                // Store full component data
+                                data.components[componentGuid] = comp;
+                            });
+                            
+                            console.log(`Organized ${components.length} components into ${Object.keys(data.entities[modelName]).length} entities`);
+                        }
+                    }
+                    console.log('✓ Components loaded and organized by model and entity');
+                }
                 else if (Array.isArray(apiData)) {
                     // Direct array response (models, entity_types, or components)
                     console.log('Processing array response:', apiData.length);
                     
                     if (endpoint.includes('/components') && apiData.length > 0 && apiData[0].componentGuid) {
-                        // Component data array - organize by model and entity GUID
+                        // Component data array - organize by model and entity GUID (deprecated format)
                         // Collect models from the component data
                         const modelsInData = [...new Set(apiData.map(comp => comp.model || 'DefaultModel'))];
                         data.models = modelsInData;

@@ -241,26 +241,66 @@ def query_component_guids():
 
 @app.route('/api/components', methods=['GET'])
 def get_components():
-    """Retrieve component data by GUIDs
+    """Retrieve component data with flexible filtering, organized by model
     
     Parameters:
-    - componentGuids: comma-separated list of component GUIDs
+    - componentGuids: comma-separated list of specific component GUIDs (optional)
+    - models: comma-separated list of model names (optional)
+    - entity_types: comma-separated list of entity types (optional)
+    - entity_guids: comma-separated list of entity GUIDs (optional)
     
-    Returns: Array of component dictionaries
+    Returns: Dictionary mapping model names to arrays of component objects
     """
     try:
         # Parse query parameters
-        component_guids = request.args.get('componentGuids', '')
+        component_guids_param = request.args.get('componentGuids', '')
+        models = request.args.get('models', '')
+        entity_types = request.args.get('entity_types', '')
+        entity_guids = request.args.get('entity_guids', '')
         
-        if not component_guids:
-            return jsonify({'error': 'componentGuids parameter is required'}), 400
+        # Parse into lists
+        component_guids = [g.strip() for g in component_guids_param.split(',')] if component_guids_param else None
+        models = [m.strip() for m in models.split(',')] if models else None
+        entity_types = [t.strip() for t in entity_types.split(',')] if entity_types else None
+        entity_guids = [g.strip() for g in entity_guids.split(',')] if entity_guids else None
         
-        component_guids = [g.strip() for g in component_guids.split(',')]
+        print(f"\n📋 /api/components query:")
+        print(f"   componentGuids: {component_guids}")
+        print(f"   models: {models}")
+        print(f"   entity_types: {entity_types}")
+        print(f"   entity_guids: {entity_guids}")
         
-        # Retrieve components
-        components = memory_tree.get_components(component_guids)
+        # If specific component GUIDs provided, use those directly
+        if component_guids:
+            components = memory_tree.get_components(component_guids)
+        # Otherwise, use query filters to find components
+        elif models or entity_types or entity_guids:
+            # Query component GUIDs based on filters
+            found_guids = memory_tree.get_component_guids(
+                models=models,
+                entity_types=entity_types,
+                entity_guids=entity_guids
+            )
+            # Get components, restricting search to the filtered models
+            components = memory_tree.get_components(found_guids, models=models)
+        else:
+            # No filters specified - return all components from all models
+            all_guids = memory_tree.get_component_guids()
+            components = memory_tree.get_components(all_guids)
         
-        return jsonify(components)
+        print(f"   Returned {len(components)} components")
+        
+        # Organize components by model
+        result_by_model = {}
+        for component in components:
+            model_name = component.get('model') or component.get('componentGuid', '')
+            if model_name not in result_by_model:
+                result_by_model[model_name] = []
+            result_by_model[model_name].append(component)
+        
+        print(f"   Organized into {len(result_by_model)} models: {list(result_by_model.keys())}")
+        
+        return jsonify(result_by_model)
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 

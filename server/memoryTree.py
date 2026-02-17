@@ -10,7 +10,8 @@ class MemoryTree:
     
     def __init__(self):
         """Initialize the memory tree"""
-        self.models: Dict = {}  # models[model_name] = {by_entity, by_type, by_componentGuid}
+        self.models: Dict = {}  # models[model_name] = {by_entity, by_type, by_entityType, by_componentGuid}
+
     
     def refresh_from_store(self, store_path: str):
         """Refresh memory tree from file-based store
@@ -34,6 +35,8 @@ class MemoryTree:
             self.models[model_name] = {
                 'by_entity': {},      # entity_guid -> [componentGuids]
                 'by_type': {},        # component_type -> [componentGuids]
+                'by_entityType': {},  # entity_type -> [entity_guids]
+                'entity_types': {},   # entity_guid -> entity_type
                 'by_componentGuid': {}         # componentGuid -> component_data
             }
             
@@ -61,6 +64,25 @@ class MemoryTree:
                         if entity_guid not in self.models[model_name]['by_entity']:
                             self.models[model_name]['by_entity'][entity_guid] = []
                         self.models[model_name]['by_entity'][entity_guid].append(component_guid)
+                        
+                        # Track entity type from component's entityType field
+                        entity_type = component.get('entityType')
+                        if entity_type:
+                            # Check for conflicts (same entity with different types)
+                            if entity_guid in self.models[model_name]['entity_types']:
+                                existing_type = self.models[model_name]['entity_types'][entity_guid]
+                                if existing_type != entity_type:
+                                    print(f"⚠️  WARNING: Entity {entity_guid} has conflicting types: '{existing_type}' vs '{entity_type}'")
+                                    print(f"   Component 1: {self.models[model_name]['by_entity'][entity_guid][0]}")
+                                    print(f"   Component 2: {component_guid}")
+                            else:
+                                # Store the entity type
+                                self.models[model_name]['entity_types'][entity_guid] = entity_type
+                                
+                                # Index entity GUID by type
+                                if entity_type not in self.models[model_name]['by_entityType']:
+                                    self.models[model_name]['by_entityType'][entity_type] = []
+                                self.models[model_name]['by_entityType'][entity_type].append(entity_guid)
                     
                     # Index by component type (remove trailing "Component")
                     component_type = component.get('componentType', 'Unknown')
@@ -91,35 +113,6 @@ class MemoryTree:
         # Determine which models to search
         search_models = models if models else list(self.models.keys())
         
-        result_guids: Set[str] = None
-        
-        for model_name in search_models:
-            if model_name not in self.models:
-                continue
-            
-            model = self.models[model_name]
-            model_guids: Set[str] = set()
-            
-            # If entity_types specified, get components of those types
-            if entity_types:
-                for entity_type in entity_types:
-                    if entity_type in model['by_type']:
-                        model_guids.update(model['by_type'][entity_type])
-            else:
-                # Get all component GUIDs in this model
-                model_guids.update(model['by_componentGuid'].keys())
-            
-            # If components specified, intersect with those
-            if components:
-                model_guids.intersection_update(set(components))
-            
-            # Union with result from other models
-            if result_guids is None:
-                result_guids = model_guids
-            else:
-                result_guids.update(model_guids)
-        
-        # Convert component GUIDs to entity GUIDs
         entity_guids: Set[str] = set()
         
         for model_name in search_models:
@@ -127,12 +120,29 @@ class MemoryTree:
                 continue
             
             model = self.models[model_name]
+            model_entities: Set[str] = set()
             
-            for component_guid in (result_guids or set()):
-                if component_guid in model['by_componentGuid']:
-                    entity_guid = model['by_componentGuid'][component_guid].get('entityGuid')
-                    if entity_guid:
-                        entity_guids.add(entity_guid)
+            # If entity_types specified, get entities of those types
+            if entity_types:
+                for entity_type in entity_types:
+                    if entity_type in model['by_entityType']:
+                        model_entities.update(model['by_entityType'][entity_type])
+            else:
+                # Get all entity GUIDs in this model
+                model_entities.update(model['by_entity'].keys())
+            
+            # If components specified, filter to only those components' entities
+            if components:
+                component_entities: Set[str] = set()
+                for component_guid in components:
+                    if component_guid in model['by_componentGuid']:
+                        entity_guid = model['by_componentGuid'][component_guid].get('entityGuid')
+                        if entity_guid:
+                            component_entities.add(entity_guid)
+                model_entities.intersection_update(component_entities)
+            
+            # Union with result from other models
+            entity_guids.update(model_entities)
         
         return sorted(list(entity_guids))
     
@@ -152,64 +162,88 @@ class MemoryTree:
         """
         # Determine which models to search
         search_models = models if models else list(self.models.keys())
+        print(f"\n🔍 get_component_guids ENTRY:")
+        print(f"   Input models param: {models}")
+        print(f"   Determined search_models: {search_models}")
+        print(f"   Available models: {list(self.models.keys())}")
+        print(f"   entity_types: {entity_types}")
+        print(f"   entity_guids: {entity_guids}")
         
         result_guids: Set[str] = None
         
         for model_name in search_models:
             if model_name not in self.models:
+                print(f"  ⚠️  Model '{model_name}' not found in available models: {list(self.models.keys())}")
                 continue
             
+            print(f"\n  Processing model: {model_name}")
             model = self.models[model_name]
             model_guids: Set[str] = set()
+            filter_entity_guids: Set[str] = set()
             
-            # If entity_types specified, get components of those types
+            # If entity_types specified, get entity GUIDs for those types
             if entity_types:
                 for entity_type in entity_types:
-                    if entity_type in model['by_type']:
-                        model_guids.update(model['by_type'][entity_type])
+                    if entity_type in model['by_entityType']:
+                        filter_entity_guids.update(model['by_entityType'][entity_type])
+                print(f"    Found {len(filter_entity_guids)} entities with matching types")
             
-            # If entity_guids specified, get components for those entities
+            # If entity_guids specified, add them to the filter
             if entity_guids:
-                entity_component_guids: Set[str] = set()
-                for entity_guid in entity_guids:
-                    if entity_guid in model['by_entity']:
-                        entity_component_guids.update(model['by_entity'][entity_guid])
-                
-                if model_guids:
-                    model_guids.intersection_update(entity_component_guids)
-                else:
-                    model_guids = entity_component_guids
+                filter_entity_guids.update(entity_guids)
+                print(f"    Filter entities now: {len(filter_entity_guids)}")
             
-            # If neither filter specified, get all components
-            if not entity_types and not entity_guids:
+            # Get components for the filtered entities
+            if filter_entity_guids:
+                for entity_guid in filter_entity_guids:
+                    if entity_guid in model['by_entity']:
+                        model_guids.update(model['by_entity'][entity_guid])
+                print(f"    Found {len(model_guids)} components for filtered entities")
+            else:
+                # No entity-level filters, get all components
                 model_guids = set(model['by_componentGuid'].keys())
+                print(f"    No entity filters - getting all {len(model_guids)} components from this model")
             
             # Union with result from other models
             if result_guids is None:
                 result_guids = model_guids
+                print(f"    First model - initialized result_guids with {len(result_guids)} components")
             else:
+                before = len(result_guids)
                 result_guids.update(model_guids)
+                print(f"    Added {len(model_guids)} components (total now: {len(result_guids)}, added: {len(result_guids) - before})")
         
+        final_count = len(result_guids or set())
+        print(f"\n✓ get_component_guids EXIT: Returning {final_count} total components")
         return sorted(list(result_guids or set()))
     
-    def get_components(self, guids: List[str]) -> List[Dict]:
+    def get_components(self, guids: List[str], models: Optional[List[str]] = None) -> List[Dict]:
         """Retrieve component data by GUIDs
         
         Args:
             guids: List of component GUIDs to retrieve
+            models: List of model names to search (None = all models)
             
         Returns:
-            List of component dictionaries
+            List of component dictionaries (with model name added)
         """
         components = []
         
-        # Search all models for the GUIDs
-        for model_name in self.models:
+        # Determine which models to search
+        search_models = models if models else list(self.models.keys())
+        
+        # Search only the specified models for the GUIDs
+        for model_name in search_models:
+            if model_name not in self.models:
+                continue
+                
             model = self.models[model_name]
             
             for guid in guids:
                 if guid in model['by_componentGuid']:
-                    components.append(model['by_componentGuid'][guid])
+                    component = model['by_componentGuid'][guid].copy()
+                    component['model'] = model_name
+                    components.append(component)
         
         return components
     
@@ -235,6 +269,6 @@ class MemoryTree:
         
         for model_name in search_models:
             if model_name in self.models:
-                types.update(self.models[model_name]['by_type'].keys())
+                types.update(self.models[model_name]['by_entityType'].keys())
         
         return sorted(list(types))

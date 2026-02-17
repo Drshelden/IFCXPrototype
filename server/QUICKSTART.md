@@ -5,7 +5,7 @@ SETUP:
 
 RUNNING:
 Option A - Python script:
-    python run.py
+    python ifcxServerFileStore.py
 
 Option B - Direct Flask:
     python app.py

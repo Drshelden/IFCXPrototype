@@ -223,7 +223,7 @@ paths:
           schema:
             type: string
             example: HelloWallIFCjsonC-2x3
-        - name: entity_types
+        - name: entityTypes
           in: query
           description: Comma-separated list of entity types to filter by
           schema:
@@ -274,13 +274,13 @@ paths:
           schema:
             type: string
             example: HelloWallIFCjsonC-2x3
-        - name: entity_guids
+        - name: entityGuids
           in: query
           description: Comma-separated list of entity GUIDs to filter components by
           schema:
             type: string
             example: 'entity-guid-1,entity-guid-2'
-        - name: entity_types
+        - name: entityTypes
           in: query
           description: Comma-separated list of entity types to filter by
           schema:
@@ -316,42 +316,75 @@ paths:
     get:
       tags:
         - Queries
-      summary: Retrieve full component data
+      summary: Retrieve full component data with flexible filtering
       description: |
-        Retrieve complete component data (including all properties and metadata)
-        for specified component GUIDs.
+        Retrieve complete component data (including all properties and metadata).
+        Results are organized by model name. Supports flexible filtering:
+        - Filter by specific component GUIDs (optional)
+        - Filter by model name(s) (optional)
+        - Filter by entity type(s) (optional)
+        - Filter by entity GUID(s) (optional)
       operationId: getComponents
       parameters:
         - name: componentGuids
           in: query
-          required: true
-          description: Comma-separated list of component GUIDs to retrieve
+          description: Comma-separated list of specific component GUIDs to retrieve (optional)
           schema:
             type: string
             example: 'component-guid-1,component-guid-2'
+        - name: models
+          in: query
+          description: Comma-separated list of model names to filter by (optional)
+          schema:
+            type: string
+            example: HelloWall-01,HelloWall-02
+        - name: entityTypes
+          in: query
+          description: Comma-separated list of entity types to filter by (optional)
+          schema:
+            type: string
+            example: IfcWallStandardCase
+        - name: entityGuids
+          in: query
+          description: Comma-separated list of entity GUIDs to filter by (optional)
+          schema:
+            type: string
+            example: 'entity-guid-1,entity-guid-2'
       responses:
         '200':
-          description: Array of component objects
+          description: Dictionary mapping model names to arrays of component objects
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  additionalProperties: true
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: true
                 example:
-                  - componentGuid: component-guid-1
-                    entityGuid: entity-guid-1
-                    type: IfcWall
-                    model: HelloWallIFCjsonC-2x3
-                    properties: {}
-                  - componentGuid: component-guid-2
-                    entityGuid: entity-guid-1
-                    type: IfcWall
-                    model: HelloWallIFCjsonC-2x3
-                    properties: {}
+                  HelloWall-01:
+                    - componentGuid: component-guid-1
+                      entityGuid: entity-guid-1
+                      componentType: IfcWallStandardCaseComponent
+                      entityType: IfcWallStandardCase
+                      model: HelloWall-01
+                      properties: {}
+                    - componentGuid: component-guid-2
+                      entityGuid: entity-guid-1
+                      componentType: IfcWallStandardCaseComponent
+                      entityType: IfcWallStandardCase
+                      model: HelloWall-01
+                      properties: {}
+                  HelloWall-02:
+                    - componentGuid: component-guid-3
+                      entityGuid: entity-guid-2
+                      componentType: IfcWallStandardCaseComponent
+                      entityType: IfcWallStandardCase
+                      model: HelloWall-02
+                      properties: {}
         '400':
-          description: Invalid request (missing or invalid componentGuids parameter)
+          description: Invalid query parameters
           content:
             application/json:
               schema:
@@ -359,7 +392,6 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: 'componentGuids parameter is required'
 
   /api/refresh:
     post:

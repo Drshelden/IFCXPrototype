@@ -169,14 +169,14 @@ def query_entity_guids():
     
     Parameters:
     - models: comma-separated list of model names (optional)
-    - entity_types: comma-separated list of entity types (optional)
+    - entityTypes: comma-separated list of entity types (optional)
     
     Returns: Dictionary mapping model names to arrays of entity GUIDs
     """
     try:
         # Parse query parameters
         models = request.args.get('models', '')
-        entity_types = request.args.get('entity_types', '')
+        entity_types = request.args.get('entityTypes', '')
         
         models = [m.strip() for m in models.split(',')] if models else None
         entity_types = [t.strip() for t in entity_types.split(',')] if entity_types else None
@@ -205,16 +205,16 @@ def query_component_guids():
     
     Parameters:
     - models: comma-separated list of model names (optional)
-    - entity_guids: comma-separated list of entity GUIDs (optional)
-    - entity_types: comma-separated list of entity types (optional)
+    - entityGuids: comma-separated list of entity GUIDs (optional)
+    - entityTypes: comma-separated list of entity types (optional)
     
     Returns: Dictionary mapping model names to arrays of component GUIDs
     """
     try:
         # Parse query parameters
         models = request.args.get('models', '')
-        entity_guids = request.args.get('entity_guids', '')
-        entity_types = request.args.get('entity_types', '')
+        entity_guids = request.args.get('entityGuids', '')
+        entity_types = request.args.get('entityTypes', '')
         
         models = [m.strip() for m in models.split(',')] if models else None
         entity_guids = [e.strip() for e in entity_guids.split(',')] if entity_guids else None
@@ -246,8 +246,8 @@ def get_components():
     Parameters:
     - componentGuids: comma-separated list of specific component GUIDs (optional)
     - models: comma-separated list of model names (optional)
-    - entity_types: comma-separated list of entity types (optional)
-    - entity_guids: comma-separated list of entity GUIDs (optional)
+    - entityTypes: comma-separated list of entity types (optional)
+    - entityGuids: comma-separated list of entity GUIDs (optional)
     
     Returns: Dictionary mapping model names to arrays of component objects
     """
@@ -255,8 +255,8 @@ def get_components():
         # Parse query parameters
         component_guids_param = request.args.get('componentGuids', '')
         models = request.args.get('models', '')
-        entity_types = request.args.get('entity_types', '')
-        entity_guids = request.args.get('entity_guids', '')
+        entity_types = request.args.get('entityTypes', '')
+        entity_guids = request.args.get('entityGuids', '')
         
         # Parse into lists
         component_guids = [g.strip() for g in component_guids_param.split(',')] if component_guids_param else None
@@ -267,8 +267,8 @@ def get_components():
         print(f"\n📋 /api/components query:")
         print(f"   componentGuids: {component_guids}")
         print(f"   models: {models}")
-        print(f"   entity_types: {entity_types}")
-        print(f"   entity_guids: {entity_guids}")
+        print(f"   entityTypes: {entity_types}")
+        print(f"   entityGuids: {entity_guids}")
         
         # If specific component GUIDs provided, use those directly
         if component_guids:

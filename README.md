@@ -212,10 +212,8 @@ Does the basics. There is a field for entering a full web REST call - currently 
 ```
 http://localhost:5000/api/components?models=HelloWall-03&entityTypes=IfcDoor
 
-![Simple query](docs/images/Picture4.png)
-
-
 ```
+![Simple query](docs/images/Picture4.png)
 
 There is also an "info" tab which shows exactly what's coming back from the server.
 

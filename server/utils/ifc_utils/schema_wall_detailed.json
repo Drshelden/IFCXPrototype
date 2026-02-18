@@ -1,0 +1,188 @@
+{
+  "root_classes": [
+    "IfcWall"
+  ],
+  "total_classes": 3,
+  "classes": [
+    {
+      "name": "IfcWall",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        {
+          "name": "GlobalId",
+          "type": "<type IfcGloballyUniqueId: <string>>",
+          "optional": false,
+          "derived": false
+        },
+        {
+          "name": "OwnerHistory",
+          "type": "<entity IfcOwnerHistory>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Name",
+          "type": "<type IfcLabel: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Description",
+          "type": "<type IfcText: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "ObjectType",
+          "type": "<type IfcLabel: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "ObjectPlacement",
+          "type": "<entity IfcObjectPlacement>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Representation",
+          "type": "<entity IfcProductRepresentation>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Tag",
+          "type": "<type IfcIdentifier: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "PredefinedType",
+          "type": "<enumeration IfcWallTypeEnum: (MOVABLE, PARAPET, PARTITIONING, PLUMBINGWALL, SHEAR, SOLIDWALL, STANDARD, POLYGONAL, ELEMENTEDWALL, USERDEFINED, NOTDEFINED)>",
+          "optional": true,
+          "derived": false
+        }
+      ]
+    },
+    {
+      "name": "IfcWallElementedCase",
+      "parent": "IfcWall",
+      "attributes": [
+        {
+          "name": "GlobalId",
+          "type": "<type IfcGloballyUniqueId: <string>>",
+          "optional": false,
+          "derived": false
+        },
+        {
+          "name": "OwnerHistory",
+          "type": "<entity IfcOwnerHistory>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Name",
+          "type": "<type IfcLabel: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Description",
+          "type": "<type IfcText: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "ObjectType",
+          "type": "<type IfcLabel: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "ObjectPlacement",
+          "type": "<entity IfcObjectPlacement>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Representation",
+          "type": "<entity IfcProductRepresentation>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Tag",
+          "type": "<type IfcIdentifier: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "PredefinedType",
+          "type": "<enumeration IfcWallTypeEnum: (MOVABLE, PARAPET, PARTITIONING, PLUMBINGWALL, SHEAR, SOLIDWALL, STANDARD, POLYGONAL, ELEMENTEDWALL, USERDEFINED, NOTDEFINED)>",
+          "optional": true,
+          "derived": false
+        }
+      ]
+    },
+    {
+      "name": "IfcWallStandardCase",
+      "parent": "IfcWall",
+      "attributes": [
+        {
+          "name": "GlobalId",
+          "type": "<type IfcGloballyUniqueId: <string>>",
+          "optional": false,
+          "derived": false
+        },
+        {
+          "name": "OwnerHistory",
+          "type": "<entity IfcOwnerHistory>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Name",
+          "type": "<type IfcLabel: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Description",
+          "type": "<type IfcText: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "ObjectType",
+          "type": "<type IfcLabel: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "ObjectPlacement",
+          "type": "<entity IfcObjectPlacement>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Representation",
+          "type": "<entity IfcProductRepresentation>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "Tag",
+          "type": "<type IfcIdentifier: <string>>",
+          "optional": true,
+          "derived": false
+        },
+        {
+          "name": "PredefinedType",
+          "type": "<enumeration IfcWallTypeEnum: (MOVABLE, PARAPET, PARTITIONING, PLUMBINGWALL, SHEAR, SOLIDWALL, STANDARD, POLYGONAL, ELEMENTEDWALL, USERDEFINED, NOTDEFINED)>",
+          "optional": true,
+          "derived": false
+        }
+      ]
+    }
+  ]
+}

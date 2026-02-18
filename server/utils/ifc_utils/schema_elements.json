@@ -1,0 +1,2647 @@
+{
+  "root_classes": [
+    "IfcElement",
+    "IfcProduct"
+  ],
+  "total_classes": 173,
+  "classes": [
+    {
+      "name": "IfcActuator",
+      "parent": "IfcDistributionControlElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcAirTerminal",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcAirTerminalBox",
+      "parent": "IfcFlowController",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcAirToAirHeatRecovery",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcAlarm",
+      "parent": "IfcDistributionControlElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcAnnotation",
+      "parent": "IfcProduct",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation"
+      ]
+    },
+    {
+      "name": "IfcAudioVisualAppliance",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcBeam",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcBeamStandardCase",
+      "parent": "IfcBeam",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcBoiler",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcBuilding",
+      "parent": "IfcSpatialStructureElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "LongName",
+        "CompositionType",
+        "ElevationOfRefHeight",
+        "ElevationOfTerrain",
+        "BuildingAddress"
+      ]
+    },
+    {
+      "name": "IfcBuildingElement",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcBuildingElementPart",
+      "parent": "IfcElementComponent",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcBuildingElementProxy",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcBuildingStorey",
+      "parent": "IfcSpatialStructureElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "LongName",
+        "CompositionType",
+        "Elevation"
+      ]
+    },
+    {
+      "name": "IfcBurner",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCableCarrierFitting",
+      "parent": "IfcFlowFitting",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCableCarrierSegment",
+      "parent": "IfcFlowSegment",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCableFitting",
+      "parent": "IfcFlowFitting",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCableSegment",
+      "parent": "IfcFlowSegment",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcChiller",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcChimney",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCivilElement",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcCoil",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcColumn",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcColumnStandardCase",
+      "parent": "IfcColumn",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCommunicationsAppliance",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCompressor",
+      "parent": "IfcFlowMovingDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCondenser",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcController",
+      "parent": "IfcDistributionControlElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCooledBeam",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCoolingTower",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCovering",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcCurtainWall",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcDamper",
+      "parent": "IfcFlowController",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcDiscreteAccessory",
+      "parent": "IfcElementComponent",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcDistributionChamberElement",
+      "parent": "IfcDistributionFlowElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcDistributionControlElement",
+      "parent": "IfcDistributionElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcDistributionElement",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcDistributionFlowElement",
+      "parent": "IfcDistributionElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcDistributionPort",
+      "parent": "IfcPort",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "FlowDirection",
+        "PredefinedType",
+        "SystemType"
+      ]
+    },
+    {
+      "name": "IfcDoor",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "OverallHeight",
+        "OverallWidth",
+        "PredefinedType",
+        "OperationType",
+        "UserDefinedOperationType"
+      ]
+    },
+    {
+      "name": "IfcDoorStandardCase",
+      "parent": "IfcDoor",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "OverallHeight",
+        "OverallWidth",
+        "PredefinedType",
+        "OperationType",
+        "UserDefinedOperationType"
+      ]
+    },
+    {
+      "name": "IfcDuctFitting",
+      "parent": "IfcFlowFitting",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcDuctSegment",
+      "parent": "IfcFlowSegment",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcDuctSilencer",
+      "parent": "IfcFlowTreatmentDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcElectricAppliance",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcElectricDistributionBoard",
+      "parent": "IfcFlowController",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcElectricFlowStorageDevice",
+      "parent": "IfcFlowStorageDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcElectricGenerator",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcElectricMotor",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcElectricTimeControl",
+      "parent": "IfcFlowController",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcElement",
+      "parent": "IfcProduct",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcElementAssembly",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "AssemblyPlace",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcElementComponent",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcEnergyConversionDevice",
+      "parent": "IfcDistributionFlowElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcEngine",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcEvaporativeCooler",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcEvaporator",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcExternalSpatialElement",
+      "parent": "IfcExternalSpatialStructureElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "LongName",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcExternalSpatialStructureElement",
+      "parent": "IfcSpatialElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "LongName"
+      ]
+    },
+    {
+      "name": "IfcFan",
+      "parent": "IfcFlowMovingDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcFastener",
+      "parent": "IfcElementComponent",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcFeatureElement",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFeatureElementAddition",
+      "parent": "IfcFeatureElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFeatureElementSubtraction",
+      "parent": "IfcFeatureElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFilter",
+      "parent": "IfcFlowTreatmentDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcFireSuppressionTerminal",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcFlowController",
+      "parent": "IfcDistributionFlowElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFlowFitting",
+      "parent": "IfcDistributionFlowElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFlowInstrument",
+      "parent": "IfcDistributionControlElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcFlowMeter",
+      "parent": "IfcFlowController",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcFlowMovingDevice",
+      "parent": "IfcDistributionFlowElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFlowSegment",
+      "parent": "IfcDistributionFlowElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFlowStorageDevice",
+      "parent": "IfcDistributionFlowElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFlowTerminal",
+      "parent": "IfcDistributionFlowElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFlowTreatmentDevice",
+      "parent": "IfcDistributionFlowElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFooting",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcFurnishingElement",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcFurniture",
+      "parent": "IfcFurnishingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcGeographicElement",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcGrid",
+      "parent": "IfcProduct",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "UAxes",
+        "VAxes",
+        "WAxes",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcHeatExchanger",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcHumidifier",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcInterceptor",
+      "parent": "IfcFlowTreatmentDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcJunctionBox",
+      "parent": "IfcFlowFitting",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcLamp",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcLightFixture",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcMechanicalFastener",
+      "parent": "IfcElementComponent",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "NominalDiameter",
+        "NominalLength",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcMedicalDevice",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcMember",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcMemberStandardCase",
+      "parent": "IfcMember",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcMotorConnection",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcOpeningElement",
+      "parent": "IfcFeatureElementSubtraction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcOpeningStandardCase",
+      "parent": "IfcOpeningElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcOutlet",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcPile",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType",
+        "ConstructionType"
+      ]
+    },
+    {
+      "name": "IfcPipeFitting",
+      "parent": "IfcFlowFitting",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcPipeSegment",
+      "parent": "IfcFlowSegment",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcPlate",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcPlateStandardCase",
+      "parent": "IfcPlate",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcPort",
+      "parent": "IfcProduct",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation"
+      ]
+    },
+    {
+      "name": "IfcProduct",
+      "parent": "IfcObject",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation"
+      ]
+    },
+    {
+      "name": "IfcProjectionElement",
+      "parent": "IfcFeatureElementAddition",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcProtectiveDevice",
+      "parent": "IfcFlowController",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcProtectiveDeviceTrippingUnit",
+      "parent": "IfcDistributionControlElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcProxy",
+      "parent": "IfcProduct",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "ProxyType",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcPump",
+      "parent": "IfcFlowMovingDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcRailing",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcRamp",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcRampFlight",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcReinforcingBar",
+      "parent": "IfcReinforcingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "SteelGrade",
+        "NominalDiameter",
+        "CrossSectionArea",
+        "BarLength",
+        "PredefinedType",
+        "BarSurface"
+      ]
+    },
+    {
+      "name": "IfcReinforcingElement",
+      "parent": "IfcElementComponent",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "SteelGrade"
+      ]
+    },
+    {
+      "name": "IfcReinforcingMesh",
+      "parent": "IfcReinforcingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "SteelGrade",
+        "MeshLength",
+        "MeshWidth",
+        "LongitudinalBarNominalDiameter",
+        "TransverseBarNominalDiameter",
+        "LongitudinalBarCrossSectionArea",
+        "TransverseBarCrossSectionArea",
+        "LongitudinalBarSpacing",
+        "TransverseBarSpacing",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcRoof",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSanitaryTerminal",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSensor",
+      "parent": "IfcDistributionControlElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcShadingDevice",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSite",
+      "parent": "IfcSpatialStructureElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "LongName",
+        "CompositionType",
+        "RefLatitude",
+        "RefLongitude",
+        "RefElevation",
+        "LandTitleNumber",
+        "SiteAddress"
+      ]
+    },
+    {
+      "name": "IfcSlab",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSlabElementedCase",
+      "parent": "IfcSlab",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSlabStandardCase",
+      "parent": "IfcSlab",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSolarDevice",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSpace",
+      "parent": "IfcSpatialStructureElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "LongName",
+        "CompositionType",
+        "PredefinedType",
+        "ElevationWithFlooring"
+      ]
+    },
+    {
+      "name": "IfcSpaceHeater",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSpatialElement",
+      "parent": "IfcProduct",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "LongName"
+      ]
+    },
+    {
+      "name": "IfcSpatialStructureElement",
+      "parent": "IfcSpatialElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "LongName",
+        "CompositionType"
+      ]
+    },
+    {
+      "name": "IfcSpatialZone",
+      "parent": "IfcSpatialElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "LongName",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcStackTerminal",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcStair",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcStairFlight",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "NumberOfRisers",
+        "NumberOfTreads",
+        "RiserHeight",
+        "TreadLength",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcStructuralAction",
+      "parent": "IfcStructuralActivity",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal",
+        "DestabilizingLoad"
+      ]
+    },
+    {
+      "name": "IfcStructuralActivity",
+      "parent": "IfcProduct",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal"
+      ]
+    },
+    {
+      "name": "IfcStructuralConnection",
+      "parent": "IfcStructuralItem",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedCondition"
+      ]
+    },
+    {
+      "name": "IfcStructuralCurveAction",
+      "parent": "IfcStructuralAction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal",
+        "DestabilizingLoad",
+        "ProjectedOrTrue",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcStructuralCurveConnection",
+      "parent": "IfcStructuralConnection",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedCondition",
+        "Axis"
+      ]
+    },
+    {
+      "name": "IfcStructuralCurveMember",
+      "parent": "IfcStructuralMember",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "PredefinedType",
+        "Axis"
+      ]
+    },
+    {
+      "name": "IfcStructuralCurveMemberVarying",
+      "parent": "IfcStructuralCurveMember",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "PredefinedType",
+        "Axis"
+      ]
+    },
+    {
+      "name": "IfcStructuralCurveReaction",
+      "parent": "IfcStructuralReaction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcStructuralItem",
+      "parent": "IfcProduct",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation"
+      ]
+    },
+    {
+      "name": "IfcStructuralLinearAction",
+      "parent": "IfcStructuralCurveAction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal",
+        "DestabilizingLoad",
+        "ProjectedOrTrue",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcStructuralMember",
+      "parent": "IfcStructuralItem",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation"
+      ]
+    },
+    {
+      "name": "IfcStructuralPlanarAction",
+      "parent": "IfcStructuralSurfaceAction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal",
+        "DestabilizingLoad",
+        "ProjectedOrTrue",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcStructuralPointAction",
+      "parent": "IfcStructuralAction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal",
+        "DestabilizingLoad"
+      ]
+    },
+    {
+      "name": "IfcStructuralPointConnection",
+      "parent": "IfcStructuralConnection",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedCondition",
+        "ConditionCoordinateSystem"
+      ]
+    },
+    {
+      "name": "IfcStructuralPointReaction",
+      "parent": "IfcStructuralReaction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal"
+      ]
+    },
+    {
+      "name": "IfcStructuralReaction",
+      "parent": "IfcStructuralActivity",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal"
+      ]
+    },
+    {
+      "name": "IfcStructuralSurfaceAction",
+      "parent": "IfcStructuralAction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal",
+        "DestabilizingLoad",
+        "ProjectedOrTrue",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcStructuralSurfaceConnection",
+      "parent": "IfcStructuralConnection",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedCondition"
+      ]
+    },
+    {
+      "name": "IfcStructuralSurfaceMember",
+      "parent": "IfcStructuralMember",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "PredefinedType",
+        "Thickness"
+      ]
+    },
+    {
+      "name": "IfcStructuralSurfaceMemberVarying",
+      "parent": "IfcStructuralSurfaceMember",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "PredefinedType",
+        "Thickness"
+      ]
+    },
+    {
+      "name": "IfcStructuralSurfaceReaction",
+      "parent": "IfcStructuralReaction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "AppliedLoad",
+        "GlobalOrLocal",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSurfaceFeature",
+      "parent": "IfcFeatureElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSwitchingDevice",
+      "parent": "IfcFlowController",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcSystemFurnitureElement",
+      "parent": "IfcFurnishingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcTank",
+      "parent": "IfcFlowStorageDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcTendon",
+      "parent": "IfcReinforcingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "SteelGrade",
+        "PredefinedType",
+        "NominalDiameter",
+        "CrossSectionArea",
+        "TensionForce",
+        "PreStress",
+        "FrictionCoefficient",
+        "AnchorageSlip",
+        "MinCurvatureRadius"
+      ]
+    },
+    {
+      "name": "IfcTendonAnchor",
+      "parent": "IfcReinforcingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "SteelGrade",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcTransformer",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcTransportElement",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcTubeBundle",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcUnitaryControlElement",
+      "parent": "IfcDistributionControlElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcUnitaryEquipment",
+      "parent": "IfcEnergyConversionDevice",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcValve",
+      "parent": "IfcFlowController",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcVibrationIsolator",
+      "parent": "IfcElementComponent",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcVirtualElement",
+      "parent": "IfcElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag"
+      ]
+    },
+    {
+      "name": "IfcVoidingFeature",
+      "parent": "IfcFeatureElementSubtraction",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcWall",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcWallElementedCase",
+      "parent": "IfcWall",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcWallStandardCase",
+      "parent": "IfcWall",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcWasteTerminal",
+      "parent": "IfcFlowTerminal",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "PredefinedType"
+      ]
+    },
+    {
+      "name": "IfcWindow",
+      "parent": "IfcBuildingElement",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "OverallHeight",
+        "OverallWidth",
+        "PredefinedType",
+        "PartitioningType",
+        "UserDefinedPartitioningType"
+      ]
+    },
+    {
+      "name": "IfcWindowStandardCase",
+      "parent": "IfcWindow",
+      "attributes": [
+        "GlobalId",
+        "OwnerHistory",
+        "Name",
+        "Description",
+        "ObjectType",
+        "ObjectPlacement",
+        "Representation",
+        "Tag",
+        "OverallHeight",
+        "OverallWidth",
+        "PredefinedType",
+        "PartitioningType",
+        "UserDefinedPartitioningType"
+      ]
+    }
+  ]
+}

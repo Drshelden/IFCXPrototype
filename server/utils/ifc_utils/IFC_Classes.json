@@ -1,0 +1,2760 @@
+{
+  "metadata": {
+    "generated_by": "generate_ifc_hierarchy.py",
+    "ifcopenshell_version": "0.8.4.post1",
+    "schema": "IFC4",
+    "statistics": {
+      "total_classes": 776,
+      "root_classes": 59,
+      "max_depth": 9
+    }
+  },
+  "classes": [
+    {
+      "name": "IfcActorRole"
+    },
+    {
+      "name": "IfcAddress",
+      "children": [
+        {
+          "name": "IfcPostalAddress"
+        },
+        {
+          "name": "IfcTelecomAddress"
+        }
+      ]
+    },
+    {
+      "name": "IfcApplication"
+    },
+    {
+      "name": "IfcAppliedValue",
+      "children": [
+        {
+          "name": "IfcCostValue"
+        }
+      ]
+    },
+    {
+      "name": "IfcApproval"
+    },
+    {
+      "name": "IfcBoundaryCondition",
+      "children": [
+        {
+          "name": "IfcBoundaryEdgeCondition"
+        },
+        {
+          "name": "IfcBoundaryFaceCondition"
+        },
+        {
+          "name": "IfcBoundaryNodeCondition",
+          "children": [
+            {
+              "name": "IfcBoundaryNodeConditionWarping"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IfcConnectionGeometry",
+      "children": [
+        {
+          "name": "IfcConnectionCurveGeometry"
+        },
+        {
+          "name": "IfcConnectionPointGeometry",
+          "children": [
+            {
+              "name": "IfcConnectionPointEccentricity"
+            }
+          ]
+        },
+        {
+          "name": "IfcConnectionSurfaceGeometry"
+        },
+        {
+          "name": "IfcConnectionVolumeGeometry"
+        }
+      ]
+    },
+    {
+      "name": "IfcConstraint",
+      "children": [
+        {
+          "name": "IfcMetric"
+        },
+        {
+          "name": "IfcObjective"
+        }
+      ]
+    },
+    {
+      "name": "IfcCoordinateOperation",
+      "children": [
+        {
+          "name": "IfcMapConversion"
+        }
+      ]
+    },
+    {
+      "name": "IfcCoordinateReferenceSystem",
+      "children": [
+        {
+          "name": "IfcProjectedCRS"
+        }
+      ]
+    },
+    {
+      "name": "IfcDerivedUnit"
+    },
+    {
+      "name": "IfcDerivedUnitElement"
+    },
+    {
+      "name": "IfcDimensionalExponents"
+    },
+    {
+      "name": "IfcExternalInformation",
+      "children": [
+        {
+          "name": "IfcClassification"
+        },
+        {
+          "name": "IfcDocumentInformation"
+        },
+        {
+          "name": "IfcLibraryInformation"
+        }
+      ]
+    },
+    {
+      "name": "IfcExternalReference",
+      "children": [
+        {
+          "name": "IfcClassificationReference"
+        },
+        {
+          "name": "IfcDocumentReference"
+        },
+        {
+          "name": "IfcExternallyDefinedHatchStyle"
+        },
+        {
+          "name": "IfcExternallyDefinedSurfaceStyle"
+        },
+        {
+          "name": "IfcExternallyDefinedTextFont"
+        },
+        {
+          "name": "IfcLibraryReference"
+        }
+      ]
+    },
+    {
+      "name": "IfcGridAxis"
+    },
+    {
+      "name": "IfcIrregularTimeSeriesValue"
+    },
+    {
+      "name": "IfcLightDistributionData"
+    },
+    {
+      "name": "IfcLightIntensityDistribution"
+    },
+    {
+      "name": "IfcMaterialClassificationRelationship"
+    },
+    {
+      "name": "IfcMaterialDefinition",
+      "children": [
+        {
+          "name": "IfcMaterial"
+        },
+        {
+          "name": "IfcMaterialConstituent"
+        },
+        {
+          "name": "IfcMaterialConstituentSet"
+        },
+        {
+          "name": "IfcMaterialLayer",
+          "children": [
+            {
+              "name": "IfcMaterialLayerWithOffsets"
+            }
+          ]
+        },
+        {
+          "name": "IfcMaterialLayerSet"
+        },
+        {
+          "name": "IfcMaterialProfile",
+          "children": [
+            {
+              "name": "IfcMaterialProfileWithOffsets"
+            }
+          ]
+        },
+        {
+          "name": "IfcMaterialProfileSet"
+        }
+      ]
+    },
+    {
+      "name": "IfcMaterialList"
+    },
+    {
+      "name": "IfcMaterialUsageDefinition",
+      "children": [
+        {
+          "name": "IfcMaterialLayerSetUsage"
+        },
+        {
+          "name": "IfcMaterialProfileSetUsage",
+          "children": [
+            {
+              "name": "IfcMaterialProfileSetUsageTapering"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IfcMeasureWithUnit"
+    },
+    {
+      "name": "IfcMonetaryUnit"
+    },
+    {
+      "name": "IfcNamedUnit",
+      "children": [
+        {
+          "name": "IfcContextDependentUnit"
+        },
+        {
+          "name": "IfcConversionBasedUnit",
+          "children": [
+            {
+              "name": "IfcConversionBasedUnitWithOffset"
+            }
+          ]
+        },
+        {
+          "name": "IfcSIUnit"
+        }
+      ]
+    },
+    {
+      "name": "IfcObjectPlacement",
+      "children": [
+        {
+          "name": "IfcGridPlacement"
+        },
+        {
+          "name": "IfcLocalPlacement"
+        }
+      ]
+    },
+    {
+      "name": "IfcOrganization"
+    },
+    {
+      "name": "IfcOwnerHistory"
+    },
+    {
+      "name": "IfcPerson"
+    },
+    {
+      "name": "IfcPersonAndOrganization"
+    },
+    {
+      "name": "IfcPhysicalQuantity",
+      "children": [
+        {
+          "name": "IfcPhysicalComplexQuantity"
+        },
+        {
+          "name": "IfcPhysicalSimpleQuantity",
+          "children": [
+            {
+              "name": "IfcQuantityArea"
+            },
+            {
+              "name": "IfcQuantityCount"
+            },
+            {
+              "name": "IfcQuantityLength"
+            },
+            {
+              "name": "IfcQuantityTime"
+            },
+            {
+              "name": "IfcQuantityVolume"
+            },
+            {
+              "name": "IfcQuantityWeight"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IfcPresentationItem",
+      "children": [
+        {
+          "name": "IfcColourRgbList"
+        },
+        {
+          "name": "IfcColourSpecification",
+          "children": [
+            {
+              "name": "IfcColourRgb"
+            }
+          ]
+        },
+        {
+          "name": "IfcCurveStyleFont"
+        },
+        {
+          "name": "IfcCurveStyleFontAndScaling"
+        },
+        {
+          "name": "IfcCurveStyleFontPattern"
+        },
+        {
+          "name": "IfcIndexedColourMap"
+        },
+        {
+          "name": "IfcPreDefinedItem",
+          "children": [
+            {
+              "name": "IfcPreDefinedColour",
+              "children": [
+                {
+                  "name": "IfcDraughtingPreDefinedColour"
+                }
+              ]
+            },
+            {
+              "name": "IfcPreDefinedCurveFont",
+              "children": [
+                {
+                  "name": "IfcDraughtingPreDefinedCurveFont"
+                }
+              ]
+            },
+            {
+              "name": "IfcPreDefinedTextFont",
+              "children": [
+                {
+                  "name": "IfcTextStyleFontModel"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "IfcSurfaceStyleLighting"
+        },
+        {
+          "name": "IfcSurfaceStyleRefraction"
+        },
+        {
+          "name": "IfcSurfaceStyleShading",
+          "children": [
+            {
+              "name": "IfcSurfaceStyleRendering"
+            }
+          ]
+        },
+        {
+          "name": "IfcSurfaceStyleWithTextures"
+        },
+        {
+          "name": "IfcSurfaceTexture",
+          "children": [
+            {
+              "name": "IfcBlobTexture"
+            },
+            {
+              "name": "IfcImageTexture"
+            },
+            {
+              "name": "IfcPixelTexture"
+            }
+          ]
+        },
+        {
+          "name": "IfcTextStyleForDefinedFont"
+        },
+        {
+          "name": "IfcTextStyleTextModel"
+        },
+        {
+          "name": "IfcTextureCoordinate",
+          "children": [
+            {
+              "name": "IfcIndexedTextureMap",
+              "children": [
+                {
+                  "name": "IfcIndexedTriangleTextureMap"
+                }
+              ]
+            },
+            {
+              "name": "IfcTextureCoordinateGenerator"
+            },
+            {
+              "name": "IfcTextureMap"
+            }
+          ]
+        },
+        {
+          "name": "IfcTextureVertex"
+        },
+        {
+          "name": "IfcTextureVertexList"
+        }
+      ]
+    },
+    {
+      "name": "IfcPresentationLayerAssignment",
+      "children": [
+        {
+          "name": "IfcPresentationLayerWithStyle"
+        }
+      ]
+    },
+    {
+      "name": "IfcPresentationStyle",
+      "children": [
+        {
+          "name": "IfcCurveStyle"
+        },
+        {
+          "name": "IfcFillAreaStyle"
+        },
+        {
+          "name": "IfcSurfaceStyle"
+        },
+        {
+          "name": "IfcTextStyle"
+        }
+      ]
+    },
+    {
+      "name": "IfcPresentationStyleAssignment"
+    },
+    {
+      "name": "IfcProductRepresentation",
+      "children": [
+        {
+          "name": "IfcMaterialDefinitionRepresentation"
+        },
+        {
+          "name": "IfcProductDefinitionShape"
+        }
+      ]
+    },
+    {
+      "name": "IfcProfileDef",
+      "children": [
+        {
+          "name": "IfcArbitraryClosedProfileDef",
+          "children": [
+            {
+              "name": "IfcArbitraryProfileDefWithVoids"
+            }
+          ]
+        },
+        {
+          "name": "IfcArbitraryOpenProfileDef",
+          "children": [
+            {
+              "name": "IfcCenterLineProfileDef"
+            }
+          ]
+        },
+        {
+          "name": "IfcCompositeProfileDef"
+        },
+        {
+          "name": "IfcDerivedProfileDef",
+          "children": [
+            {
+              "name": "IfcMirroredProfileDef"
+            }
+          ]
+        },
+        {
+          "name": "IfcParameterizedProfileDef",
+          "children": [
+            {
+              "name": "IfcAsymmetricIShapeProfileDef"
+            },
+            {
+              "name": "IfcCShapeProfileDef"
+            },
+            {
+              "name": "IfcCircleProfileDef",
+              "children": [
+                {
+                  "name": "IfcCircleHollowProfileDef"
+                }
+              ]
+            },
+            {
+              "name": "IfcEllipseProfileDef"
+            },
+            {
+              "name": "IfcIShapeProfileDef"
+            },
+            {
+              "name": "IfcLShapeProfileDef"
+            },
+            {
+              "name": "IfcRectangleProfileDef",
+              "children": [
+                {
+                  "name": "IfcRectangleHollowProfileDef"
+                },
+                {
+                  "name": "IfcRoundedRectangleProfileDef"
+                }
+              ]
+            },
+            {
+              "name": "IfcTShapeProfileDef"
+            },
+            {
+              "name": "IfcTrapeziumProfileDef"
+            },
+            {
+              "name": "IfcUShapeProfileDef"
+            },
+            {
+              "name": "IfcZShapeProfileDef"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IfcPropertyAbstraction",
+      "children": [
+        {
+          "name": "IfcExtendedProperties",
+          "children": [
+            {
+              "name": "IfcMaterialProperties"
+            },
+            {
+              "name": "IfcProfileProperties"
+            }
+          ]
+        },
+        {
+          "name": "IfcPreDefinedProperties",
+          "children": [
+            {
+              "name": "IfcReinforcementBarProperties"
+            },
+            {
+              "name": "IfcSectionProperties"
+            },
+            {
+              "name": "IfcSectionReinforcementProperties"
+            }
+          ]
+        },
+        {
+          "name": "IfcProperty",
+          "children": [
+            {
+              "name": "IfcComplexProperty"
+            },
+            {
+              "name": "IfcSimpleProperty",
+              "children": [
+                {
+                  "name": "IfcPropertyBoundedValue"
+                },
+                {
+                  "name": "IfcPropertyEnumeratedValue"
+                },
+                {
+                  "name": "IfcPropertyListValue"
+                },
+                {
+                  "name": "IfcPropertyReferenceValue"
+                },
+                {
+                  "name": "IfcPropertySingleValue"
+                },
+                {
+                  "name": "IfcPropertyTableValue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "IfcPropertyEnumeration"
+        }
+      ]
+    },
+    {
+      "name": "IfcRecurrencePattern"
+    },
+    {
+      "name": "IfcReference"
+    },
+    {
+      "name": "IfcRepresentation",
+      "children": [
+        {
+          "name": "IfcShapeModel",
+          "children": [
+            {
+              "name": "IfcShapeRepresentation"
+            },
+            {
+              "name": "IfcTopologyRepresentation"
+            }
+          ]
+        },
+        {
+          "name": "IfcStyleModel",
+          "children": [
+            {
+              "name": "IfcStyledRepresentation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IfcRepresentationContext",
+      "children": [
+        {
+          "name": "IfcGeometricRepresentationContext",
+          "children": [
+            {
+              "name": "IfcGeometricRepresentationSubContext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IfcRepresentationItem",
+      "children": [
+        {
+          "name": "IfcGeometricRepresentationItem",
+          "children": [
+            {
+              "name": "IfcAnnotationFillArea"
+            },
+            {
+              "name": "IfcBooleanResult",
+              "children": [
+                {
+                  "name": "IfcBooleanClippingResult"
+                }
+              ]
+            },
+            {
+              "name": "IfcBoundingBox"
+            },
+            {
+              "name": "IfcCartesianPointList",
+              "children": [
+                {
+                  "name": "IfcCartesianPointList2D"
+                },
+                {
+                  "name": "IfcCartesianPointList3D"
+                }
+              ]
+            },
+            {
+              "name": "IfcCartesianTransformationOperator",
+              "children": [
+                {
+                  "name": "IfcCartesianTransformationOperator2D",
+                  "children": [
+                    {
+                      "name": "IfcCartesianTransformationOperator2DnonUniform"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcCartesianTransformationOperator3D",
+                  "children": [
+                    {
+                      "name": "IfcCartesianTransformationOperator3DnonUniform"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcCompositeCurveSegment",
+              "children": [
+                {
+                  "name": "IfcReparametrisedCompositeCurveSegment"
+                }
+              ]
+            },
+            {
+              "name": "IfcCsgPrimitive3D",
+              "children": [
+                {
+                  "name": "IfcBlock"
+                },
+                {
+                  "name": "IfcRectangularPyramid"
+                },
+                {
+                  "name": "IfcRightCircularCone"
+                },
+                {
+                  "name": "IfcRightCircularCylinder"
+                },
+                {
+                  "name": "IfcSphere"
+                }
+              ]
+            },
+            {
+              "name": "IfcCurve",
+              "children": [
+                {
+                  "name": "IfcBoundedCurve",
+                  "children": [
+                    {
+                      "name": "IfcBSplineCurve",
+                      "children": [
+                        {
+                          "name": "IfcBSplineCurveWithKnots",
+                          "children": [
+                            {
+                              "name": "IfcRationalBSplineCurveWithKnots"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcCompositeCurve",
+                      "children": [
+                        {
+                          "name": "IfcCompositeCurveOnSurface",
+                          "children": [
+                            {
+                              "name": "IfcBoundaryCurve",
+                              "children": [
+                                {
+                                  "name": "IfcOuterBoundaryCurve"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcIndexedPolyCurve"
+                    },
+                    {
+                      "name": "IfcPolyline"
+                    },
+                    {
+                      "name": "IfcTrimmedCurve"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcConic",
+                  "children": [
+                    {
+                      "name": "IfcCircle"
+                    },
+                    {
+                      "name": "IfcEllipse"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcLine"
+                },
+                {
+                  "name": "IfcOffsetCurve2D"
+                },
+                {
+                  "name": "IfcOffsetCurve3D"
+                },
+                {
+                  "name": "IfcPcurve"
+                },
+                {
+                  "name": "IfcSurfaceCurve",
+                  "children": [
+                    {
+                      "name": "IfcIntersectionCurve"
+                    },
+                    {
+                      "name": "IfcSeamCurve"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcDirection"
+            },
+            {
+              "name": "IfcFaceBasedSurfaceModel"
+            },
+            {
+              "name": "IfcFillAreaStyleHatching"
+            },
+            {
+              "name": "IfcFillAreaStyleTiles"
+            },
+            {
+              "name": "IfcGeometricSet",
+              "children": [
+                {
+                  "name": "IfcGeometricCurveSet"
+                }
+              ]
+            },
+            {
+              "name": "IfcHalfSpaceSolid",
+              "children": [
+                {
+                  "name": "IfcBoxedHalfSpace"
+                },
+                {
+                  "name": "IfcPolygonalBoundedHalfSpace"
+                }
+              ]
+            },
+            {
+              "name": "IfcLightSource",
+              "children": [
+                {
+                  "name": "IfcLightSourceAmbient"
+                },
+                {
+                  "name": "IfcLightSourceDirectional"
+                },
+                {
+                  "name": "IfcLightSourceGoniometric"
+                },
+                {
+                  "name": "IfcLightSourcePositional",
+                  "children": [
+                    {
+                      "name": "IfcLightSourceSpot"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcPlacement",
+              "children": [
+                {
+                  "name": "IfcAxis1Placement"
+                },
+                {
+                  "name": "IfcAxis2Placement2D"
+                },
+                {
+                  "name": "IfcAxis2Placement3D"
+                }
+              ]
+            },
+            {
+              "name": "IfcPlanarExtent",
+              "children": [
+                {
+                  "name": "IfcPlanarBox"
+                }
+              ]
+            },
+            {
+              "name": "IfcPoint",
+              "children": [
+                {
+                  "name": "IfcCartesianPoint"
+                },
+                {
+                  "name": "IfcPointOnCurve"
+                },
+                {
+                  "name": "IfcPointOnSurface"
+                }
+              ]
+            },
+            {
+              "name": "IfcSectionedSpine"
+            },
+            {
+              "name": "IfcShellBasedSurfaceModel"
+            },
+            {
+              "name": "IfcSolidModel",
+              "children": [
+                {
+                  "name": "IfcCsgSolid"
+                },
+                {
+                  "name": "IfcManifoldSolidBrep",
+                  "children": [
+                    {
+                      "name": "IfcAdvancedBrep",
+                      "children": [
+                        {
+                          "name": "IfcAdvancedBrepWithVoids"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcFacetedBrep",
+                      "children": [
+                        {
+                          "name": "IfcFacetedBrepWithVoids"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcSweptAreaSolid",
+                  "children": [
+                    {
+                      "name": "IfcExtrudedAreaSolid",
+                      "children": [
+                        {
+                          "name": "IfcExtrudedAreaSolidTapered"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcFixedReferenceSweptAreaSolid"
+                    },
+                    {
+                      "name": "IfcRevolvedAreaSolid",
+                      "children": [
+                        {
+                          "name": "IfcRevolvedAreaSolidTapered"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcSurfaceCurveSweptAreaSolid"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcSweptDiskSolid",
+                  "children": [
+                    {
+                      "name": "IfcSweptDiskSolidPolygonal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcSurface",
+              "children": [
+                {
+                  "name": "IfcBoundedSurface",
+                  "children": [
+                    {
+                      "name": "IfcBSplineSurface",
+                      "children": [
+                        {
+                          "name": "IfcBSplineSurfaceWithKnots",
+                          "children": [
+                            {
+                              "name": "IfcRationalBSplineSurfaceWithKnots"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcCurveBoundedPlane"
+                    },
+                    {
+                      "name": "IfcCurveBoundedSurface"
+                    },
+                    {
+                      "name": "IfcRectangularTrimmedSurface"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcElementarySurface",
+                  "children": [
+                    {
+                      "name": "IfcCylindricalSurface"
+                    },
+                    {
+                      "name": "IfcPlane"
+                    },
+                    {
+                      "name": "IfcSphericalSurface"
+                    },
+                    {
+                      "name": "IfcToroidalSurface"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcSweptSurface",
+                  "children": [
+                    {
+                      "name": "IfcSurfaceOfLinearExtrusion"
+                    },
+                    {
+                      "name": "IfcSurfaceOfRevolution"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcTessellatedItem",
+              "children": [
+                {
+                  "name": "IfcIndexedPolygonalFace",
+                  "children": [
+                    {
+                      "name": "IfcIndexedPolygonalFaceWithVoids"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcTessellatedFaceSet",
+                  "children": [
+                    {
+                      "name": "IfcPolygonalFaceSet"
+                    },
+                    {
+                      "name": "IfcTriangulatedFaceSet"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcTextLiteral",
+              "children": [
+                {
+                  "name": "IfcTextLiteralWithExtent"
+                }
+              ]
+            },
+            {
+              "name": "IfcVector"
+            }
+          ]
+        },
+        {
+          "name": "IfcMappedItem"
+        },
+        {
+          "name": "IfcStyledItem"
+        },
+        {
+          "name": "IfcTopologicalRepresentationItem",
+          "children": [
+            {
+              "name": "IfcConnectedFaceSet",
+              "children": [
+                {
+                  "name": "IfcClosedShell"
+                },
+                {
+                  "name": "IfcOpenShell"
+                }
+              ]
+            },
+            {
+              "name": "IfcEdge",
+              "children": [
+                {
+                  "name": "IfcEdgeCurve"
+                },
+                {
+                  "name": "IfcOrientedEdge"
+                },
+                {
+                  "name": "IfcSubedge"
+                }
+              ]
+            },
+            {
+              "name": "IfcFace",
+              "children": [
+                {
+                  "name": "IfcFaceSurface",
+                  "children": [
+                    {
+                      "name": "IfcAdvancedFace"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcFaceBound",
+              "children": [
+                {
+                  "name": "IfcFaceOuterBound"
+                }
+              ]
+            },
+            {
+              "name": "IfcLoop",
+              "children": [
+                {
+                  "name": "IfcEdgeLoop"
+                },
+                {
+                  "name": "IfcPolyLoop"
+                },
+                {
+                  "name": "IfcVertexLoop"
+                }
+              ]
+            },
+            {
+              "name": "IfcPath"
+            },
+            {
+              "name": "IfcVertex",
+              "children": [
+                {
+                  "name": "IfcVertexPoint"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IfcRepresentationMap"
+    },
+    {
+      "name": "IfcResourceLevelRelationship",
+      "children": [
+        {
+          "name": "IfcApprovalRelationship"
+        },
+        {
+          "name": "IfcCurrencyRelationship"
+        },
+        {
+          "name": "IfcDocumentInformationRelationship"
+        },
+        {
+          "name": "IfcExternalReferenceRelationship"
+        },
+        {
+          "name": "IfcMaterialRelationship"
+        },
+        {
+          "name": "IfcOrganizationRelationship"
+        },
+        {
+          "name": "IfcPropertyDependencyRelationship"
+        },
+        {
+          "name": "IfcResourceApprovalRelationship"
+        },
+        {
+          "name": "IfcResourceConstraintRelationship"
+        }
+      ]
+    },
+    {
+      "name": "IfcRoot",
+      "children": [
+        {
+          "name": "IfcObjectDefinition",
+          "children": [
+            {
+              "name": "IfcContext",
+              "children": [
+                {
+                  "name": "IfcProject"
+                },
+                {
+                  "name": "IfcProjectLibrary"
+                }
+              ]
+            },
+            {
+              "name": "IfcObject",
+              "children": [
+                {
+                  "name": "IfcActor",
+                  "children": [
+                    {
+                      "name": "IfcOccupant"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcControl",
+                  "children": [
+                    {
+                      "name": "IfcActionRequest"
+                    },
+                    {
+                      "name": "IfcCostItem"
+                    },
+                    {
+                      "name": "IfcCostSchedule"
+                    },
+                    {
+                      "name": "IfcPerformanceHistory"
+                    },
+                    {
+                      "name": "IfcPermit"
+                    },
+                    {
+                      "name": "IfcProjectOrder"
+                    },
+                    {
+                      "name": "IfcWorkCalendar"
+                    },
+                    {
+                      "name": "IfcWorkControl",
+                      "children": [
+                        {
+                          "name": "IfcWorkPlan"
+                        },
+                        {
+                          "name": "IfcWorkSchedule"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcGroup",
+                  "children": [
+                    {
+                      "name": "IfcAsset"
+                    },
+                    {
+                      "name": "IfcInventory"
+                    },
+                    {
+                      "name": "IfcStructuralLoadGroup",
+                      "children": [
+                        {
+                          "name": "IfcStructuralLoadCase"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcStructuralResultGroup"
+                    },
+                    {
+                      "name": "IfcSystem",
+                      "children": [
+                        {
+                          "name": "IfcBuildingSystem"
+                        },
+                        {
+                          "name": "IfcDistributionSystem",
+                          "children": [
+                            {
+                              "name": "IfcDistributionCircuit"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcStructuralAnalysisModel"
+                        },
+                        {
+                          "name": "IfcZone"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcProcess",
+                  "children": [
+                    {
+                      "name": "IfcEvent"
+                    },
+                    {
+                      "name": "IfcProcedure"
+                    },
+                    {
+                      "name": "IfcTask"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcProduct",
+                  "children": [
+                    {
+                      "name": "IfcAnnotation"
+                    },
+                    {
+                      "name": "IfcElement",
+                      "children": [
+                        {
+                          "name": "IfcBuildingElement",
+                          "children": [
+                            {
+                              "name": "IfcBeam",
+                              "children": [
+                                {
+                                  "name": "IfcBeamStandardCase"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcBuildingElementProxy"
+                            },
+                            {
+                              "name": "IfcChimney"
+                            },
+                            {
+                              "name": "IfcColumn",
+                              "children": [
+                                {
+                                  "name": "IfcColumnStandardCase"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcCovering"
+                            },
+                            {
+                              "name": "IfcCurtainWall"
+                            },
+                            {
+                              "name": "IfcDoor",
+                              "children": [
+                                {
+                                  "name": "IfcDoorStandardCase"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcFooting"
+                            },
+                            {
+                              "name": "IfcMember",
+                              "children": [
+                                {
+                                  "name": "IfcMemberStandardCase"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcPile"
+                            },
+                            {
+                              "name": "IfcPlate",
+                              "children": [
+                                {
+                                  "name": "IfcPlateStandardCase"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcRailing"
+                            },
+                            {
+                              "name": "IfcRamp"
+                            },
+                            {
+                              "name": "IfcRampFlight"
+                            },
+                            {
+                              "name": "IfcRoof"
+                            },
+                            {
+                              "name": "IfcShadingDevice"
+                            },
+                            {
+                              "name": "IfcSlab",
+                              "children": [
+                                {
+                                  "name": "IfcSlabElementedCase"
+                                },
+                                {
+                                  "name": "IfcSlabStandardCase"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcStair"
+                            },
+                            {
+                              "name": "IfcStairFlight"
+                            },
+                            {
+                              "name": "IfcWall",
+                              "children": [
+                                {
+                                  "name": "IfcWallElementedCase"
+                                },
+                                {
+                                  "name": "IfcWallStandardCase"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcWindow",
+                              "children": [
+                                {
+                                  "name": "IfcWindowStandardCase"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcCivilElement"
+                        },
+                        {
+                          "name": "IfcDistributionElement",
+                          "children": [
+                            {
+                              "name": "IfcDistributionControlElement",
+                              "children": [
+                                {
+                                  "name": "IfcActuator"
+                                },
+                                {
+                                  "name": "IfcAlarm"
+                                },
+                                {
+                                  "name": "IfcController"
+                                },
+                                {
+                                  "name": "IfcFlowInstrument"
+                                },
+                                {
+                                  "name": "IfcProtectiveDeviceTrippingUnit"
+                                },
+                                {
+                                  "name": "IfcSensor"
+                                },
+                                {
+                                  "name": "IfcUnitaryControlElement"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcDistributionFlowElement",
+                              "children": [
+                                {
+                                  "name": "IfcDistributionChamberElement"
+                                },
+                                {
+                                  "name": "IfcEnergyConversionDevice",
+                                  "children": [
+                                    {
+                                      "name": "IfcAirToAirHeatRecovery"
+                                    },
+                                    {
+                                      "name": "IfcBoiler"
+                                    },
+                                    {
+                                      "name": "IfcBurner"
+                                    },
+                                    {
+                                      "name": "IfcChiller"
+                                    },
+                                    {
+                                      "name": "IfcCoil"
+                                    },
+                                    {
+                                      "name": "IfcCondenser"
+                                    },
+                                    {
+                                      "name": "IfcCooledBeam"
+                                    },
+                                    {
+                                      "name": "IfcCoolingTower"
+                                    },
+                                    {
+                                      "name": "IfcElectricGenerator"
+                                    },
+                                    {
+                                      "name": "IfcElectricMotor"
+                                    },
+                                    {
+                                      "name": "IfcEngine"
+                                    },
+                                    {
+                                      "name": "IfcEvaporativeCooler"
+                                    },
+                                    {
+                                      "name": "IfcEvaporator"
+                                    },
+                                    {
+                                      "name": "IfcHeatExchanger"
+                                    },
+                                    {
+                                      "name": "IfcHumidifier"
+                                    },
+                                    {
+                                      "name": "IfcMotorConnection"
+                                    },
+                                    {
+                                      "name": "IfcSolarDevice"
+                                    },
+                                    {
+                                      "name": "IfcTransformer"
+                                    },
+                                    {
+                                      "name": "IfcTubeBundle"
+                                    },
+                                    {
+                                      "name": "IfcUnitaryEquipment"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowController",
+                                  "children": [
+                                    {
+                                      "name": "IfcAirTerminalBox"
+                                    },
+                                    {
+                                      "name": "IfcDamper"
+                                    },
+                                    {
+                                      "name": "IfcElectricDistributionBoard"
+                                    },
+                                    {
+                                      "name": "IfcElectricTimeControl"
+                                    },
+                                    {
+                                      "name": "IfcFlowMeter"
+                                    },
+                                    {
+                                      "name": "IfcProtectiveDevice"
+                                    },
+                                    {
+                                      "name": "IfcSwitchingDevice"
+                                    },
+                                    {
+                                      "name": "IfcValve"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowFitting",
+                                  "children": [
+                                    {
+                                      "name": "IfcCableCarrierFitting"
+                                    },
+                                    {
+                                      "name": "IfcCableFitting"
+                                    },
+                                    {
+                                      "name": "IfcDuctFitting"
+                                    },
+                                    {
+                                      "name": "IfcJunctionBox"
+                                    },
+                                    {
+                                      "name": "IfcPipeFitting"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowMovingDevice",
+                                  "children": [
+                                    {
+                                      "name": "IfcCompressor"
+                                    },
+                                    {
+                                      "name": "IfcFan"
+                                    },
+                                    {
+                                      "name": "IfcPump"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowSegment",
+                                  "children": [
+                                    {
+                                      "name": "IfcCableCarrierSegment"
+                                    },
+                                    {
+                                      "name": "IfcCableSegment"
+                                    },
+                                    {
+                                      "name": "IfcDuctSegment"
+                                    },
+                                    {
+                                      "name": "IfcPipeSegment"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowStorageDevice",
+                                  "children": [
+                                    {
+                                      "name": "IfcElectricFlowStorageDevice"
+                                    },
+                                    {
+                                      "name": "IfcTank"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowTerminal",
+                                  "children": [
+                                    {
+                                      "name": "IfcAirTerminal"
+                                    },
+                                    {
+                                      "name": "IfcAudioVisualAppliance"
+                                    },
+                                    {
+                                      "name": "IfcCommunicationsAppliance"
+                                    },
+                                    {
+                                      "name": "IfcElectricAppliance"
+                                    },
+                                    {
+                                      "name": "IfcFireSuppressionTerminal"
+                                    },
+                                    {
+                                      "name": "IfcLamp"
+                                    },
+                                    {
+                                      "name": "IfcLightFixture"
+                                    },
+                                    {
+                                      "name": "IfcMedicalDevice"
+                                    },
+                                    {
+                                      "name": "IfcOutlet"
+                                    },
+                                    {
+                                      "name": "IfcSanitaryTerminal"
+                                    },
+                                    {
+                                      "name": "IfcSpaceHeater"
+                                    },
+                                    {
+                                      "name": "IfcStackTerminal"
+                                    },
+                                    {
+                                      "name": "IfcWasteTerminal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowTreatmentDevice",
+                                  "children": [
+                                    {
+                                      "name": "IfcDuctSilencer"
+                                    },
+                                    {
+                                      "name": "IfcFilter"
+                                    },
+                                    {
+                                      "name": "IfcInterceptor"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcElementAssembly"
+                        },
+                        {
+                          "name": "IfcElementComponent",
+                          "children": [
+                            {
+                              "name": "IfcBuildingElementPart"
+                            },
+                            {
+                              "name": "IfcDiscreteAccessory"
+                            },
+                            {
+                              "name": "IfcFastener"
+                            },
+                            {
+                              "name": "IfcMechanicalFastener"
+                            },
+                            {
+                              "name": "IfcReinforcingElement",
+                              "children": [
+                                {
+                                  "name": "IfcReinforcingBar"
+                                },
+                                {
+                                  "name": "IfcReinforcingMesh"
+                                },
+                                {
+                                  "name": "IfcTendon"
+                                },
+                                {
+                                  "name": "IfcTendonAnchor"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcVibrationIsolator"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcFeatureElement",
+                          "children": [
+                            {
+                              "name": "IfcFeatureElementAddition",
+                              "children": [
+                                {
+                                  "name": "IfcProjectionElement"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcFeatureElementSubtraction",
+                              "children": [
+                                {
+                                  "name": "IfcOpeningElement",
+                                  "children": [
+                                    {
+                                      "name": "IfcOpeningStandardCase"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcVoidingFeature"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcSurfaceFeature"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcFurnishingElement",
+                          "children": [
+                            {
+                              "name": "IfcFurniture"
+                            },
+                            {
+                              "name": "IfcSystemFurnitureElement"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcGeographicElement"
+                        },
+                        {
+                          "name": "IfcTransportElement"
+                        },
+                        {
+                          "name": "IfcVirtualElement"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcGrid"
+                    },
+                    {
+                      "name": "IfcPort",
+                      "children": [
+                        {
+                          "name": "IfcDistributionPort"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcProxy"
+                    },
+                    {
+                      "name": "IfcSpatialElement",
+                      "children": [
+                        {
+                          "name": "IfcExternalSpatialStructureElement",
+                          "children": [
+                            {
+                              "name": "IfcExternalSpatialElement"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcSpatialStructureElement",
+                          "children": [
+                            {
+                              "name": "IfcBuilding"
+                            },
+                            {
+                              "name": "IfcBuildingStorey"
+                            },
+                            {
+                              "name": "IfcSite"
+                            },
+                            {
+                              "name": "IfcSpace"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcSpatialZone"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcStructuralActivity",
+                      "children": [
+                        {
+                          "name": "IfcStructuralAction",
+                          "children": [
+                            {
+                              "name": "IfcStructuralCurveAction",
+                              "children": [
+                                {
+                                  "name": "IfcStructuralLinearAction"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcStructuralPointAction"
+                            },
+                            {
+                              "name": "IfcStructuralSurfaceAction",
+                              "children": [
+                                {
+                                  "name": "IfcStructuralPlanarAction"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcStructuralReaction",
+                          "children": [
+                            {
+                              "name": "IfcStructuralCurveReaction"
+                            },
+                            {
+                              "name": "IfcStructuralPointReaction"
+                            },
+                            {
+                              "name": "IfcStructuralSurfaceReaction"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcStructuralItem",
+                      "children": [
+                        {
+                          "name": "IfcStructuralConnection",
+                          "children": [
+                            {
+                              "name": "IfcStructuralCurveConnection"
+                            },
+                            {
+                              "name": "IfcStructuralPointConnection"
+                            },
+                            {
+                              "name": "IfcStructuralSurfaceConnection"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcStructuralMember",
+                          "children": [
+                            {
+                              "name": "IfcStructuralCurveMember",
+                              "children": [
+                                {
+                                  "name": "IfcStructuralCurveMemberVarying"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcStructuralSurfaceMember",
+                              "children": [
+                                {
+                                  "name": "IfcStructuralSurfaceMemberVarying"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcResource",
+                  "children": [
+                    {
+                      "name": "IfcConstructionResource",
+                      "children": [
+                        {
+                          "name": "IfcConstructionEquipmentResource"
+                        },
+                        {
+                          "name": "IfcConstructionMaterialResource"
+                        },
+                        {
+                          "name": "IfcConstructionProductResource"
+                        },
+                        {
+                          "name": "IfcCrewResource"
+                        },
+                        {
+                          "name": "IfcLaborResource"
+                        },
+                        {
+                          "name": "IfcSubContractResource"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcTypeObject",
+              "children": [
+                {
+                  "name": "IfcTypeProcess",
+                  "children": [
+                    {
+                      "name": "IfcEventType"
+                    },
+                    {
+                      "name": "IfcProcedureType"
+                    },
+                    {
+                      "name": "IfcTaskType"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcTypeProduct",
+                  "children": [
+                    {
+                      "name": "IfcDoorStyle"
+                    },
+                    {
+                      "name": "IfcElementType",
+                      "children": [
+                        {
+                          "name": "IfcBuildingElementType",
+                          "children": [
+                            {
+                              "name": "IfcBeamType"
+                            },
+                            {
+                              "name": "IfcBuildingElementProxyType"
+                            },
+                            {
+                              "name": "IfcChimneyType"
+                            },
+                            {
+                              "name": "IfcColumnType"
+                            },
+                            {
+                              "name": "IfcCoveringType"
+                            },
+                            {
+                              "name": "IfcCurtainWallType"
+                            },
+                            {
+                              "name": "IfcDoorType"
+                            },
+                            {
+                              "name": "IfcFootingType"
+                            },
+                            {
+                              "name": "IfcMemberType"
+                            },
+                            {
+                              "name": "IfcPileType"
+                            },
+                            {
+                              "name": "IfcPlateType"
+                            },
+                            {
+                              "name": "IfcRailingType"
+                            },
+                            {
+                              "name": "IfcRampFlightType"
+                            },
+                            {
+                              "name": "IfcRampType"
+                            },
+                            {
+                              "name": "IfcRoofType"
+                            },
+                            {
+                              "name": "IfcShadingDeviceType"
+                            },
+                            {
+                              "name": "IfcSlabType"
+                            },
+                            {
+                              "name": "IfcStairFlightType"
+                            },
+                            {
+                              "name": "IfcStairType"
+                            },
+                            {
+                              "name": "IfcWallType"
+                            },
+                            {
+                              "name": "IfcWindowType"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcCivilElementType"
+                        },
+                        {
+                          "name": "IfcDistributionElementType",
+                          "children": [
+                            {
+                              "name": "IfcDistributionControlElementType",
+                              "children": [
+                                {
+                                  "name": "IfcActuatorType"
+                                },
+                                {
+                                  "name": "IfcAlarmType"
+                                },
+                                {
+                                  "name": "IfcControllerType"
+                                },
+                                {
+                                  "name": "IfcFlowInstrumentType"
+                                },
+                                {
+                                  "name": "IfcProtectiveDeviceTrippingUnitType"
+                                },
+                                {
+                                  "name": "IfcSensorType"
+                                },
+                                {
+                                  "name": "IfcUnitaryControlElementType"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcDistributionFlowElementType",
+                              "children": [
+                                {
+                                  "name": "IfcDistributionChamberElementType"
+                                },
+                                {
+                                  "name": "IfcEnergyConversionDeviceType",
+                                  "children": [
+                                    {
+                                      "name": "IfcAirToAirHeatRecoveryType"
+                                    },
+                                    {
+                                      "name": "IfcBoilerType"
+                                    },
+                                    {
+                                      "name": "IfcBurnerType"
+                                    },
+                                    {
+                                      "name": "IfcChillerType"
+                                    },
+                                    {
+                                      "name": "IfcCoilType"
+                                    },
+                                    {
+                                      "name": "IfcCondenserType"
+                                    },
+                                    {
+                                      "name": "IfcCooledBeamType"
+                                    },
+                                    {
+                                      "name": "IfcCoolingTowerType"
+                                    },
+                                    {
+                                      "name": "IfcElectricGeneratorType"
+                                    },
+                                    {
+                                      "name": "IfcElectricMotorType"
+                                    },
+                                    {
+                                      "name": "IfcEngineType"
+                                    },
+                                    {
+                                      "name": "IfcEvaporativeCoolerType"
+                                    },
+                                    {
+                                      "name": "IfcEvaporatorType"
+                                    },
+                                    {
+                                      "name": "IfcHeatExchangerType"
+                                    },
+                                    {
+                                      "name": "IfcHumidifierType"
+                                    },
+                                    {
+                                      "name": "IfcMotorConnectionType"
+                                    },
+                                    {
+                                      "name": "IfcSolarDeviceType"
+                                    },
+                                    {
+                                      "name": "IfcTransformerType"
+                                    },
+                                    {
+                                      "name": "IfcTubeBundleType"
+                                    },
+                                    {
+                                      "name": "IfcUnitaryEquipmentType"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowControllerType",
+                                  "children": [
+                                    {
+                                      "name": "IfcAirTerminalBoxType"
+                                    },
+                                    {
+                                      "name": "IfcDamperType"
+                                    },
+                                    {
+                                      "name": "IfcElectricDistributionBoardType"
+                                    },
+                                    {
+                                      "name": "IfcElectricTimeControlType"
+                                    },
+                                    {
+                                      "name": "IfcFlowMeterType"
+                                    },
+                                    {
+                                      "name": "IfcProtectiveDeviceType"
+                                    },
+                                    {
+                                      "name": "IfcSwitchingDeviceType"
+                                    },
+                                    {
+                                      "name": "IfcValveType"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowFittingType",
+                                  "children": [
+                                    {
+                                      "name": "IfcCableCarrierFittingType"
+                                    },
+                                    {
+                                      "name": "IfcCableFittingType"
+                                    },
+                                    {
+                                      "name": "IfcDuctFittingType"
+                                    },
+                                    {
+                                      "name": "IfcJunctionBoxType"
+                                    },
+                                    {
+                                      "name": "IfcPipeFittingType"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowMovingDeviceType",
+                                  "children": [
+                                    {
+                                      "name": "IfcCompressorType"
+                                    },
+                                    {
+                                      "name": "IfcFanType"
+                                    },
+                                    {
+                                      "name": "IfcPumpType"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowSegmentType",
+                                  "children": [
+                                    {
+                                      "name": "IfcCableCarrierSegmentType"
+                                    },
+                                    {
+                                      "name": "IfcCableSegmentType"
+                                    },
+                                    {
+                                      "name": "IfcDuctSegmentType"
+                                    },
+                                    {
+                                      "name": "IfcPipeSegmentType"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowStorageDeviceType",
+                                  "children": [
+                                    {
+                                      "name": "IfcElectricFlowStorageDeviceType"
+                                    },
+                                    {
+                                      "name": "IfcTankType"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowTerminalType",
+                                  "children": [
+                                    {
+                                      "name": "IfcAirTerminalType"
+                                    },
+                                    {
+                                      "name": "IfcAudioVisualApplianceType"
+                                    },
+                                    {
+                                      "name": "IfcCommunicationsApplianceType"
+                                    },
+                                    {
+                                      "name": "IfcElectricApplianceType"
+                                    },
+                                    {
+                                      "name": "IfcFireSuppressionTerminalType"
+                                    },
+                                    {
+                                      "name": "IfcLampType"
+                                    },
+                                    {
+                                      "name": "IfcLightFixtureType"
+                                    },
+                                    {
+                                      "name": "IfcMedicalDeviceType"
+                                    },
+                                    {
+                                      "name": "IfcOutletType"
+                                    },
+                                    {
+                                      "name": "IfcSanitaryTerminalType"
+                                    },
+                                    {
+                                      "name": "IfcSpaceHeaterType"
+                                    },
+                                    {
+                                      "name": "IfcStackTerminalType"
+                                    },
+                                    {
+                                      "name": "IfcWasteTerminalType"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "IfcFlowTreatmentDeviceType",
+                                  "children": [
+                                    {
+                                      "name": "IfcDuctSilencerType"
+                                    },
+                                    {
+                                      "name": "IfcFilterType"
+                                    },
+                                    {
+                                      "name": "IfcInterceptorType"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcElementAssemblyType"
+                        },
+                        {
+                          "name": "IfcElementComponentType",
+                          "children": [
+                            {
+                              "name": "IfcBuildingElementPartType"
+                            },
+                            {
+                              "name": "IfcDiscreteAccessoryType"
+                            },
+                            {
+                              "name": "IfcFastenerType"
+                            },
+                            {
+                              "name": "IfcMechanicalFastenerType"
+                            },
+                            {
+                              "name": "IfcReinforcingElementType",
+                              "children": [
+                                {
+                                  "name": "IfcReinforcingBarType"
+                                },
+                                {
+                                  "name": "IfcReinforcingMeshType"
+                                },
+                                {
+                                  "name": "IfcTendonAnchorType"
+                                },
+                                {
+                                  "name": "IfcTendonType"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "IfcVibrationIsolatorType"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcFurnishingElementType",
+                          "children": [
+                            {
+                              "name": "IfcFurnitureType"
+                            },
+                            {
+                              "name": "IfcSystemFurnitureElementType"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcGeographicElementType"
+                        },
+                        {
+                          "name": "IfcTransportElementType"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcSpatialElementType",
+                      "children": [
+                        {
+                          "name": "IfcSpatialStructureElementType",
+                          "children": [
+                            {
+                              "name": "IfcSpaceType"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "IfcSpatialZoneType"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "IfcWindowStyle"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcTypeResource",
+                  "children": [
+                    {
+                      "name": "IfcConstructionResourceType",
+                      "children": [
+                        {
+                          "name": "IfcConstructionEquipmentResourceType"
+                        },
+                        {
+                          "name": "IfcConstructionMaterialResourceType"
+                        },
+                        {
+                          "name": "IfcConstructionProductResourceType"
+                        },
+                        {
+                          "name": "IfcCrewResourceType"
+                        },
+                        {
+                          "name": "IfcLaborResourceType"
+                        },
+                        {
+                          "name": "IfcSubContractResourceType"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "IfcPropertyDefinition",
+          "children": [
+            {
+              "name": "IfcPropertySetDefinition",
+              "children": [
+                {
+                  "name": "IfcPreDefinedPropertySet",
+                  "children": [
+                    {
+                      "name": "IfcDoorLiningProperties"
+                    },
+                    {
+                      "name": "IfcDoorPanelProperties"
+                    },
+                    {
+                      "name": "IfcPermeableCoveringProperties"
+                    },
+                    {
+                      "name": "IfcReinforcementDefinitionProperties"
+                    },
+                    {
+                      "name": "IfcWindowLiningProperties"
+                    },
+                    {
+                      "name": "IfcWindowPanelProperties"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcPropertySet"
+                },
+                {
+                  "name": "IfcQuantitySet",
+                  "children": [
+                    {
+                      "name": "IfcElementQuantity"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcPropertyTemplateDefinition",
+              "children": [
+                {
+                  "name": "IfcPropertySetTemplate"
+                },
+                {
+                  "name": "IfcPropertyTemplate",
+                  "children": [
+                    {
+                      "name": "IfcComplexPropertyTemplate"
+                    },
+                    {
+                      "name": "IfcSimplePropertyTemplate"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "IfcRelationship",
+          "children": [
+            {
+              "name": "IfcRelAssigns",
+              "children": [
+                {
+                  "name": "IfcRelAssignsToActor"
+                },
+                {
+                  "name": "IfcRelAssignsToControl"
+                },
+                {
+                  "name": "IfcRelAssignsToGroup",
+                  "children": [
+                    {
+                      "name": "IfcRelAssignsToGroupByFactor"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcRelAssignsToProcess"
+                },
+                {
+                  "name": "IfcRelAssignsToProduct"
+                },
+                {
+                  "name": "IfcRelAssignsToResource"
+                }
+              ]
+            },
+            {
+              "name": "IfcRelAssociates",
+              "children": [
+                {
+                  "name": "IfcRelAssociatesApproval"
+                },
+                {
+                  "name": "IfcRelAssociatesClassification"
+                },
+                {
+                  "name": "IfcRelAssociatesConstraint"
+                },
+                {
+                  "name": "IfcRelAssociatesDocument"
+                },
+                {
+                  "name": "IfcRelAssociatesLibrary"
+                },
+                {
+                  "name": "IfcRelAssociatesMaterial"
+                }
+              ]
+            },
+            {
+              "name": "IfcRelConnects",
+              "children": [
+                {
+                  "name": "IfcRelConnectsElements",
+                  "children": [
+                    {
+                      "name": "IfcRelConnectsPathElements"
+                    },
+                    {
+                      "name": "IfcRelConnectsWithRealizingElements"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcRelConnectsPortToElement"
+                },
+                {
+                  "name": "IfcRelConnectsPorts"
+                },
+                {
+                  "name": "IfcRelConnectsStructuralActivity"
+                },
+                {
+                  "name": "IfcRelConnectsStructuralMember",
+                  "children": [
+                    {
+                      "name": "IfcRelConnectsWithEccentricity"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcRelContainedInSpatialStructure"
+                },
+                {
+                  "name": "IfcRelCoversBldgElements"
+                },
+                {
+                  "name": "IfcRelCoversSpaces"
+                },
+                {
+                  "name": "IfcRelFillsElement"
+                },
+                {
+                  "name": "IfcRelFlowControlElements"
+                },
+                {
+                  "name": "IfcRelInterferesElements"
+                },
+                {
+                  "name": "IfcRelReferencedInSpatialStructure"
+                },
+                {
+                  "name": "IfcRelSequence"
+                },
+                {
+                  "name": "IfcRelServicesBuildings"
+                },
+                {
+                  "name": "IfcRelSpaceBoundary",
+                  "children": [
+                    {
+                      "name": "IfcRelSpaceBoundary1stLevel",
+                      "children": [
+                        {
+                          "name": "IfcRelSpaceBoundary2ndLevel"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "IfcRelDeclares"
+            },
+            {
+              "name": "IfcRelDecomposes",
+              "children": [
+                {
+                  "name": "IfcRelAggregates"
+                },
+                {
+                  "name": "IfcRelNests"
+                },
+                {
+                  "name": "IfcRelProjectsElement"
+                },
+                {
+                  "name": "IfcRelVoidsElement"
+                }
+              ]
+            },
+            {
+              "name": "IfcRelDefines",
+              "children": [
+                {
+                  "name": "IfcRelDefinesByObject"
+                },
+                {
+                  "name": "IfcRelDefinesByProperties"
+                },
+                {
+                  "name": "IfcRelDefinesByTemplate"
+                },
+                {
+                  "name": "IfcRelDefinesByType"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IfcSchedulingTime",
+      "children": [
+        {
+          "name": "IfcEventTime"
+        },
+        {
+          "name": "IfcLagTime"
+        },
+        {
+          "name": "IfcResourceTime"
+        },
+        {
+          "name": "IfcTaskTime",
+          "children": [
+            {
+              "name": "IfcTaskTimeRecurring"
+            }
+          ]
+        },
+        {
+          "name": "IfcWorkTime"
+        }
+      ]
+    },
+    {
+      "name": "IfcShapeAspect"
+    },
+    {
+      "name": "IfcStructuralConnectionCondition",
+      "children": [
+        {
+          "name": "IfcFailureConnectionCondition"
+        },
+        {
+          "name": "IfcSlippageConnectionCondition"
+        }
+      ]
+    },
+    {
+      "name": "IfcStructuralLoad",
+      "children": [
+        {
+          "name": "IfcStructuralLoadConfiguration"
+        },
+        {
+          "name": "IfcStructuralLoadOrResult",
+          "children": [
+            {
+              "name": "IfcStructuralLoadStatic",
+              "children": [
+                {
+                  "name": "IfcStructuralLoadLinearForce"
+                },
+                {
+                  "name": "IfcStructuralLoadPlanarForce"
+                },
+                {
+                  "name": "IfcStructuralLoadSingleDisplacement",
+                  "children": [
+                    {
+                      "name": "IfcStructuralLoadSingleDisplacementDistortion"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcStructuralLoadSingleForce",
+                  "children": [
+                    {
+                      "name": "IfcStructuralLoadSingleForceWarping"
+                    }
+                  ]
+                },
+                {
+                  "name": "IfcStructuralLoadTemperature"
+                }
+              ]
+            },
+            {
+              "name": "IfcSurfaceReinforcementArea"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IfcTable"
+    },
+    {
+      "name": "IfcTableColumn"
+    },
+    {
+      "name": "IfcTableRow"
+    },
+    {
+      "name": "IfcTimePeriod"
+    },
+    {
+      "name": "IfcTimeSeries",
+      "children": [
+        {
+          "name": "IfcIrregularTimeSeries"
+        },
+        {
+          "name": "IfcRegularTimeSeries"
+        }
+      ]
+    },
+    {
+      "name": "IfcTimeSeriesValue"
+    },
+    {
+      "name": "IfcUnitAssignment"
+    },
+    {
+      "name": "IfcVirtualGridIntersection"
+    }
+  ]
+}

@@ -64,7 +64,7 @@ class MemoryTree:
                         if entity_guid not in self.models[model_name]['by_entity']:
                             self.models[model_name]['by_entity'][entity_guid] = []
                         self.models[model_name]['by_entity'][entity_guid].append(component_guid)
-                        
+
                         # Track entity type from component's entityType field
                         entity_type = component.get('entityType')
                         if entity_type:
@@ -272,3 +272,59 @@ class MemoryTree:
                 types.update(self.models[model_name]['by_entityType'].keys())
         
         return sorted(list(types))
+    
+    def get_component_types(self, models: Optional[List[str]] = None) -> List[str]:
+        """Get list of all component types across models
+        
+        Args:
+            models: List of model names (None = all models)
+            
+        Returns:
+            List of component types
+        """
+        search_models = models if models else list(self.models.keys())
+        types: Set[str] = set()
+        
+        for model_name in search_models:
+            if model_name in self.models:
+                types.update(self.models[model_name]['by_type'].keys())
+        
+        return sorted(list(types))
+    
+    def get_component_guids_by_type(self, 
+                                    component_types: Optional[List[str]] = None,
+                                    models: Optional[List[str]] = None) -> List[str]:
+        """Query for component GUIDs by component type
+        
+        Args:
+            component_types: List of component types to filter by (None = all types)
+            models: List of model names (None = all models)
+            
+        Returns:
+            List of component GUIDs matching the criteria
+        """
+        # Determine which models to search
+        search_models = models if models else list(self.models.keys())
+        
+        result_guids: Set[str] = set()
+        
+        for model_name in search_models:
+            if model_name not in self.models:
+                continue
+            
+            model = self.models[model_name]
+            model_guids: Set[str] = set()
+            
+            # If component_types specified, get components of those types
+            if component_types:
+                for comp_type in component_types:
+                    if comp_type in model['by_type']:
+                        model_guids.update(model['by_type'][comp_type])
+            else:
+                # No type filters, get all components
+                model_guids = set(model['by_componentGuid'].keys())
+            
+            # Union with result from other models
+            result_guids.update(model_guids)
+        
+        return sorted(list(result_guids))

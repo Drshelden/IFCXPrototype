@@ -1,6 +1,10 @@
 import uuid
 import hashlib
-import ifcopenshell.guid as guid
+
+try:
+    import ifcopenshell.guid as guid
+except ImportError:
+    guid = None
 
 
 def toLowerCamelcase(string):
@@ -8,6 +12,8 @@ def toLowerCamelcase(string):
     return string[0].lower() + string[1:]
 
 def expandGuid(entityGuid):
+    if guid is None:
+        raise RuntimeError("ifcopenshell not available - cannot expand GUID")
     expanded = guid.expand(entityGuid)
     # Format as UUID with dashes: 8-4-4-4-12
     return str(uuid.UUID(expanded))

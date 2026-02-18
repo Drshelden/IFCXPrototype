@@ -10,9 +10,16 @@ import uuid
 import json
 import sys
 import argparse
-import ifcopenshell
-import ifcopenshell.geom
-import ifcopenshell.guid as guid
+
+try:
+    import ifcopenshell
+    import ifcopenshell.geom
+    import ifcopenshell.guid as guid
+except ImportError as e:
+    print(f"Warning: ifcopenshell not available: {e}")
+    ifcopenshell = None
+    guid = None
+
 from utils import toLowerCamelcase, generateDeterministicGuid, expandGuid
 
 INCLUDE_EMPTY_PROPERTIES = False
@@ -51,10 +58,8 @@ class IFC2JSONSimple:
     
     SCHEMA_VERSION = '0.0.1'
 
-    settings = ifcopenshell.geom.settings()
-    # settings.set("iterator-output", ifcopenshell.ifcopenshell_wrapper.NATIVE)
-    settings.set("use-world-coords", True)
-
+    settings = None  # Lazy-loaded in __init__
+    
     def __init__(self, ifcModel, COMPACT=False, EMPTY_PROPERTIES=False):
         """IFC SPF simplified converter
 
@@ -62,6 +67,14 @@ class IFC2JSONSimple:
         ifcModel: IFC filePath or ifcopenshell model instance
         COMPACT (boolean): if True then pretty print is turned off
         """
+        if ifcopenshell is None:
+            raise RuntimeError("ifcopenshell is not installed. Cannot process IFC files.")
+        
+        # Lazy-load settings on first initialization
+        if IFC2JSONSimple.settings is None:
+            IFC2JSONSimple.settings = ifcopenshell.geom.settings()
+            IFC2JSONSimple.settings.set("use-world-coords", True)
+        
         if isinstance(ifcModel, ifcopenshell.file):
             self.ifcModel = ifcModel
         else:
@@ -152,10 +165,11 @@ class IFC2JSONSimple:
         if hasattr(entity, 'GlobalId') and entity.GlobalId: fc = True
         else: fc = False
 
-        if(entity.is_a('IfcObjectDefinition')):
-            isEntityDefinition = True
-        else:            
-            isEntityDefinition = False
+        # if(entity.is_a('IfcObjectDefinition')):
+        #     isEntityDefinition = True
+        # else:            
+        #     isEntityDefinition = False
+        isEntityDefinition = True
 
         if 'Representation' in entityAttributes:
                 obj = self.toObj(entity)

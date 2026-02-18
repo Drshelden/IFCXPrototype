@@ -14,6 +14,21 @@ from flask_cors import CORS
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'ingestors'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'dataStores', 'fileBased'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'dataStores', 'mongodbBased'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils', 'ifc_utils'))
+
+# Debug logging to file
+DEBUG_LOG = None
+
+def debug_print(msg):
+    """Print to both stdout and debug log file"""
+    global DEBUG_LOG
+    print(msg, flush=True)
+    if DEBUG_LOG:
+        try:
+            with open(DEBUG_LOG, 'a', encoding='utf-8') as f:
+                f.write(msg + '\n')
+        except:
+            pass
 
 from ifc4ingestor import IFC2JSONSimple
 
@@ -31,6 +46,7 @@ class IFCProcessingServer:
         self.app = Flask(__name__)
         self.file_store = None
         self.memory_tree = None
+        self._descendants_exporter = None
         
         # Configure Flask app
         self._configure_app()
@@ -54,6 +70,7 @@ class IFCProcessingServer:
         self.app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
         self.app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
         self.app.config['DATA_STORE_TYPE'] = self.data_store_type
+        self.app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
         
         # Ensure upload folder exists
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -73,7 +90,7 @@ class IFCProcessingServer:
             
             # Refresh memory tree on startup
             self._refresh_memory_tree()
-            print(f"✅ Initialized file-based data store at: {self.file_store.base_path}")
+            print(f"[OK] Initialized file-based data store at: {self.file_store.base_path}")
             
         elif self.data_store_type == 'mongodbBased':
             from mongodbBased import MongoDBStore
@@ -100,6 +117,134 @@ class IFCProcessingServer:
         except Exception as e:
             print(f"❌ Error refreshing memory tree: {e}")
             return 0
+
+    def _expand_entity_types_for_models(self, entity_types, models):
+        """Expand entity types to include all descendants, filtered by model."""
+        if not entity_types:
+            return {}
+
+        print(f"[EXPAND] Input: entity_types={entity_types}, models={models}")
+        
+        search_models = models if models else self.memory_tree.get_models()
+        descendants = set()
+
+        try:
+            if self._descendants_exporter is None:
+                try:
+                    from ifc_descendants_export import IFCDescendantsExporter
+                    self._descendants_exporter = IFCDescendantsExporter()
+                    print("[EXPAND] Descendants exporter initialized")
+                except (Exception, SystemExit) as e:
+                    print(f"[WARN] IFC descendants exporter unavailable: {e}")
+                    self._descendants_exporter = None
+
+            if self._descendants_exporter is None:
+                descendants = set(entity_types)
+                print(f"[EXPAND] No exporter, using fallback: {descendants}")
+                raise RuntimeError("Descendants exporter unavailable")
+
+            for entity_type in entity_types:
+                entity_descendants = self._descendants_exporter.get_descendants(entity_type)
+                print(f"[EXPAND] {entity_type} -> {entity_descendants}")
+                descendants.update(entity_descendants)
+        except Exception as e:
+            print(f"[WARN] Descendant expansion failed: {e}")
+            descendants = set(entity_types)
+
+        if not descendants:
+            descendants = set(entity_types)
+
+        print(f"[EXPAND] Final descendants: {descendants}")
+        
+        per_model = {}
+        for model_name in search_models:
+            model_types = set(self.memory_tree.get_entity_types(models=[model_name]))
+            intersection = model_types.intersection(descendants)
+            per_model[model_name] = sorted(list(intersection))
+            print(f"[EXPAND] Model {model_name}: available={len(model_types)}, intersection={per_model[model_name]}")
+
+        return per_model
+    
+    def _expand_component_types_for_models(self, component_types, models):
+        """Expand component types to include all descendants, filtered by model.
+        
+        Component types are stored WITHOUT the "Component" suffix (e.g., IfcWall, IfcWallStandardCase).
+        The user can query with or without "Component" suffix - both will work.
+        """
+        if not component_types:
+            return {}
+
+        print(f"\n🔍 _expand_component_types_for_models:")
+        print(f"   Input component_types: {component_types}")
+
+        search_models = models if models else self.memory_tree.get_models()
+        descendants = set()
+
+        try:
+            if self._descendants_exporter is None:
+                try:
+                    from ifc_descendants_export import IFCDescendantsExporter
+                    self._descendants_exporter = IFCDescendantsExporter()
+                except (Exception, SystemExit) as e:
+                    print(f"⚠️  IFC descendants exporter unavailable: {e}")
+                    self._descendants_exporter = None
+
+            if self._descendants_exporter is None:
+                # If exporter unavailable, return component types as-is (stripped)
+                descendants = set()
+                for comp_type in component_types:
+                    # Strip "Component" suffix if present
+                    if comp_type.endswith('Component'):
+                        descendants.add(comp_type[:-9])
+                    else:
+                        descendants.add(comp_type)
+                print(f"   ⚠️  Exporter unavailable, using fallback: {descendants}")
+                raise RuntimeError("Descendants exporter unavailable")
+
+            # Get descendants for each component type
+            for comp_type in component_types:
+                # Strip "Component" suffix if present to get the entity type name
+                entity_type = comp_type
+                if entity_type.endswith('Component'):
+                    entity_type = entity_type[:-9]
+                
+                print(f"   Processing component type '{comp_type}' → entity type '{entity_type}'")
+                
+                # Get descendants of the entity type (these are already without Component suffix)
+                entity_descendants = self._descendants_exporter.get_descendants(entity_type)
+                print(f"   Found descendants: {entity_descendants}")
+                descendants.update(entity_descendants)
+        except Exception as e:
+            print(f"⚠️  Component type expansion failed: {e}")
+            # Fallback: strip Component suffix and use as-is
+            descendants = set()
+            for comp_type in component_types:
+                if comp_type.endswith('Component'):
+                    descendants.add(comp_type[:-9])
+                else:
+                    descendants.add(comp_type)
+            print(f"   Using fallback descendants: {descendants}")
+
+        if not descendants:
+            # Fallback: just strip Component and use as-is
+            descendants = set()
+            for comp_type in component_types:
+                if comp_type.endswith('Component'):
+                    descendants.add(comp_type[:-9])
+                else:
+                    descendants.add(comp_type)
+            print(f"   Descendants was empty, using fallback: {descendants}")
+
+        print(f"   Final descendants to search: {descendants}")
+        
+        per_model = {}
+        for model_name in search_models:
+            model_types = set(self.memory_tree.get_component_types(models=[model_name]))
+            intersection = model_types.intersection(descendants)
+            per_model[model_name] = sorted(list(intersection))
+            print(f"   Model '{model_name}': available types {len(model_types)}, intersection {len(intersection)}: {per_model[model_name]}")
+
+        return per_model
     
     def _allowed_file(self, filename):
         """Check if file extension is allowed"""
@@ -122,6 +267,8 @@ class IFCProcessingServer:
         def upload_file():
             """Handle file upload and processing"""
             try:
+                overwrite = request.args.get('overwrite', 'false').lower() in ('1', 'true', 'yes')
+
                 # Check if file is in request
                 if 'file' not in request.files:
                     return jsonify({'error': 'No file provided'}), 400
@@ -146,6 +293,16 @@ class IFCProcessingServer:
                     # Convert IFC to JSON using the ingestor
                     json_filename = os.path.splitext(filename)[0] + '.json'
                     json_path = os.path.join(self.upload_folder, json_filename)
+                    model_name = os.path.splitext(json_filename)[0]
+
+                    if self.data_store_type == 'fileBased' and self.file_store.model_exists(model_name):
+                        if not overwrite:
+                            return jsonify({
+                                'error': 'Model already exists',
+                                'model_exists': True,
+                                'model': model_name
+                            }), 409
+                        self.file_store.delete_model(model_name)
                     
                     converter = IFC2JSONSimple(file_path)
                     json_objects = converter.spf2Json()
@@ -179,6 +336,16 @@ class IFCProcessingServer:
                     
                     if not isinstance(json_objects, list):
                         return jsonify({'error': 'JSON file must contain an array of components'}), 400
+
+                    model_name = os.path.splitext(filename)[0]
+                    if self.data_store_type == 'fileBased' and self.file_store.model_exists(model_name):
+                        if not overwrite:
+                            return jsonify({
+                                'error': 'Model already exists',
+                                'model_exists': True,
+                                'model': model_name
+                            }), 409
+                        self.file_store.delete_model(model_name)
                     
                     # Store in data store
                     result = self.file_store.store(filename, json_objects)
@@ -247,13 +414,21 @@ class IFCProcessingServer:
                 # If no specific models requested, use all available models
                 if not models:
                     models = self.memory_tree.get_models()
-                
+
+                expanded_types = self._expand_entity_types_for_models(entity_types, models) if entity_types else {}
+
                 # Query and organize results by model
                 result_by_model = {}
                 for model_name in models:
+                    model_entity_types = None
+                    if entity_types:
+                        model_entity_types = expanded_types.get(model_name, [])
+                        if not model_entity_types and not entity_guids:
+                            continue
+
                     entity_guids = self.memory_tree.get_entity_guids(
                         models=[model_name],
-                        entity_types=entity_types
+                        entity_types=model_entity_types
                     )
                     if entity_guids:
                         result_by_model[model_name] = entity_guids
@@ -270,6 +445,7 @@ class IFCProcessingServer:
             - models: comma-separated list of model names (optional)
             - entityGuids: comma-separated list of entity GUIDs (optional)
             - entityTypes: comma-separated list of entity types (optional)
+            - componentTypes: comma-separated list of component types (optional)
             
             Returns: Dictionary mapping model names to arrays of component GUIDs
             """
@@ -278,22 +454,48 @@ class IFCProcessingServer:
                 models = request.args.get('models', '')
                 entity_guids = request.args.get('entityGuids', '')
                 entity_types = request.args.get('entityTypes', '')
+                component_types = request.args.get('componentTypes', '')
                 
                 models = [m.strip() for m in models.split(',')] if models else None
                 entity_guids = [e.strip() for e in entity_guids.split(',')] if entity_guids else None
                 entity_types = [t.strip() for t in entity_types.split(',')] if entity_types else None
+                component_types = [t.strip() for t in component_types.split(',')] if component_types else None
                 
                 # If no specific models requested, use all available models
                 if not models:
                     models = self.memory_tree.get_models()
+
+                # Expand component types if provided
+                if component_types:
+                    expanded_comp_types = self._expand_component_types_for_models(component_types, models)
+                    result_by_model = {}
+                    for model_name in models:
+                        model_comp_types = expanded_comp_types.get(model_name, [])
+                        if model_comp_types:
+                            component_guids = self.memory_tree.get_component_guids_by_type(
+                                component_types=model_comp_types,
+                                models=[model_name]
+                            )
+                            if component_guids:
+                                result_by_model[model_name] = component_guids
+                    return jsonify(result_by_model)
                 
+                # Otherwise expand entity types
+                expanded_types = self._expand_entity_types_for_models(entity_types, models) if entity_types else {}
+
                 # Query and organize results by model
                 result_by_model = {}
                 for model_name in models:
+                    model_entity_types = None
+                    if entity_types:
+                        model_entity_types = expanded_types.get(model_name, [])
+                        if not model_entity_types:
+                            continue
+
                     component_guids = self.memory_tree.get_component_guids(
                         models=[model_name],
                         entity_guids=entity_guids,
-                        entity_types=entity_types
+                        entity_types=model_entity_types
                     )
                     if component_guids:
                         result_by_model[model_name] = component_guids
@@ -311,47 +513,98 @@ class IFCProcessingServer:
             - models: comma-separated list of model names (optional)
             - entityTypes: comma-separated list of entity types (optional)
             - entityGuids: comma-separated list of entity GUIDs (optional)
+            - componentTypes: comma-separated list of component types (optional)
             
             Returns: Dictionary mapping model names to arrays of component objects
             """
             try:
+                with open('api_debug.log', 'a') as f:
+                    f.write(f"\n[GET_COMPONENTS] New request\n")
+                
                 # Parse query parameters
                 component_guids_param = request.args.get('componentGuids', '')
                 models = request.args.get('models', '')
                 entity_types = request.args.get('entityTypes', '')
                 entity_guids = request.args.get('entityGuids', '')
+                component_types = request.args.get('componentTypes', '')
                 
                 # Parse into lists
                 component_guids = [g.strip() for g in component_guids_param.split(',')] if component_guids_param else None
                 models = [m.strip() for m in models.split(',')] if models else None
                 entity_types = [t.strip() for t in entity_types.split(',')] if entity_types else None
                 entity_guids = [g.strip() for g in entity_guids.split(',')] if entity_guids else None
+                component_types = [t.strip() for t in component_types.split(',')] if component_types else None
                 
-                print(f"\n📋 /api/components query:")
-                print(f"   componentGuids: {component_guids}")
-                print(f"   models: {models}")
-                print(f"   entityTypes: {entity_types}")
-                print(f"   entityGuids: {entity_guids}")
+                with open('api_debug.log', 'a') as f:
+                    f.write(f"  models={models}\n")
+                    f.write(f"  entity_types={entity_types}\n")
+                    f.write(f"  entity_guids={entity_guids}\n")
+                    f.write(f"  component_types={component_types}\n")
                 
                 # If specific component GUIDs provided, use those directly
                 if component_guids:
+                    with open('api_debug.log', 'a') as f:
+                        f.write(f"  -> Branch 1: component_guids\n")
                     components = self.memory_tree.get_components(component_guids)
+                # If component types provided, use those
+                elif component_types:
+                    with open('api_debug.log', 'a') as f:
+                        f.write(f"  -> Branch 2: component_types\n")
+                    search_models = models if models else self.memory_tree.get_models()
+                    expanded_comp_types = self._expand_component_types_for_models(component_types, search_models)
+                    
+                    found_guids = set()
+                    for model_name in search_models:
+                        model_comp_types = expanded_comp_types.get(model_name, [])
+                        if model_comp_types:
+                            model_guids = self.memory_tree.get_component_guids_by_type(
+                                component_types=model_comp_types,
+                                models=[model_name]
+                            )
+                            found_guids.update(model_guids)
+                    
+                    components = self.memory_tree.get_components(list(found_guids), models=search_models)
                 # Otherwise, use query filters to find components
                 elif models or entity_types or entity_guids:
-                    # Query component GUIDs based on filters
-                    found_guids = self.memory_tree.get_component_guids(
-                        models=models,
-                        entity_types=entity_types,
-                        entity_guids=entity_guids
-                    )
+                    with open('api_debug.log', 'a') as f:
+                        f.write(f"  -> Branch 3: query filters (models OR entity_types OR entity_guids)\n")
+                    search_models = models if models else self.memory_tree.get_models()
+                    with open('api_debug.log', 'a') as f:
+                        f.write(f"     search_models={search_models}\n")
+                        f.write(f"     Calling _expand_entity_types_for_models({entity_types}, {search_models})\n")
+                    expanded_types = self._expand_entity_types_for_models(entity_types, search_models) if entity_types else {}
+                    with open('api_debug.log', 'a') as f:
+                        f.write(f"     expanded_types={expanded_types}\n")
+
+                    found_guids = set()
+                    for model_name in search_models:
+                        model_entity_types = None
+                        if entity_types:
+                            model_entity_types = expanded_types.get(model_name, [])
+                            if not model_entity_types and not entity_guids:
+                                continue
+
+                        with open('api_debug.log', 'a') as f:
+                            f.write(f"     Model {model_name}: calling get_component_guids with entity_types={model_entity_types}\n")
+                        
+                        model_guids = self.memory_tree.get_component_guids(
+                            models=[model_name],
+                            entity_types=model_entity_types,
+                            entity_guids=entity_guids
+                        )
+                        with open('api_debug.log', 'a') as f:
+                            f.write(f"     Model {model_name}: found {len(model_guids)} guids\n")
+                        found_guids.update(model_guids)
+
                     # Get components, restricting search to the filtered models
-                    components = self.memory_tree.get_components(found_guids, models=models)
+                    components = self.memory_tree.get_components(list(found_guids), models=search_models)
                 else:
                     # No filters specified - return all components from all models
                     all_guids = self.memory_tree.get_component_guids()
                     components = self.memory_tree.get_components(all_guids)
                 
-                print(f"   Returned {len(components)} components")
+                with open('api_debug.log', 'a') as f:
+                    f.write(f"  Found {len(components)} total components\n")
                 
                 # Organize components by model
                 result_by_model = {}
@@ -361,7 +614,8 @@ class IFCProcessingServer:
                         result_by_model[model_name] = []
                     result_by_model[model_name].append(component)
                 
-                print(f"   Organized into {len(result_by_model)} models: {list(result_by_model.keys())}")
+                with open('api_debug.log', 'a') as f:
+                    f.write(f"  Returning {len(result_by_model)} models\n")
                 
                 return jsonify(result_by_model)
             except Exception as e:
@@ -384,6 +638,48 @@ class IFCProcessingServer:
             """List all loaded models"""
             models = self.memory_tree.get_models()
             return jsonify(models)
+
+        @self.app.route('/api/models/details', methods=['GET'])
+        def list_models_details():
+            """List all stored models with metadata (file-based only)"""
+            if self.data_store_type != 'fileBased':
+                return jsonify({'error': 'Model details are only available for fileBased store'}), 501
+
+            return jsonify(self.file_store.list_directories())
+
+        @self.app.route('/api/models/delete', methods=['POST'])
+        def delete_models():
+            """Delete one or more models and refresh the memory tree"""
+            if self.data_store_type != 'fileBased':
+                return jsonify({'error': 'Delete is only available for fileBased store'}), 501
+
+            payload = request.get_json(silent=True) or {}
+            models = payload.get('models') or []
+            if not models and payload.get('model'):
+                models = [payload.get('model')]
+
+            if not models:
+                return jsonify({'error': 'No models provided'}), 400
+
+            deleted = []
+            missing = []
+            for model_name in models:
+                try:
+                    if self.file_store.delete_model(model_name):
+                        deleted.append(model_name)
+                    else:
+                        missing.append(model_name)
+                except ValueError:
+                    missing.append(model_name)
+
+            if deleted:
+                self._refresh_memory_tree()
+
+            return jsonify({
+                'deleted': deleted,
+                'missing': missing,
+                'models_loaded': len(self.memory_tree.get_models())
+            })
         
         @self.app.route('/api/entityTypes', methods=['GET'])
         def list_entity_types():
@@ -399,6 +695,25 @@ class IFCProcessingServer:
                 models = [m.strip() for m in models.split(',')] if models else None
                 
                 types = self.memory_tree.get_entity_types(models=models)
+                
+                return jsonify(types)
+            except Exception as e:
+                return jsonify({'error': str(e)}), 400
+        
+        @self.app.route('/api/componentTypes', methods=['GET'])
+        def list_component_types():
+            """List all component types in specified models
+            
+            Parameters:
+            - models: comma-separated list of model names (optional)
+            
+            Returns: List of component types
+            """
+            try:
+                models = request.args.get('models', '')
+                models = [m.strip() for m in models.split(',')] if models else None
+                
+                types = self.memory_tree.get_component_types(models=models)
                 
                 return jsonify(types)
             except Exception as e:

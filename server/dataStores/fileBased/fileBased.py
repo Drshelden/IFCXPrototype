@@ -2,6 +2,7 @@
 
 import os
 import json
+import shutil
 from pathlib import Path
 
 class FileBasedStore:
@@ -117,3 +118,36 @@ class FileBasedStore:
                 })
         
         return directories
+
+    def model_exists(self, model_name):
+        """Check if a model directory exists."""
+        if not model_name or model_name in ('.', '..'):
+            return False
+        if os.path.sep in model_name or (os.path.altsep and os.path.altsep in model_name):
+            return False
+        dir_path = os.path.join(self.base_path, model_name)
+        return os.path.isdir(dir_path)
+
+    def delete_model(self, model_name):
+        """Delete a model directory and all contained files.
+
+        Returns:
+            True if deleted, False if not found
+        """
+        if not model_name or model_name in ('.', '..'):
+            return False
+        if os.path.sep in model_name or (os.path.altsep and os.path.altsep in model_name):
+            return False
+
+        # Prevent path traversal by resolving inside base_path
+        base_path = Path(self.base_path).resolve()
+        target_path = (base_path / model_name).resolve()
+
+        if base_path not in target_path.parents:
+            raise ValueError("Invalid model path")
+
+        if not target_path.is_dir():
+            return False
+
+        shutil.rmtree(target_path)
+        return True

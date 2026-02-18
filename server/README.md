@@ -21,14 +21,22 @@ pip install -r requirements.txt
 
 ### 2. Run the Server
 
-**Option A: From Terminal**
 ```bash
-python app.py
-```
+# Default: file-based backend on port 5000
+python server.py
 
-**Option B: From VS Code**
-- Press `F5` or go to Run → Start Debugging
-- Select "Flask Server" from the configuration dropdown
+# With custom backend
+python server.py --backend fileBased
+
+# Custom port
+python server.py --port 5001
+
+# Debug mode
+python server.py --debug
+
+# Show all options
+python server.py --help
+```
 
 ### 3. Access the Admin Panel
 
@@ -50,18 +58,27 @@ http://localhost:5000/viewer
 
 ```
 server/
-├── app.py                          # Main Flask application
-├── requirements.txt                # Python dependencies
+├── server.py                      # Core Flask application (entry point)
+├── requirements.txt               # Python dependencies
 ├── templates/
-│   ├── admin.html                 # Web admin interface
-│   └── viewer.html                # Advanced 3D viewer interface
-├── ingestors/
-│   ├── ifc4ingestor.py           # IFC to JSON converter
-│   └── utils.py                   # Utility functions
+│   ├── admin.html                # Web admin interface
+│   └── viewer.html               # Advanced 3D viewer interface
 ├── dataStores/
-│   └── fileBased.py              # File-based storage implementation
-├── uploads/                       # Temporary upload storage
-└── dataStores/fileBased/data/     # Processed component storage
+│   ├── fileBased/                # File-based backend implementation
+│   │   ├── fileBased.py
+│   │   ├── memoryTree.py
+│   │   └── data/                 # Processed component storage
+│   └── mongodbBased/             # MongoDB backend (stub)
+│       ├── mongodbBased.py
+│       └── mongodbMemoryTree.py
+├── ingestors/
+│   ├── ifc4ingestor.py          # IFC to JSON converter
+│   └── utils.py                  # Utility functions
+├── uploads/                      # Temporary upload storage
+└── docs/
+    ├── REORGANIZATION.md         # Architecture documentation
+    ├── QUICK_START.md            # Quick start guide
+    └── BACKEND_INTERFACE.md      # Backend implementation guide
 ```
 
 ## API Endpoints
@@ -76,7 +93,7 @@ server/
 - **GET** `/api/guids` - Query for component GUIDs by filters
 - **GET** `/api/components` - Retrieve component data by GUIDs
 - **GET** `/api/models` - List all loaded models
-- **GET** `/api/entity_types` - List all entity types
+- **GET** `/api/entityTypes` - List all entity types
 
 ### Management
 - **POST** `/api/refresh` - Manually refresh the memory tree

@@ -55,17 +55,23 @@ curl http://localhost:5000/api/models
 
 ### List Entity Types
 ```bash
-GET /api/entity_types?models=MODEL1,MODEL2
+GET /api/entityTypes?models=MODEL1,MODEL2
 
 # Examples:
-curl http://localhost:5000/api/entity_types
-curl "http://localhost:5000/api/entity_types?models=HelloWall-01"
+curl http://localhost:5000/api/entityTypes
+curl "http://localhost:5000/api/entityTypes?models=HelloWall-01"
 ```
 
 ### Server Status
 ```bash
 GET /api/status
 curl http://localhost:5000/api/status
+```
+
+### List Available Data Stores
+```bash
+GET /api/stores
+curl http://localhost:5000/api/stores
 ```
 
 ### Refresh Memory Tree
@@ -88,7 +94,7 @@ curl "http://localhost:5000/api/components?models=HelloWall-01&entityTypes=IfcWa
 
 ### All property sets across models
 ```bash
-curl "http://localhost:5000/api/entityGuids?entity_types=IfcPropertySet"
+curl "http://localhost:5000/api/entityGuids?entityTypes=IfcPropertySet"
 ```
 
 ### Components for multiple entities
@@ -123,7 +129,7 @@ response = requests.get(f'{BASE_URL}/models')
 models = response.json()  # Returns list of model names
 
 # Get entity types
-response = requests.get(f'{BASE_URL}/entity_types', 
+response = requests.get(f'{BASE_URL}/entityTypes', 
                        params={'models': 'HelloWall-2x3'})
 types = response.json()  # Returns list of type names
 
@@ -229,8 +235,8 @@ Returns a dictionary organized by model name, with each model containing an arra
 ## Parameter Types
 
 - **models**: Comma-separated model names
-- **entity_types**: Comma-separated IFC type names
-- **entity_guids**: Comma-separated entity GUIDs
+- **entityTypes**: Comma-separated IFC type names
+- **entityGuids**: Comma-separated entity GUIDs
 - **componentGuids**: Comma-separated component GUIDs
 
 ## Common Filters
@@ -262,7 +268,7 @@ Returns a dictionary organized by model name, with each model containing an arra
 4. **Get full component data (with filtering):**
    ```bash
    curl "http://localhost:5000/api/components?models=HelloWall-01"
-   curl "http://localhost:5000/api/components?entity_types=IfcWallStandardCase"
+  curl "http://localhost:5000/api/components?entityTypes=IfcWallStandardCase"
    curl "http://localhost:5000/api/components?componentGuids=guid1,guid2"
    ```
 

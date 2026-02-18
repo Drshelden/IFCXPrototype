@@ -139,7 +139,7 @@ app.py
 ├── /viewer route (serves viewer.html)
 └── Existing REST API endpoints
     ├── /api/models
-    ├── /api/entity_types
+   ├── /api/entityTypes
     ├── /api/entities
     ├── /api/guids
     └── /api/components
@@ -260,10 +260,10 @@ User Query → REST API → Memory Tree → JSON Response → UI Update
 1. Query: /api/models
    Result: See available models
 
-2. Query: /api/entity_types?models=HelloWall
+2. Query: /api/entityTypes?models=HelloWall
    Result: See what types exist
 
-3. Query: /api/guids?models=HelloWall&entity_types=IfcWallAttributes
+3. Query: /api/guids?models=HelloWall&entityTypes=IfcWallAttributes
    Result: Get walls, see in tree
 
 4. Select: Check 2-3 walls

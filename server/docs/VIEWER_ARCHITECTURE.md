@@ -12,8 +12,8 @@
 │  │              │  │             │  │                │    │
 │  │ /api/guids   │  │ Entities    │  │ WebGL Canvas   │    │
 │  │ /api/models  │  │ Components  │  │ Interactive    │    │
-│  │ /api/entity_ │  │ Properties  │  │ Visualization  │    │
-│  │  types       │  │             │  │                │    │
+│  │ /api/entityT │  │ Properties  │  │ Visualization  │    │
+│  │  ypes        │  │             │  │                │    │
 │  └──────────────┘  └─────────────┘  │ Lighting       │    │
 │                                      │ Materials      │    │
 │  ┌──────────────────────────────────┤                │    │
@@ -25,7 +25,7 @@
 │                 REST API (Flask - app.py)                    │
 ├─────────────────────────────────────────────────────────────┤
 │  /api/models       → Returns available models              │
-│  /api/entity_types → Returns entity type list              │
+│  /api/entityTypes  → Returns entity type list              │
 │  /api/entities     → Returns entity GUIDs (with filters)   │
 │  /api/guids        → Returns component GUIDs (with filters)│
 │  /api/components   → Returns full component data           │
@@ -114,13 +114,13 @@ Update row count display
 ```
 User Input → Normalized URL → API Fetch → Response Processing
 
-Full URL:     http://localhost:5000/api/entities?entity_types=IfcWall
+Full URL:     http://localhost:5000/api/entities?entityTypes=IfcWall
               → Used as-is
               
-Path URL:     /api/entities?entity_types=IfcWall
+Path URL:     /api/entities?entityTypes=IfcWall
               → Prepended with http://localhost:5000
               
-Shorthand:    entities?entity_types=IfcWall
+Shorthand:    entities?entityTypes=IfcWall
               → Converted to http://localhost:5000/api/entities?...
               
 Mixed:        api/guids?models=HelloWall
@@ -133,7 +133,7 @@ Mixed:        api/guids?models=HelloWall
 - `/api/guids` → Fetches component GUIDs, then retrieves component data
 - `/api/components` → Uses component data directly
 - `/api/models` → Displays models list
-- `/api/entity_types` → Displays entity types list
+- `/api/entityTypes` → Displays entity types list
 
 ```javascript
 async function executeQuery() {
@@ -261,7 +261,7 @@ function updateTable(rows) {
 | Endpoint | Handler | Returns |
 |----------|---------|---------|
 | `/api/models` | `models()` | List of model names |
-| `/api/entity_types` | `entity_types()` | Filtered entity type list |
+| `/api/entityTypes` | `entityTypes()` | Filtered entity type list |
 | `/api/entities` | `entities()` | Entity GUIDs with filters |
 | `/api/guids` | `guids()` | Component GUIDs with filters |
 | `/api/components` | `components()` | Full component data |

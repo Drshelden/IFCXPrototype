@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: IFC Processing Server API
   description: REST API for IFC file processing and component querying with in-memory indexing
-  version: 0.0.1
+  version: 0.1.0
   contact:
     name: IFC Processing Team
 
@@ -41,13 +41,16 @@ paths:
                   status:
                     type: string
                     example: running
+                  data_store:
+                    type: string
+                    example: fileBased
                   timestamp:
                     type: string
                     format: date-time
                     example: '2026-02-16T14:30:00.000000'
                   version:
                     type: string
-                    example: '0.0.1'
+                    example: '0.1.0'
 
   /api/stores:
     get:
@@ -72,6 +75,9 @@ paths:
                     description:
                       type: string
                       example: File-based data store
+                    status:
+                      type: string
+                      example: active
 
   /api/upload:
     post:
@@ -168,7 +174,7 @@ paths:
                 example:
                   - HelloWallIFCjsonC-2x3
 
-  /api/entity_types:
+  /api/entityTypes:
     get:
       tags:
         - Queries
@@ -435,15 +441,27 @@ components:
         componentGuid:
           type: string
           description: Unique identifier for the component
+        componentType:
+          type: string
+          description: Component type with "Component" suffix (e.g., IfcWallAttributesComponent)
         entityGuid:
           type: string
           description: Reference to the parent entity
-        type:
+        entityType:
           type: string
           description: IFC entity type (e.g., IfcWall, IfcPropertySet)
         model:
           type: string
           description: Name of the model this component belongs to
+        componentName:
+          type: string
+          description: Human-readable component name (if available)
+        objectType:
+          type: string
+          description: IFC object type (if available)
+        tag:
+          type: string
+          description: IFC tag (if available)
         properties:
           type: object
           description: Component properties and attributes
@@ -471,7 +489,7 @@ components:
 x-metadata:
   apiTitle: IFC Processing Server
   apiDescription: RESTful API for processing IFC files and querying component data
-  apiVersion: 0.0.1
+  apiVersion: 0.1.0
   baseUrl: http://localhost:5000
   dataStore: File-based storage (one JSON file per component)
   indexing: In-memory tree indexed by componentGuid, entityGuid, and entity type

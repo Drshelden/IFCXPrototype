@@ -3,7 +3,7 @@
 API Test Suite for IFC Processing Server
 
 This script tests all API endpoints with example queries.
-Make sure the server is running first: python app.py
+Make sure the server is running first: python server.py
 """
 
 import requests
@@ -68,7 +68,7 @@ def main():
     
     # Test 3: List Entity Types
     print(f"\n{Colors.OKBLUE}Test 3: List Entity Types{Colors.ENDC}")
-    test_endpoint('GET', '/entity_types')
+    test_endpoint('GET', '/entityTypes')
     
     # Test 4: Query Entities (all)
     print(f"\n{Colors.OKBLUE}Test 4: Query All Entities{Colors.ENDC}")
@@ -83,7 +83,7 @@ def main():
     
     # Test 6: Query Entities by Type
     print(f"\n{Colors.OKBLUE}Test 6: Query Entities by Type{Colors.ENDC}")
-    test_endpoint('GET', '/entityGuids', params={'entity_types': 'IfcPropertySet'})
+    test_endpoint('GET', '/entityGuids', params={'entityTypes': 'IfcPropertySet'})
     
     # Test 7: Query Component GUIDs
     print(f"\n{Colors.OKBLUE}Test 7: Query Component GUIDs{Colors.ENDC}")
@@ -111,7 +111,7 @@ def main():
     print(f"\n{Colors.OKBLUE}Test 10: Complex Query (All Filters){Colors.ENDC}")
     test_endpoint('GET', '/componentGuids', params={
         'models': model_name,
-        'entity_types': 'IfcPropertySet'
+        'entityTypes': 'IfcPropertySet'
     })
     
     print(f"\n{Colors.BOLD}=" * 60)

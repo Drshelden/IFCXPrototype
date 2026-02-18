@@ -1,4 +1,4 @@
-"""In-memory tree structure for component storage and querying"""
+"""In-memory tree structure for component storage and querying (fileBased)"""
 
 import os
 import json

@@ -39,26 +39,26 @@ MemoryTree
 
 ### 3. Query Endpoints
 
-#### `/api/entities` - Query Entity GUIDs
-- Filter by: models, entity_types, components
-- Returns: List of entity GUIDs
+#### `/api/entityGuids` - Query Entity GUIDs
+- Filter by: models, entityTypes
+- Returns: Entity GUIDs organized by model
 - Use case: Find all entities matching criteria
 
-#### `/api/guids` - Query Component GUIDs
-- Filter by: models, entity_guids, entity_types
-- Returns: List of component GUIDs
+#### `/api/componentGuids` - Query Component GUIDs
+- Filter by: models, entityGuids, entityTypes
+- Returns: Component GUIDs organized by model
 - Use case: Find all components matching criteria
 
 #### `/api/components` - Retrieve Component Data
-- Requires: List of component GUIDs
-- Returns: Full component dictionaries
+- Filters: componentGuids, models, entityTypes, entityGuids
+- Returns: Full component dictionaries organized by model
 - Use case: Get actual component data for display/processing
 
 #### `/api/models` - List All Models
 - Returns: Names of all loaded models
 - Use case: Discover available data
 
-#### `/api/entity_types` - List Context-Aware Types
+#### `/api/entityTypes` - List Context-Aware Types
 - Optional filter by models
 - Returns: All entity types in specified models
 - Use case: UI dropdowns, type discovery
@@ -71,22 +71,22 @@ MemoryTree
 
 ### Find all wall components in a model
 ```
-GET /api/guids?models=HelloWall&entity_types=IfcWallAttributes
+GET /api/componentGuids?models=HelloWall&entityTypes=IfcWallAttributes
 ```
 
 ### Get all property sets
 ```
-GET /api/guids?entity_types=IfcPropertySet
+GET /api/componentGuids?entityTypes=IfcPropertySet
 ```
 
 ### Get components for a specific entity
 ```
-GET /api/guids?entity_guids=12345678-1234-5678-1234-567812345678
+GET /api/componentGuids?entityGuids=12345678-1234-5678-1234-567812345678
 ```
 
 ### Retrieve component data
 ```
-GET /api/components?guids=guid1,guid2,guid3
+GET /api/components?componentGuids=guid1,guid2,guid3
 ```
 
 ## Performance Characteristics

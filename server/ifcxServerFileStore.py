@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Start script for IFC Processing Server"""
+"""Start script for IFC Processing Server with configurable data store backend"""
 
 import os
 import sys
@@ -20,7 +20,7 @@ def check_venv():
 
 def check_dependencies():
     """Check if required packages are installed"""
-    required = ['flask', 'werkzeug', 'ifcopenshell']
+    required = ['flask', 'werkzeug', 'ifcopenshell', 'flask-cors']
     missing = []
     
     for package in required:
@@ -39,17 +39,54 @@ def install_dependencies():
     ])
     print("✅ Dependencies installed!")
 
-def start_server():
-    """Start the Flask server"""
+def get_data_store_type():
+    """Get data store type from environment or user input"""
+    # Check environment variable first
+    store_type = os.environ.get('IFC_DATA_STORE', '').lower()
+    
+    if store_type in ['filebased', 'mongodbbased']:
+        return store_type
+    
+    # Ask user
+    print("\n📊 Select Data Store Backend:")
+    print("   1. fileBased      (File-based storage in dataStores/fileBased/data)")
+    print("   2. mongodbBased   (MongoDB storage - currently in development)")
+    
+    choice = input("\nEnter choice (1 or 2) [1]: ").strip() or "1"
+    
+    if choice == "1":
+        return "fileBased"
+    elif choice == "2":
+        return "mongodbBased"
+    else:
+        print("Invalid choice, using fileBased by default")
+        return "fileBased"
+
+def start_server(data_store_type='fileBased'):
+    """Start the Flask server
+    
+    Args:
+        data_store_type: 'fileBased' or 'mongodbBased'
+    """
     print("\n" + "="*50)
     print("🚀 IFC Processing Server")
     print("="*50)
-    print("\n📄 Admin Interface: http://localhost:5000")
-    print("📁 Data Store: dataStores/fileBased/data/")
+    print(f"\n💾 Data Store Backend: {data_store_type}")
+    
+    if data_store_type == 'fileBased':
+        print("📁 Data Store: dataStores/fileBased/data/")
+    elif data_store_type == 'mongodbBased':
+        print("🔗 MongoDB Connection: mongodb://localhost:27017")
+    
+    print("📄 Admin Interface: http://localhost:5000")
     print("🔧 Press Ctrl+C to stop the server\n")
     print("="*50 + "\n")
     
-    os.system(f'{sys.executable} app.py')
+    # Set environment variable for server.py
+    env = os.environ.copy()
+    env['IFC_DATA_STORE'] = data_store_type
+    
+    subprocess.call([sys.executable, 'server.py'], env=env)
 
 if __name__ == '__main__':
     # Check for virtual environment
@@ -68,12 +105,16 @@ if __name__ == '__main__':
             print("❌ Cannot start server without dependencies")
             sys.exit(1)
     
+    # Get data store type
+    data_store_type = get_data_store_type()
+    
     # Start server
     try:
-        start_server()
+        start_server(data_store_type)
     except KeyboardInterrupt:
         print("\n\n✅ Server stopped")
         sys.exit(0)
     except Exception as e:
         print(f"\n❌ Error: {e}")
         sys.exit(1)
+

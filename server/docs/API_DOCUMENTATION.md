@@ -61,35 +61,34 @@ Upload and process IFC or JSON files.
 
 ### Query Endpoints
 
-#### GET `/api/entities`
+#### GET `/api/entityGuids`
 
-Query for entity GUIDs based on filters.
+Query for entity GUIDs based on filters. Results are organized by model name.
 
 **Parameters:**
 - `models` (optional): Comma-separated list of model names
   - Example: `models=HelloWall,AnotherModel`
   - Default: All models
-- `entity_types` (optional): Comma-separated list of entity types to filter by
-  - Example: `entity_types=IfcWallAttributes,IfcObjectDefinition`
+- `entityTypes` (optional): Comma-separated list of entity types to filter by
+  - Example: `entityTypes=IfcWallAttributes,IfcObjectDefinition`
   - Default: All types
-- `components` (optional): Comma-separated list of component GUIDs to filter by
-  - Default: All components
 
 **Response:**
 ```json
 {
-  "success": true,
-  "count": 2,
-  "entity_guids": [
+  "HelloWall": [
     "12345678-1234-5678-1234-567812345678",
     "87654321-4321-8765-4321-876543218765"
+  ],
+  "AnotherModel": [
+    "11223344-5566-7788-99aa-bbccddeeff00"
   ]
 }
 ```
 
 **Example:**
 ```bash
-curl "http://localhost:5000/api/entities?models=HelloWall&entity_types=IfcWallAttributes"
+curl "http://localhost:5000/api/entityGuids?models=HelloWall&entityTypes=IfcWallAttributes"
 ```
 
 ---
@@ -101,67 +100,59 @@ Query for component GUIDs based on filters.
 **Parameters:**
 - `models` (optional): Comma-separated list of model names
   - Default: All models
-- `entity_guids` (optional): Comma-separated list of entity GUIDs to filter by
-  - Example: `entity_guids=12345678-1234-5678-1234-567812345678`
+- `entityGuids` (optional): Comma-separated list of entity GUIDs to filter by
+  - Example: `entityGuids=12345678-1234-5678-1234-567812345678`
   - Default: All entities
-- `entity_types` (optional): Comma-separated list of entity types
+- `entityTypes` (optional): Comma-separated list of entity types
   - Default: All types
 
 **Response:**
 ```json
 {
-  "success": true,
-  "count": 3,
-  "component_guids": [
+  "HelloWall": [
     "abc123def456abc123def456abc123de",
-    "def456abc123def456abc123def456ab",
-    "456abc123def456abc123def456abc12"
+    "def456abc123def456abc123def456ab"
   ]
 }
 ```
 
 **Example:**
 ```bash
-curl "http://localhost:5000/api/guids?models=HelloWall&entity_types=IfcWallAttributes"
+curl "http://localhost:5000/api/componentGuids?models=HelloWall&entityTypes=IfcWallAttributes"
 ```
 
 ---
 
 #### GET `/api/components`
 
-Retrieve actual component data by GUIDs.
+Retrieve component data with flexible filtering. Results are organized by model name.
 
 **Parameters:**
-- `guids` (required): Comma-separated list of component GUIDs
-  - Example: `guids=abc123def456,def456abc123`
+- `componentGuids` (optional): Comma-separated list of component GUIDs
+  - Example: `componentGuids=abc123def456,def456abc123`
+- `models` (optional): Comma-separated list of model names
+- `entityTypes` (optional): Comma-separated list of entity types
+- `entityGuids` (optional): Comma-separated list of entity GUIDs
 
 **Response:**
 ```json
 {
-  "success": true,
-  "count": 2,
-  "components": [
+  "HelloWall-01": [
     {
-      "guid": "abc123def456abc123def456abc123de",
+      "componentGuid": "abc123def456abc123def456abc123de",
       "componentType": "IfcWallAttributesComponent",
       "entityGuid": "12345678-1234-5678-1234-567812345678",
-      "name": "Wall-001",
-      "description": "Exterior wall"
-    },
-    {
-      "guid": "def456abc123def456abc123def456ab",
-      "componentType": "IfcWallAttributesComponent",
-      "entityGuid": "87654321-4321-8765-4321-876543218765",
-      "name": "Wall-002",
-      "description": "Interior wall"
+      "entityType": "IfcWallAttributes",
+      "model": "HelloWall-01"
     }
   ]
 }
 ```
 
-**Example:**
+**Examples:**
 ```bash
-curl "http://localhost:5000/api/components?guids=abc123def456,def456abc123"
+curl "http://localhost:5000/api/components?componentGuids=abc123def456,def456abc123"
+curl "http://localhost:5000/api/components?models=HelloWall-01&entityTypes=IfcWallStandardCase"
 ```
 
 ---
@@ -174,19 +165,15 @@ List all loaded models in the server.
 
 **Response:**
 ```json
-{
-  "success": true,
-  "count": 2,
-  "models": [
-    "HelloWall",
-    "AnotherModel"
-  ]
-}
+[
+  "HelloWall",
+  "AnotherModel"
+]
 ```
 
 ---
 
-#### GET `/api/entity_types`
+#### GET `/api/entityTypes`
 
 List all entity types across models.
 
@@ -195,17 +182,13 @@ List all entity types across models.
 
 **Response:**
 ```json
-{
-  "success": true,
-  "count": 5,
-  "entity_types": [
-    "IfcDoorStyle",
-    "IfcObjectDefinition",
-    "IfcPropertySet",
-    "IfcWallAttributes",
-    "IfcWindowStyle"
-  ]
-}
+[
+  "IfcDoorStyle",
+  "IfcObjectDefinition",
+  "IfcPropertySet",
+  "IfcWallAttributes",
+  "IfcWindowStyle"
+]
 ```
 
 ---
@@ -218,9 +201,32 @@ Get server status and version.
 ```json
 {
   "status": "running",
+  "data_store": "fileBased",
   "timestamp": "2026-02-15T10:30:45.123456",
-  "version": "0.0.1"
+  "version": "0.1.0"
 }
+```
+
+---
+
+#### GET `/api/stores`
+
+List available data store backends and show which is active.
+
+**Response:**
+```json
+[
+  {
+    "name": "fileBased",
+    "description": "File-based data store",
+    "status": "active"
+  },
+  {
+    "name": "mongodbBased",
+    "description": "MongoDB-based data store",
+    "status": "available"
+  }
+]
 ```
 
 ---
@@ -234,7 +240,6 @@ Manually refresh the in-memory component tree from disk.
 **Response:**
 ```json
 {
-  "success": true,
   "models_loaded": 2,
   "message": "Memory tree refreshed with 2 model(s)"
 }
@@ -251,27 +256,27 @@ Manually refresh the in-memory component tree from disk.
 
 ### Get all property sets
 ```bash
-curl "http://localhost:5000/api/componentGuids?entity_types=IfcPropertySet"
+curl "http://localhost:5000/api/componentGuids?entityTypes=IfcPropertySet"
 ```
 
 ### Get components for specific entity
 ```bash
-curl "http://localhost:5000/api/componentGuids?entity_guids=12345678-1234-5678-1234-567812345678"
+curl "http://localhost:5000/api/componentGuids?entityGuids=12345678-1234-5678-1234-567812345678"
 ```
 
 ### Get all entities in a model
 ```bash
-curl "http://localhost:5000/api/entities?models=HelloWall"
+curl "http://localhost:5000/api/entityGuids?models=HelloWall"
 ```
 
 ### Retrieve component data
 ```bash
-curl "http://localhost:5000/api/components?guids=abc123,def456,ghi789"
+curl "http://localhost:5000/api/components?componentGuids=abc123,def456,ghi789"
 ```
 
 ### Complex query: Walls in specific model
 ```bash
-curl "http://localhost:5000/api/componentGuids?models=HelloWall&entity_types=IfcWallAttributes"
+curl "http://localhost:5000/api/componentGuids?models=HelloWall&entityTypes=IfcWallAttributes"
 ```
 
 ---
@@ -306,9 +311,11 @@ All endpoints return appropriate HTTP status codes:
 ## Component Structure
 
 Each component contains:
-- `guid`: Internal component identifier
+- `componentGuid`: Unique component identifier
 - `componentType`: Type with "Component" suffix (e.g., `IfcWallAttributesComponent`)
 - `entityGuid`: Reference to the entity this component describes (optional)
+- `entityType`: IFC entity type (optional)
+- `model`: Model name this component belongs to (optional)
 - Additional properties specific to the component type
 
 ---

@@ -2,11 +2,11 @@
 
 ## Getting Started (30 seconds)
 
-1. **Start Server**: `python app.py` (or F5 in VS Code)
+1. **Start Server**: `python server.py` (or F5 in VS Code)
 2. **Upload Model**: Go to `http://localhost:5000` → Upload IFC file
 3. **Open Viewer**: Go to `http://localhost:5000/viewer`
 4. **Run Query**: Enter a query and press Enter:
-   - Full URL: `http://localhost:5000/api/entities?entity_types=IfcWall`
+   - Full URL: `http://localhost:5000/api/entities?entityTypes=IfcWall`
    - Shorthand: `/api/componentGuids?models=HelloWall`
    - Shorthand: `api/models`
 
@@ -18,8 +18,8 @@ The viewer accepts queries in multiple formats:
 
 | Format | Example |
 |--------|---------|
-| **Full URL** | `http://localhost:5000/api/entities?entity_types=IfcWall` |
-| **With /api** | `/api/componentGuids?models=HelloWall&entity_types=IfcWallAttributes` |
+| **Full URL** | `http://localhost:5000/api/entities?entityTypes=IfcWall` |
+| **With /api** | `/api/componentGuids?models=HelloWall&entityTypes=IfcWallAttributes` |
 | **Without /api** | `api/componentGuids?models=HelloWall` |
 | **Shorthand** | `componentGuids?models=HelloWall` |
 
@@ -31,7 +31,7 @@ All formats are automatically converted and display component data.
 
 ### Task 1: View All Components in a Model (Full URL Example)
 ```
-Query: http://localhost:5000/api/entities?entity_types=IfcWall
+Query: http://localhost:5000/api/entities?entityTypes=IfcWall
 Click: [Execute]
 Result: Component data automatically fetched and displayed
 View: Tree shows all entities with their components
@@ -48,7 +48,7 @@ Select: Check boxes to display in 3D view
 
 ### Task 3: Find All Walls
 ```
-Query: /api/componentGuids?entity_types=IfcWallAttributes
+Query: /api/componentGuids?entityTypes=IfcWallAttributes
 Click: [Execute]
 Result: Shows only wall-type components from all models
 Check: Select specific walls to visualize
@@ -56,7 +56,7 @@ Check: Select specific walls to visualize
 
 ### Task 4: Compare Properties Across Components
 ```
-Query: /api/componentGuids?models=HelloWall&entity_types=IfcWallAttributes,IfcDoorStyle
+Query: /api/componentGuids?models=HelloWall&entityTypes=IfcWallAttributes,IfcDoorStyle
 Click: [Execute]
 Expand: Click arrows to see component structure
 Check: Multiple components to compare
@@ -65,9 +65,9 @@ Scroll: Scroll data table to compare properties side-by-side
 
 ### Task 5: Inspect Specific Components
 ```
-Query: /api/entity_types?models=HelloWall
+Query: /api/entityTypes?models=HelloWall
 Result: Lists all entity types available
-Query: /api/componentGuids?entity_types=IfcPropertySet
+Query: /api/componentGuids?entityTypes=IfcPropertySet
 Select: Check components in tree
 View: See all properties in bottom table
 ```
@@ -87,17 +87,17 @@ Compare: Use tree and 3D viewer to analyze across projects
 
 | Task | Query | Format |
 |------|-------|--------|
-| Query with full URL | `http://localhost:5000/api/entities?entity_types=IfcWall` | Full URL |
+| Query with full URL | `http://localhost:5000/api/entities?entityTypes=IfcWall` | Full URL |
 | Get all models | `/api/models` | Shorthand |
-| List entity types | `/api/entity_types` | Shorthand |
+| List entity types | `/api/entityTypes` | Shorthand |
 | All components in a model | `/api/componentGuids?models=HelloWall` | Shorthand |
-| Specific component type | `/api/componentGuids?entity_types=IfcPropertySet` | Shorthand |
-| Components by entity ID | `/api/componentGuids?entity_guids=12345678-1234-5678-1234-567812345678` | Shorthand |
+| Specific component type | `/api/componentGuids?entityTypes=IfcPropertySet` | Shorthand |
+| Components by entity ID | `/api/componentGuids?entityGuids=12345678-1234-5678-1234-567812345678` | Shorthand |
 | Specific components data | `/api/components?componentGuids=abc123,def456` | Shorthand |
-| Walls in building | `/api/componentGuids?models=MainBuilding&entity_types=IfcWallAttributes` | Shorthand |
-| All property sets | `/api/componentGuids?entity_types=IfcPropertySet` | Shorthand |
-| Multiple types | `/api/componentGuids?entity_types=IfcWall,IfcDoor,IfcWindow` | Shorthand |
-| Cross-model query | `/api/componentGuids?models=Floor1,Floor2&entity_types=IfcSlab` | Shorthand |
+| Walls in building | `/api/componentGuids?models=MainBuilding&entityTypes=IfcWallAttributes` | Shorthand |
+| All property sets | `/api/componentGuids?entityTypes=IfcPropertySet` | Shorthand |
+| Multiple types | `/api/componentGuids?entityTypes=IfcWall,IfcDoor,IfcWindow` | Shorthand |
+| Cross-model query | `/api/componentGuids?models=Floor1,Floor2&entityTypes=IfcSlab` | Shorthand |
 
 ---
 
@@ -141,7 +141,7 @@ Compare: Use tree and 3D viewer to analyze across projects
 
 1. **Start with discovery**
    - Query `/api/models` first
-   - Then `/api/entity_types?models=MyModel`
+   - Then `/api/entityTypes?models=MyModel`
    - This shows what data is available
 
 2. **Query efficiently**
@@ -185,10 +185,10 @@ Compare: Use tree and 3D viewer to analyze across projects
 1. Query: /api/models
    → Lists available models
 
-2. Query: /api/entity_types?models=MainBuilding  
+2. Query: /api/entityTypes?models=MainBuilding  
    → See what types exist
 
-3. Query: /api/componentGuids?models=MainBuilding&entity_types=IfcWallAttributes
+3. Query: /api/componentGuids?models=MainBuilding&entityTypes=IfcWallAttributes
    → Get all walls
 
 4. Check: 2-3 walls in tree
@@ -200,7 +200,7 @@ Compare: Use tree and 3D viewer to analyze across projects
 
 ### Workflow B: Property Investigation
 ```
-1. Query: /api/componentGuids?entity_types=IfcPropertySet
+1. Query: /api/componentGuids?entityTypes=IfcPropertySet
    → Get all property sets
 
 2. Expand: Tree to see structure
@@ -231,25 +231,25 @@ Compare: Use tree and 3D viewer to analyze across projects
 
 ### Building Analysis
 ```
-/api/componentGuids?models=MainBuilding&entity_types=IfcWallAttributes,IfcSlabAttributes,IfcRoofAttributes
+/api/componentGuids?models=MainBuilding&entityTypes=IfcWallAttributes,IfcSlabAttributes,IfcRoofAttributes
 → View all structural elements
 ```
 
 ### Space Planning
 ```
-/api/componentGuids?entity_types=IfcSpaceAttributes
+/api/componentGuids?entityTypes=IfcSpaceAttributes
 → All rooms and spaces
 ```
 
 ### System Design
 ```
-/api/componentGuids?entity_types=IfcPipeSegmentAttributes,IfcElectricalElement
+/api/componentGuids?entityTypes=IfcPipeSegmentAttributes,IfcElectricalElement
 → MEP components
 ```
 
 ### Material Schedule
 ```
-/api/componentGuids?entity_types=IfcPropertySet
+/api/componentGuids?entityTypes=IfcPropertySet
 → All material properties
 ```
 

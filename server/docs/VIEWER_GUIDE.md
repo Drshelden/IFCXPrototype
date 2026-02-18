@@ -16,12 +16,12 @@ The Advanced Viewer is a web-based interface for exploring IFC component data wi
 The query input bar allows you to execute REST API calls directly.
 
 ```
-[http://localhost:5000/api/entities?entity_types=IfcWall] [Execute] [Clear]  ● Ready
+[http://localhost:5000/api/entities?entityTypes=IfcWall] [Execute] [Clear]  ● Ready
 ```
 
 **Features:**
 - Direct REST endpoint querying with any server/port
-- **Full URL support**: `http://localhost:5000/api/entities?entity_types=IfcWall`
+- **Full URL support**: `http://localhost:5000/api/entities?entityTypes=IfcWall`
 - **Shorthand URLs**: `/api/guids?models=HelloWall`
 - **Mixed formats**: `api/components?guids=abc123` (auto-fills server)
 - Press Enter or click Execute to run query
@@ -32,20 +32,20 @@ The query input bar allows you to execute REST API calls directly.
 **Query Format Examples:**
 ```
 # Full URL (any server/port)
-http://localhost:5000/api/entities?entity_types=IfcWall
+http://localhost:5000/api/entities?entityTypes=IfcWall
 
 # Standard API path
-/api/guids?entity_types=IfcPropertySet
+/api/guids?entityTypes=IfcPropertySet
 
 # Without /api prefix
 api/components?guids=abc123,def456
 
 # Shorthand endpoint
-guids?models=HelloWall&entity_types=IfcWallAttributes
+guids?models=HelloWall&entityTypes=IfcWallAttributes
 
 # Discovery endpoints
 /api/models
-/api/entity_types?models=HelloWall
+/api/entityTypes?models=HelloWall
 ```
 
 ### 2. **Left Panel: Entity/Component Tree**
@@ -138,7 +138,7 @@ Component Data (127 rows)
 
 ### Example 1: Explore All Walls in a Model
 
-1. **Query**: `/api/guids?models=HelloWall&entity_types=IfcWallAttributes`
+1. **Query**: `/api/guids?models=HelloWall&entityTypes=IfcWallAttributes`
 2. **Execute** → Tree loads with all walls grouped by entity
 3. **Select**: Check box next to first entity
 4. **View**: 3D viewer displays selected walls
@@ -146,7 +146,7 @@ Component Data (127 rows)
 
 ### Example 2: Compare Multiple Component Types
 
-1. **Query**: `/api/guids?entity_types=IfcPropertySet,IfcDoor`
+1. **Query**: `/api/guids?entityTypes=IfcPropertySet,IfcDoor`
 2. **Execute** → Loads property sets and doors
 3. **Expand**: Click expand arrows to see component hierarchy
 4. **Toggle**: Check/uncheck individual components to compare
@@ -162,9 +162,9 @@ Component Data (127 rows)
 
 ### Example 4: Across Multiple Models
 
-1. **Query**: `/api/entity_types?models=Model1,Model2`
+1. **Query**: `/api/entityTypes?models=Model1,Model2`
 2. View entity types available in both models
-3. **Query**: `/api/guids?models=Model1,Model2&entity_types=IfcWallAttributes`
+3. **Query**: `/api/guids?models=Model1,Model2&entityTypes=IfcWallAttributes`
 4. **Compare**: Walls across multiple project models side-by-side
 
 ---
@@ -175,7 +175,7 @@ Component Data (127 rows)
 
 Query multiple models simultaneously:
 ```
-/api/guids?models=HelloWall,SecondFloor,Exterior&entity_types=IfcWallAttributes
+/api/guids?models=HelloWall,SecondFloor,Exterior&entityTypes=IfcWallAttributes
 ```
 
 The tree organizes results hierarchically, and checkboxes control visibility per component.
@@ -184,7 +184,7 @@ The tree organizes results hierarchically, and checkboxes control visibility per
 
 Combine multiple filters:
 ```
-/api/guids?models=MainBuilding&entity_types=IfcPropertySet,IfcObjectDefinition&entity_guids=guid1,guid2
+/api/guids?models=MainBuilding&entityTypes=IfcPropertySet,IfcObjectDefinition&entity_guids=guid1,guid2
 ```
 
 ### Hierarchical Selection
@@ -282,7 +282,7 @@ The viewer automatically handles these API endpoints:
 | `/api/guids` | Component GUIDs by filter | Array of component GUIDs |
 | `/api/components` | Full component data | Objects with all properties |
 | `/api/models` | Available models list | Simple array of model names |
-| `/api/entity_types` | Type discovery | Array of entity type names |
+| `/api/entityTypes` | Type discovery | Array of entity type names |
 
 All queries return standard JSON with optional error messages.
 
@@ -291,7 +291,7 @@ All queries return standard JSON with optional error messages.
 ## Tips & Best Practices
 
 1. **Start Broad**: Query `/api/models` first to understand available data
-2. **Refine Gradually**: Use `/api/entity_types?models=X` to see what's available
+2. **Refine Gradually**: Use `/api/entityTypes?models=X` to see what's available
 3. **Batch Small**: For the first time, query a single model with one type
 4. **Check Visibility**: Uncheck grid/axes to focus on geometry
 5. **Use Fit All**: After selection, click "Fit All" to center view on data

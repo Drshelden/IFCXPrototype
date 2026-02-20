@@ -277,6 +277,34 @@
             box-shadow: 0 10px 20px rgba(220, 38, 38, 0.2);
         }
 
+        .header-actions {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .viewer-button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .viewer-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
         .models-box {
             border: 1px solid #e5e7eb;
             border-radius: 10px;
@@ -369,6 +397,13 @@
     <div class="container">
         <h1>🏗️ IFC Processing Server</h1>
         <p class="subtitle">Upload IFC or JSON files for processing</p>
+        
+        <div class="header-actions">
+            <a href="/viewer" class="viewer-button">
+                <span>🔍</span>
+                <span>Open Viewer</span>
+            </a>
+        </div>
         
         <div class="status running" id="statusDiv">
             <span class="status-indicator"></span>

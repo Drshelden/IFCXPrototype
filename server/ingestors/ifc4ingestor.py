@@ -20,7 +20,7 @@ except ImportError as e:
     ifcopenshell = None
     guid = None
 
-from utils import toLowerCamelcase, generateDeterministicGuid, expandGuid
+from .utils import toLowerCamelcase, generateDeterministicGuid, expandGuid
 
 INCLUDE_EMPTY_PROPERTIES = False
 

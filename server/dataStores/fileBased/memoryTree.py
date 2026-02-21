@@ -217,7 +217,7 @@ class MemoryTree:
         print(f"\n✓ get_component_guids EXIT: Returning {final_count} total components")
         return sorted(list(result_guids or set()))
     
-    def get_components(self, guids: List[str], models: Optional[List[str]] = None) -> List[Dict]:
+    def get_components(self, guids: List[str], models: Optional[List[str]] = None):
         """Retrieve component data by GUIDs
         
         Args:
@@ -225,9 +225,12 @@ class MemoryTree:
             models: List of model names to search (None = all models)
             
         Returns:
-            List of component dictionaries (with model name added)
+            Tuple of (components_list, guid_to_model_dict)
+            - components_list: List of component dictionaries (without model field)
+            - guid_to_model_dict: Dict mapping each component GUID to its model name
         """
         components = []
+        guid_to_model = {}
         
         # Determine which models to search
         search_models = models if models else list(self.models.keys())
@@ -242,10 +245,10 @@ class MemoryTree:
             for guid in guids:
                 if guid in model['by_componentGuid']:
                     component = model['by_componentGuid'][guid].copy()
-                    component['model'] = model_name
                     components.append(component)
+                    guid_to_model[guid] = model_name
         
-        return components
+        return components, guid_to_model
     
     def get_models(self) -> List[str]:
         """Get list of all loaded models

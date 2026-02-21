@@ -71,7 +71,7 @@ class MongoDBMemoryTree:
         """
         raise NotImplementedError("MongoDB get_component_guids operation not yet implemented.")
     
-    def get_components(self, guids: List[str], models: Optional[List[str]] = None) -> List[Dict]:
+    def get_components(self, guids: List[str], models: Optional[List[str]] = None):
         """Retrieve component data by GUIDs from MongoDB
         
         Args:
@@ -79,7 +79,9 @@ class MongoDBMemoryTree:
             models: List of model names to search (None = search all)
             
         Returns:
-            List of component dictionaries
+            Tuple of (components_list, guid_to_model_dict)
+            - components_list: List of component dictionaries
+            - guid_to_model_dict: Dict mapping each component GUID to its model name
         """
         raise NotImplementedError("MongoDB get_components operation not yet implemented.")
     

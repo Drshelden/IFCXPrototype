@@ -20,7 +20,7 @@ except ImportError as e:
     ifcopenshell = None
     guid = None
 
-from .utils import toLowerCamelcase, generateDeterministicGuid, expandGuid
+from utils import toLowerCamelcase, generateDeterministicGuid, expandGuid
 
 INCLUDE_EMPTY_PROPERTIES = False
 
@@ -60,12 +60,13 @@ class IFC2JSONSimple:
 
     settings = None  # Lazy-loaded in __init__
     
-    def __init__(self, ifcModel, COMPACT=False, EMPTY_PROPERTIES=False):
+    def __init__(self, ifcModel, COMPACT=False, EMPTY_PROPERTIES=False, modelName=None):
         """IFC SPF simplified converter
 
         parameters:
         ifcModel: IFC filePath or ifcopenshell model instance
         COMPACT (boolean): if True then pretty print is turned off
+        modelName (str): Optional model name for deterministic GUID generation
         """
         if ifcopenshell is None:
             raise RuntimeError("ifcopenshell is not installed. Cannot process IFC files.")
@@ -81,6 +82,7 @@ class IFC2JSONSimple:
             self.ifcModel = ifcopenshell.open(ifcModel)
         self.COMPACT = COMPACT
         self.EMPTY_PROPERTIES = EMPTY_PROPERTIES
+        self.modelName = modelName or "unknown"
 
         # Dictionary referencing all objects with a GlobalId that are already created
         self.rootObjects = {}
@@ -182,7 +184,7 @@ class IFC2JSONSimple:
                     # ref['ref'] = id
                     # entityAttributes['representations'] = [ref]
                     entityGuid = expandGuid(entity.GlobalId)
-                    componentGuid = generateDeterministicGuid("ShapeRepresentationComponent", entityGuid)    
+                    componentGuid = generateDeterministicGuid(self.modelName, "ShapeRepresentationComponent", entityGuid)    
                     self.representations.append(
                         {
                             "componentGuid": componentGuid,
@@ -270,6 +272,7 @@ class IFC2JSONSimple:
         # Generate deterministic GUID and place it as the first attribute
         if 'componentType' in entity_dict and 'entityGuid' in entity_dict:
             deterministic_guid = generateDeterministicGuid(
+                self.modelName,
                 entity_dict['componentType'],
                 entity_dict['entityGuid']
             )

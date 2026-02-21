@@ -57,11 +57,15 @@ def process_ifc_file(ifc_path, output_path=None, compact=False, empty_properties
         
         print(f"Processing: {ifc_path}")
         
+        # Extract model name from parent directory
+        model_name = ifc_path.parent.name
+        
         # Create converter instance
         converter = IFC2JSONSimple(
             str(ifc_path),
             COMPACT=compact,
-            EMPTY_PROPERTIES=empty_properties
+            EMPTY_PROPERTIES=empty_properties,
+            modelName=model_name
         )
         
         # Convert to JSON

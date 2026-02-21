@@ -51,7 +51,7 @@ for model_name in models:
 print(f"\n6. Total component_guids: {len(found_guids)}")
 
 # Get components
-components = tree.get_components(list(found_guids), models=models)
+components, guid_to_model = tree.get_components(list(found_guids), models=models)
 print(f"7. Total components: {len(components)}")
 for c in components:
     print(f"   - {c.get('componentType', 'unknown')}: {c.get('componentGuid', 'no-guid')[:8]}...")

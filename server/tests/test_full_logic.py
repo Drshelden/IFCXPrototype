@@ -69,7 +69,7 @@ try:
         
         # Step 6: Get components
         print(f"Step 6: Fetching component data")
-        components = server.memory_tree.get_components(list(found_guids), models=search_models)
+        components, guid_to_model = server.memory_tree.get_components(list(found_guids), models=search_models)
         print(f"  -> Found {len(components)} components\n")
 
 except Exception as e:

@@ -545,7 +545,7 @@ class IFCProcessingServer:
                 if component_guids:
                     with open('api_debug.log', 'a') as f:
                         f.write(f"  -> Branch 1: component_guids\n")
-                    components = self.memory_tree.get_components(component_guids)
+                    components, guid_to_model = self.memory_tree.get_components(component_guids)
                 # If component types provided, use those
                 elif component_types:
                     with open('api_debug.log', 'a') as f:
@@ -563,7 +563,7 @@ class IFCProcessingServer:
                             )
                             found_guids.update(model_guids)
                     
-                    components = self.memory_tree.get_components(list(found_guids), models=search_models)
+                    components, guid_to_model = self.memory_tree.get_components(list(found_guids), models=search_models)
                 # Otherwise, use query filters to find components
                 elif models or entity_types or entity_guids:
                     with open('api_debug.log', 'a') as f:
@@ -597,19 +597,20 @@ class IFCProcessingServer:
                         found_guids.update(model_guids)
 
                     # Get components, restricting search to the filtered models
-                    components = self.memory_tree.get_components(list(found_guids), models=search_models)
+                    components, guid_to_model = self.memory_tree.get_components(list(found_guids), models=search_models)
                 else:
                     # No filters specified - return all components from all models
                     all_guids = self.memory_tree.get_component_guids()
-                    components = self.memory_tree.get_components(all_guids)
+                    components, guid_to_model = self.memory_tree.get_components(all_guids)
                 
                 with open('api_debug.log', 'a') as f:
                     f.write(f"  Found {len(components)} total components\n")
                 
-                # Organize components by model
+                # Organize components by model using the guid_to_model mapping
                 result_by_model = {}
                 for component in components:
-                    model_name = component.get('model') or component.get('componentGuid', '')
+                    guid = component.get('componentGuid', '')
+                    model_name = guid_to_model.get(guid, 'unknown')
                     if model_name not in result_by_model:
                         result_by_model[model_name] = []
                     result_by_model[model_name].append(component)

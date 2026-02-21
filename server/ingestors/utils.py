@@ -18,18 +18,19 @@ def expandGuid(entityGuid):
     # Format as UUID with dashes: 8-4-4-4-12
     return str(uuid.UUID(expanded))
 
-def generateDeterministicGuid(componentType, entityGuid):
-    """Generate a deterministic GUID based on component type and entity GUID
+def generateDeterministicGuid(modelName, componentType, entityGuid):
+    """Generate a deterministic GUID based on model name, component type and entity GUID
     
     Parameters:
+    modelName (str): The model name
     componentType (str): The component type string
     entityGuid (str): The entity GUID
     
     Returns:
     str: A GUID formatted as 01695e4-f7c6-46b0-8f70-8a0172df5a1
     """
-    # Create a hash from the combination of componentType and entityGuid
-    hash_input = f"{componentType}:{entityGuid}".encode('utf-8')
+    # Create a hash from the combination of modelName, componentType and entityGuid
+    hash_input = f"{modelName}:{componentType}:{entityGuid}".encode('utf-8')
     hash_obj = hashlib.sha256(hash_input)
     hash_hex = hash_obj.hexdigest()
     

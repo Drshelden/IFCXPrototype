@@ -80,7 +80,7 @@ if models:
     components = memory_tree.get_component_guids(models=[model_name])
     
     # Get components data
-    comp_data = memory_tree.get_components(components, models=[model_name])
+    comp_data, guid_to_model = memory_tree.get_components(components, models=[model_name])
     
     # Get entity types
     types = memory_tree.get_entity_types(models=[model_name])
@@ -147,12 +147,13 @@ walls = tree.get_entity_guids(entity_types=['IfcWall'])
 beams = tree.get_component_guids(entity_types=['IfcBeam'])
 
 # Get component data
-beam_data = tree.get_components(beams)
+beam_data, guid_to_model = tree.get_components(beams)
 
-# Organize by model
+# Organize by model using the guid_to_model mapping
 by_model = {}
 for component in beam_data:
-    model_name = component.get('model')
+    guid = component.get('componentGuid')
+    model_name = guid_to_model.get(guid, 'unknown')
     if model_name not in by_model:
         by_model[model_name] = []
     by_model[model_name].append(component)
@@ -173,7 +174,7 @@ wall_components = tree.get_component_guids(
 )
 
 # Retrieve full data
-wall_data = tree.get_components(
+wall_data, guid_to_model = tree.get_components(
     wall_components,
     models=['Building_A']
 )
@@ -245,7 +246,7 @@ guids = server.memory_tree.get_component_guids(
 )
 
 # 2. Retrieve full components (gets additional data)
-components = server.memory_tree.get_components(guids)
+components, guid_to_model = server.memory_tree.get_components(guids)
 
 # 3. Process data
 for component in components:

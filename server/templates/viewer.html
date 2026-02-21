@@ -1594,16 +1594,59 @@
             const item = document.createElement('div');
             item.className = 'tree-item';
 
-            let valueStr = String(value);
-            if (valueStr.length > 50) {
+            // Check if value is a plain object (not null, array, or other type)
+            const isObject = value !== null && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date);
+            
+            let valueStr = isObject ? '[object]' : String(value);
+            if (!isObject && valueStr.length > 50) {
                 valueStr = valueStr.substring(0, 47) + '...';
             }
 
-            item.innerHTML = `
-                <div class="tree-item-content" style="padding-left: 32px; cursor: default;">
-                    <span class="tree-label"><strong>${key}:</strong> ${valueStr}</span>
-                </div>
-            `;
+            if (isObject) {
+                // Create expandable object item
+                item.innerHTML = `
+                    <div class="tree-item-content" style="padding-left: 32px;">
+                        <div class="tree-toggle"></div>
+                        <span class="tree-label"><strong>${key}:</strong> ${valueStr}</span>
+                    </div>
+                `;
+                
+                // Create children container
+                const childrenDiv = document.createElement('div');
+                childrenDiv.className = 'tree-children';
+                
+                // Add properties of nested object
+                Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+                    const nestedItem = createPropertyItem(nestedKey, nestedValue);
+                    childrenDiv.appendChild(nestedItem);
+                });
+                
+                item.appendChild(childrenDiv);
+                
+                // Add toggle functionality
+                const toggle = item.querySelector('.tree-toggle');
+                if (toggle) {
+                    toggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        item.classList.toggle('expanded');
+                    });
+                }
+                
+                // Toggle on text click
+                item.addEventListener('click', (e) => {
+                    if (e.target.closest('.tree-toggle')) return;
+                    e.stopPropagation();
+                    item.classList.toggle('expanded');
+                });
+            } else {
+                // Regular property item (non-object)
+                item.innerHTML = `
+                    <div class="tree-item-content" style="padding-left: 32px; cursor: default;">
+                        <span class="tree-label"><strong>${key}:</strong> ${valueStr}</span>
+                    </div>
+                `;
+            }
+            
             return item;
         }
 

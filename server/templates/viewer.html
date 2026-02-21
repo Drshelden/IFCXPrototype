@@ -236,14 +236,59 @@
             height: 16px;
             flex-shrink: 0;
             cursor: pointer;
-            accent-color: #0098ff;
+            accent-color: #ffffff;
+            background-color: transparent;
+            appearance: none;
+            border: 1px solid #555;
+            border-radius: 2px;
         }
+        
+        .tree-checkbox:checked {
+            background-color: #888888;
+            border-color: #555;
+        }
+
+        .tree-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            margin-right: 4px;
+        }
+
+        .tree-icon.entity { color: #b0b0b0; }     /* Light grey for entities */
+        .tree-icon.relation { color: #f8d700; }   /* Yellow for relations */
+        .tree-icon.mesh { color: #85e89d; }       /* Green for mesh/representation */
+        .tree-icon.property { color: #f8b500; }   /* Orange for properties */
+        .tree-icon.component { color: #56b6f2; }  /* Cyan for components */
+        .tree-icon.component-with-entity { color: #4da6ff; }  /* Blue for components with entityType */
 
         .tree-label {
             flex: 1;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .tree-label.entity-name { color: #b0b0b0; }      /* Light grey */
+        .tree-label.relation-name { color: #f8d700; }    /* Yellow */
+        .tree-label.mesh-name { color: #85e89d; }        /* Green */
+        .tree-label.property-name { color: #f8b500; }    /* Orange */
+        .tree-label.component-name { color: #56b6f2; }   /* Cyan */
+        .tree-label.component-with-entity-name { color: #4da6ff; }   /* Blue for components with entityType */
+
+        .tree-label-guid {
+            font-size: 10px;
+            color: #888;
+            margin-left: 6px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .tree-item[title] {
+            cursor: help;
         }
 
         .tree-count {
@@ -310,8 +355,19 @@
         }
 
         .viewer-control-group input[type="checkbox"] {
-            accent-color: #0098ff;
+            accent-color: #ffffff;
             cursor: pointer;
+            background-color: transparent;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #555;
+            border-radius: 2px;
+        }
+        
+        .viewer-control-group input[type="checkbox"]:checked {
+            background-color: #888888;
+            border-color: #555;
         }
 
         .control-separator {
@@ -1196,22 +1252,36 @@
 
                 // Build entity → component tree under model
                 entityGuids.sort().forEach(entityGuid => {
-                    const entityItem = createTreeItem(entityGuid, 'entity', modelEntities[entityGuid].length);
+                    // Find component data for this entity to get better display info
+                    const firstCompGuid = modelEntities[entityGuid][0];
+                    const firstCompData = firstCompGuid ? data.components?.[firstCompGuid] : null;
+                    const entityName = firstCompData?.entityType || `Entity ${entityGuid.substring(0, 8)}`;
+                    
+                    const entityItem = createTreeItem(entityGuid, 'entity', modelEntities[entityGuid].length, {
+                        entityGuid: entityGuid,
+                        entityType: entityName
+                    });
+                    
+                    // Update label color based on entity type
+                    const entityLabel = entityItem.querySelector('.tree-label');
+                    if (entityLabel) entityLabel.classList.add('entity-name');
+                    
                     const entityChildren = document.createElement('div');
                     entityChildren.className = 'tree-children';
 
                     modelEntities[entityGuid].forEach((componentGuid, idx) => {
-                        const componentItem = createTreeItem(componentGuid, 'component', null);
+                        const comp = data.components?.[componentGuid];
+                        const componentItem = createTreeItem(componentGuid, 'component', null, comp);
                         const componentChildren = document.createElement('div');
                         componentChildren.className = 'tree-children';
 
-                        // Add component properties
+                        // Add component properties (but keep collapsed by default)
                         if (data.components && data.components[componentGuid]) {
                             const comp = data.components[componentGuid];
                             Object.keys(comp).slice(0, 10).forEach(key => {
                                 const propItem = createPropertyItem(key, comp[key]);
-                            componentChildren.appendChild(propItem);
-                        });
+                                componentChildren.appendChild(propItem);
+                            });
                         if (Object.keys(comp).length > 10) {
                             const moreItem = document.createElement('div');
                             moreItem.className = 'tree-item';
@@ -1373,30 +1443,150 @@
             rootItem.appendChild(rootChildren);
             container.appendChild(rootItem);
             
-            // Expand root and all models by default
+            // Expand root, models, and entities by default - but NOT components
             rootItem.classList.add('expanded');
-            const modelItems = rootChildren.querySelectorAll('.tree-item');
-            modelItems.forEach(item => item.classList.add('expanded'));
+            // Find all tree items and expand them based on type, but not component items
+            const allTreeItems = container.querySelectorAll('.tree-item');
+            allTreeItems.forEach(item => {
+                const itemType = item.dataset.type;
+                // Expand everything except components
+                if (itemType !== 'component') {
+                    item.classList.add('expanded');
+                }
+                // Components remain collapsed, which keeps their property children hidden
+            });
+            
+            // Check all checkboxes by default and populate selectedGuids (only if components data available)
+            if (data && data.components) {
+                const allCheckboxes = container.querySelectorAll('.tree-checkbox');
+                allCheckboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                    // Add component GUID to selectedGuids if it's a component checkbox
+                    const treeItem = checkbox.closest('.tree-item');
+                    if (treeItem?.dataset?.guid && treeItem?.dataset?.type === 'component') {
+                        selectedGuids.add(treeItem.dataset.guid);
+                        // Render the component shape
+                        if (data.components[treeItem.dataset.guid]) {
+                            try {
+                                renderComponentShapes(treeItem.dataset.guid, data.components[treeItem.dataset.guid]);
+                            } catch (e) {
+                                console.error('Error rendering shape for', treeItem.dataset.guid, e);
+                            }
+                        }
+                    }
+                });
+                // Update UI after all components are loaded
+                try {
+                    updateComponentVisibility();
+                    updateTableForSelection();
+                } catch (e) {
+                    console.error('Error updating UI after loading:', e);
+                }
+            }
         }
 
-        function createTreeItem(label, type, count) {
+        function getIconForType(type, componentData) {
+            // Determine icon based on type and component data
+            if (type === 'entity') {
+                return '⬡'; // Hexagon for entity
+            } else if (type === 'component') {
+                const compType = componentData?.componentType || '';
+                const entityType = componentData?.entityType || '';
+                if (entityType && compType) return '●'; // Filled circle for component with entityType
+                if (compType.includes('ShapeRepresentation')) return '▲'; // Triangle for mesh
+                if (compType.includes('Relation')) return '🔗'; // Link for relation
+                if (compType.includes('Property')) return '⊞'; // Squares for properties
+                return '◆'; // Diamond for generic component
+            } else if (type === 'model' || type === 'root') {
+                return '📦'; // Package
+            }
+            return '•';
+        }
+
+        function getColorClassForComponent(componentData) {
+            if (!componentData) return '';
+            const compType = componentData.componentType || '';
+            const entityType = componentData.entityType || '';
+            
+            // Check ShapeRepresentation first - it takes priority
+            if (compType.includes('ShapeRepresentation')) return 'mesh-name';
+            
+            // Then check if this is a component with entityType attribute
+            if (entityType && compType) {
+                return 'component-with-entity-name';
+            }
+            
+            if (compType.includes('Relation')) return 'relation-name';
+            if (compType.includes('Property')) return 'property-name';
+            if (entityType) return 'entity-name';
+            return 'component-name';
+        }
+
+        function getIconColorClass(type, componentData) {
+            if (type === 'entity') {
+                return 'entity';
+            } else if (type === 'component') {
+                const compType = componentData?.componentType || '';
+                const entityType = componentData?.entityType || '';
+                if (compType.includes('ShapeRepresentation')) return 'mesh';
+                if (entityType && compType) return 'component-with-entity';
+                if (compType.includes('Relation')) return 'relation';
+                if (compType.includes('Property')) return 'property';
+                return 'component';
+            }
+            return '';
+        }
+
+        function createTreeItem(label, type, count, componentData) {
             const item = document.createElement('div');
             item.className = 'tree-item';
 
             let countText = count !== null ? ` (${count})` : '';
+            
+            // Determine display name and color
             let displayLabel = label;
+            let colorClass = '';
+            let icon = getIconForType(type, componentData);
+            let guid = label;
+            
+            if (componentData) {
+                // For components, use componentName if available
+                if (componentData.componentName) {
+                    displayLabel = componentData.componentName;
+                } else if (componentData.objectType) {
+                    displayLabel = componentData.objectType;
+                }
+                // Always apply color class based on component data
+                colorClass = getColorClassForComponent(componentData);
+                guid = componentData.componentGuid || componentData.entityGuid || label;
+            } else if (type === 'entity' && componentData === null) {
+                // For entity nodes created from the tree structure, we'll need to look up later
+                guid = label;
+            }
+            
             if (displayLabel.length > 40) {
                 displayLabel = displayLabel.substring(0, 37) + '...';
             }
-
+            
+            // Show short GUID for reference
+            const shortGuid = guid.substring(0, 8).toUpperCase();
+            const guidDisplay = guid && guid !== label ? `<span class="tree-label-guid">#${shortGuid}</span>` : '';
+            
+            // Get icon color class
+            const iconColorClass = getIconColorClass(type, componentData);
+            
             item.innerHTML = `
-                <div class="tree-item-content">
+                <div class="tree-item-content" title="${guid}">
                     <div class="tree-toggle"></div>
                     <input type="checkbox" class="tree-checkbox">
-                    <span class="tree-label">${displayLabel}</span>
+                    <span class="tree-icon ${iconColorClass}" title="${type}">${icon}</span>
+                    <span class="tree-label ${colorClass}">${displayLabel}</span>
+                    ${guidDisplay}
                     <span class="tree-count">${countText}</span>
                 </div>
             `;
+            item.dataset.guid = guid;
+            item.dataset.type = type;
             return item;
         }
 
@@ -1463,14 +1653,14 @@
         }
 
         function updateTableForSelection() {
-            if (selectedGuids.size === 0) {
+            if (selectedGuids.size === 0 || !currentData) {
                 updateTable([]);
                 return;
             }
 
             const rows = [];
             selectedGuids.forEach(guid => {
-                if (currentData.components && currentData.components[guid]) {
+                if (currentData && currentData.components && currentData.components[guid]) {
                     const comp = currentData.components[guid];
                     Object.keys(comp).forEach(key => {
                         rows.push({ guid, key, value: comp[key] });

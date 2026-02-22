@@ -118,12 +118,16 @@
         /* Left Panel - Tree View */
         .left-panel {
             width: min(33%, 400px);
+            min-width: 250px;
+            max-width: calc(100% - 300px);
             background: #2d2d2d;
             border: 1px solid #444;
             border-radius: 4px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            flex-shrink: 0;
+            min-height: 0;
         }
 
         .tree-header {
@@ -140,6 +144,7 @@
             background: #252525;
             border-bottom: 1px solid #444;
             gap: 0;
+            flex-shrink: 0;
         }
 
         .tab-button {
@@ -170,8 +175,8 @@
         .tab-content {
             display: none;
             flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .tab-content.active {
@@ -183,6 +188,7 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
+            min-height: 0;
         }
 
         .tree-item {
@@ -313,6 +319,25 @@
 
         .tree-children > .tree-item {
             margin-left: 16px;
+        }
+
+        /* Splitter Bar between Left and Right Panels */
+        .splitter {
+            width: 8px;
+            background: #3d3d3d;
+            border-left: 1px solid #555;
+            border-right: 1px solid #555;
+            cursor: col-resize;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .splitter:hover {
+            background: #4d4d4d;
+        }
+
+        .splitter.active {
+            background: #0098ff;
         }
 
         /* Right Panel - 3D Viewer */
@@ -569,8 +594,11 @@
                 </div>
             </div>
 
+            <!-- Splitter Bar -->
+            <div class="splitter" id="splitter"></div>
+
             <!-- Right: 3D Viewer -->
-            <div style="flex: 1; display: flex; flex-direction: column;">
+            <div style="flex: 1; display: flex; flex-direction: column; min-width: 300px;">
                 <div class="right-panel" style="flex: 1;">
                     <div class="viewer-header">3D View</div>
                     <canvas id="canvas3d"></canvas>
@@ -613,6 +641,61 @@
         const selectedGuids = new Set();
         let gridHelper, axesHelper;
         let panTarget; // Track the pan/orbit center point
+
+        // IFC Class Colors and Opacity (from color table)
+        const ifcClassColors = {
+            'IFCWindow': { color: '#aaaaaa', opacity: 0.5 },
+            'IFCSpace': { color: '#8888ff', opacity: 0.1 },
+            'IFCWall': { color: '#ffff00', opacity: 1.0 },
+            'IFCWallStandardCase': { color: '#aaaaaa', opacity: 1.0 },
+            'IFCFooting': { color: '#888888', opacity: 1.0 },
+            'IFCSlab': { color: '#444488', opacity: 0.75 },
+            'IFCFurnishingElement': { color: '#008800', opacity: 1.0 },
+            'IFCBeam': { color: '#ffff00', opacity: 1.0 },
+            'IFCPlate': { color: '#888888', opacity: 1.0 },
+            'IFCMember': { color: '#888888', opacity: 1.0 },
+            'IFCColumn': { color: '#008800', opacity: 1.0 },
+            'IFCBuildingElementProxy': { color: '#888888', opacity: 1.0 },
+            'IFCRoof': { color: '#994444', opacity: 1.0 },
+            'IFCDoor': { color: '#888800', opacity: 1.0 },
+            'IFCOpeningElement': { color: '#444444', opacity: 0.05 }
+        };
+
+        function getColorAndOpacityForEntityType(entityType) {
+            if (!entityType) {
+                // Default color if no entity type
+                return { color: 0x0098ff, opacity: 0.8 };
+            }
+            
+            // Normalize the entity type - try exact match first, then case-insensitive
+            let lookupKey = entityType;
+            
+            // Try exact match first
+            if (ifcClassColors[lookupKey]) {
+                const colorData = ifcClassColors[lookupKey];
+                return {
+                    color: parseInt(colorData.color.replace('#', '0x'), 16),
+                    opacity: colorData.opacity
+                };
+            }
+            
+            // Try case-insensitive match by checking all keys
+            const lowerKey = lookupKey.toLowerCase();
+            for (const key of Object.keys(ifcClassColors)) {
+                if (key.toLowerCase() === lowerKey) {
+                    const colorData = ifcClassColors[key];
+                    console.log(`✓ Case-insensitive match: '${entityType}' -> '${key}'`);
+                    return {
+                        color: parseInt(colorData.color.replace('#', '0x'), 16),
+                        opacity: colorData.opacity
+                    };
+                }
+            }
+            
+            // Default fallback
+            console.log(`⚠️  EntityType '${entityType}' not found in color table, using default blue`);
+            return { color: 0x0098ff, opacity: 0.8 };
+        }
 
         function init3DViewer() {
             const canvas = document.getElementById('canvas3d');
@@ -929,6 +1012,95 @@
             return geometry;
         }
 
+        // Cache for entity type lookups to avoid repeated searches
+        const entityTypeCache = {};
+
+        function resolveEntityType(componentData, componentGuid) {
+            // Check cache first
+            if (entityTypeCache[componentGuid]) {
+                console.log(`   ✓ Using cached entityType: ${entityTypeCache[componentGuid]}`);
+                return entityTypeCache[componentGuid];
+            }
+
+            let entityType = componentData.entityType;
+            
+            console.log(`\n   Resolving entityType for component ${componentGuid.substring(0, 8)}...`);
+            console.log(`   Direct entityType: ${entityType || 'undefined'}`);
+            console.log(`   componentType: ${componentData.componentType || 'undefined'}`);
+            console.log(`   entityGuid: ${componentData.entityGuid || 'undefined'}`);
+            
+            // Try multiple lookup strategies to find entityType
+            if (!entityType) {
+                // Strategy 1 (PRIORITY): Look through ALL components for one with the same entityGuid that has entityType
+                // This is the MAIN strategy for shape representation components!
+                if (componentData.entityGuid && currentData && currentData.components) {
+                    console.log(`   Strategy 1: Searching through components for matching entityGuid...`);
+                    let foundMatches = [];
+                    for (const [guid, comp] of Object.entries(currentData.components)) {
+                        if (comp.entityGuid === componentData.entityGuid) {
+                            foundMatches.push({ guid, entityType: comp.entityType, componentType: comp.componentType });
+                            // Look for a component that has entityType (not shape representation)
+                            if (comp.entityType && !comp.componentType?.includes('ShapeRepresentation')) {
+                                entityType = comp.entityType;
+                                console.log(`   ✓ Found entityType from related component: ${entityType}`);
+                                break;
+                            }
+                        }
+                    }
+                    if (foundMatches.length > 0 && !entityType) {
+                        console.log(`   Found ${foundMatches.length} matching components:`);
+                        foundMatches.forEach(m => console.log(`     - ${m.guid.substring(0, 8)}... entityType=${m.entityType}, componentType=${m.componentType}`));
+                        // If we found matches but no entityType, take the first one's entityType if available
+                        const firstWithType = foundMatches.find(m => m.entityType);
+                        if (firstWithType) {
+                            entityType = firstWithType.entityType;
+                            console.log(`   ✓ Using entityType from first matching component: ${entityType}`);
+                        }
+                    }
+                }
+                
+                // Strategy 2 (FALLBACK ONLY): Parse patterns from fields, but SKIP for shape representations
+                if (!entityType && componentData.componentType && !componentData.componentType.includes('ShapeRepresentation')) {
+                    console.log(`   Strategy 2: Parsing patterns from component fields (NOT shape representation)...`);
+                    // Try parsing from componentType
+                    if (componentData.componentType) {
+                        const match = componentData.componentType.match(/IFC\w+|Ifc\w+/);
+                        if (match) {
+                            entityType = match[0];
+                            console.log(`   ✓ Extracted entityType from componentType '${componentData.componentType}': ${entityType}`);
+                        }
+                    }
+                    
+                    // Try parsing from objectType
+                    if (!entityType && componentData.objectType) {
+                        const match = componentData.objectType.match(/IFC\w+|Ifc\w+/);
+                        if (match) {
+                            entityType = match[0];
+                            console.log(`   ✓ Extracted entityType from objectType '${componentData.objectType}': ${entityType}`);
+                        }
+                    }
+                    
+                    // Try parsing from componentName
+                    if (!entityType && componentData.componentName) {
+                        const match = componentData.componentName.match(/IFC\w+|Ifc\w+/);
+                        if (match) {
+                            entityType = match[0];
+                            console.log(`   ✓ Extracted entityType from componentName '${componentData.componentName}': ${entityType}`);
+                        }
+                    }
+                }
+            }
+            
+            console.log(`   Final resolved entityType: ${entityType || '❌ UNDEFINED'}`);
+            
+            // Cache the result
+            if (entityType) {
+                entityTypeCache[componentGuid] = entityType;
+            }
+            
+            return entityType;
+        }
+
         function renderComponentShapes(componentGuid, componentData) {
             if (!componentData) {
                 console.warn(`renderComponentShapes: No component data for ${componentGuid}`);
@@ -936,8 +1108,13 @@
             }
 
             console.log(`🔍 renderComponentShapes called for ${componentGuid}`);
+            console.log(`   entityType:`, componentData.entityType);
+            console.log(`   entityGuid:`, componentData.entityGuid);
             console.log(`   Full component data:`, componentData);
             console.log(`   Component data keys:`, Object.keys(componentData));
+
+            // Resolve entity type using comprehensive lookup
+            let entityType = resolveEntityType(componentData, componentGuid);
 
             // CHECK IF SHAPES ALREADY RENDERED: If any mesh for this component exists in objects3d, skip rendering
             let alreadyRendered = false;
@@ -984,13 +1161,19 @@
                         
                         const meshId = `${componentGuid}-item-${idx}`;
                         
+                        // Get color and opacity based on entity type
+                        const { color, opacity } = getColorAndOpacityForEntityType(entityType);
+                        console.log(`   🎨 Using color for entityType '${entityType}':`, { color: color.toString(16), opacity });
+                        
                         // Material for the OBJ mesh
                         const material = new THREE.MeshPhongMaterial({
-                            color: 0x0098ff,
+                            color: color,
                             emissive: 0x000000,
                             shininess: 100,
                             wireframe: false,
-                            side: THREE.DoubleSide
+                            side: THREE.DoubleSide,
+                            opacity: opacity,
+                            transparent: opacity < 1.0
                         });
                         
                         const mesh = new THREE.Mesh(geometry, material);
@@ -1064,12 +1247,18 @@
 
                     geometry.computeVertexNormals();
 
+                    // Get color and opacity based on entity type
+                    const { color, opacity } = getColorAndOpacityForEntityType(entityType);
+                    console.log(`   🎨 Using color for entityType '${entityType}':`, { color: color.toString(16), opacity });
+
                     const material = new THREE.MeshPhongMaterial({
-                        color: 0x0098ff,
+                        color: color,
                         emissive: 0x000000,
                         shininess: 100,
                         wireframe: false,
-                        side: THREE.DoubleSide
+                        side: THREE.DoubleSide,
+                        opacity: opacity,
+                        transparent: opacity < 1.0
                     });
 
                     const mesh = new THREE.Mesh(geometry, material);
@@ -1488,6 +1677,15 @@
                 try {
                     updateComponentVisibility();
                     updateTableForSelection();
+                    // Fix any colors that may have been set to default during initial render
+                    console.log('🎨 Initial updateMaterialColors pass after all components loaded');
+                    updateMaterialColors();
+                    
+                    // Also do a second pass after a short delay in case some async operations complete
+                    setTimeout(() => {
+                        console.log('🎨 Second updateMaterialColors pass (after 100ms delay)');
+                        updateMaterialColors();
+                    }, 100);
                 } catch (e) {
                     console.error('Error updating UI after loading:', e);
                 }
@@ -1579,27 +1777,37 @@
             let guid = label;
             
             if (componentData) {
-                // For components, use componentName if available
-                if (componentData.componentName) {
-                    displayLabel = componentData.componentName;
-                } else if (componentData.objectType) {
-                    displayLabel = componentData.objectType;
-                }
                 // Always apply color class based on component data
                 colorClass = getColorClassForComponent(componentData);
                 guid = componentData.componentGuid || componentData.entityGuid || label;
+                
+                // For components: use the 'name' field if available, concatenate with GUID
+                if (type === 'component') {
+                    if (componentData.name) {
+                        displayLabel = `${componentData.name} | ${guid}`;
+                    } else {
+                        displayLabel = guid;
+                    }
+                } else {
+                    // For non-component items, use componentName or objectType
+                    if (componentData.componentName) {
+                        displayLabel = componentData.componentName;
+                    } else if (componentData.objectType) {
+                        displayLabel = componentData.objectType;
+                    }
+                }
             } else if (type === 'entity' && componentData === null) {
                 // For entity nodes created from the tree structure, we'll need to look up later
                 guid = label;
             }
             
-            if (displayLabel.length > 40) {
-                displayLabel = displayLabel.substring(0, 37) + '...';
+            if (displayLabel.length > 60) {
+                displayLabel = displayLabel.substring(0, 57) + '...';
             }
             
-            // Show short GUID for reference
+            // Show short GUID for reference (only for non-component items)
             const shortGuid = guid.substring(0, 8).toUpperCase();
-            const guidDisplay = guid && guid !== label ? `<span class="tree-label-guid">#${shortGuid}</span>` : '';
+            const guidDisplay = guid && guid !== label && type !== 'component' ? `<span class="tree-label-guid">#${shortGuid}</span>` : '';
             
             // Get icon color class
             const iconColorClass = getIconColorClass(type, componentData);
@@ -1633,16 +1841,28 @@
             const item = document.createElement('div');
             item.className = 'tree-item';
 
-            // Check if value is a plain object (not null, array, or other type)
-            const isObject = value !== null && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date);
+            // Check if value is complex (object or array)
+            const isComplex = value !== null && typeof value === 'object';
+            const isArray = Array.isArray(value);
+            const isObject = isComplex && !isArray && !(value instanceof Date);
             
-            let valueStr = isObject ? '[object]' : String(value);
-            if (!isObject && valueStr.length > 50) {
-                valueStr = valueStr.substring(0, 47) + '...';
+            let valueStr = '';
+            if (isArray) {
+                valueStr = `[${value.length}]`;
+            } else if (isObject) {
+                const objKeys = Object.keys(value).length;
+                valueStr = `{${objKeys}}`;
+            } else if (value instanceof Date) {
+                valueStr = value.toISOString();
+            } else {
+                valueStr = String(value);
+                if (valueStr.length > 50) {
+                    valueStr = valueStr.substring(0, 47) + '...';
+                }
             }
 
-            if (isObject) {
-                // Create expandable object item
+            if (isComplex) {
+                // Create expandable item for objects and arrays
                 item.innerHTML = `
                     <div class="tree-item-content" style="padding-left: 32px;">
                         <div class="tree-toggle"></div>
@@ -1654,11 +1874,18 @@
                 const childrenDiv = document.createElement('div');
                 childrenDiv.className = 'tree-children';
                 
-                // Add properties of nested object
-                Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-                    const nestedItem = createPropertyItem(nestedKey, nestedValue);
-                    childrenDiv.appendChild(nestedItem);
-                });
+                // Add properties of nested object or array items
+                if (isArray) {
+                    value.forEach((item, idx) => {
+                        const childItem = createPropertyItem(`[${idx}]`, item);
+                        childrenDiv.appendChild(childItem);
+                    });
+                } else {
+                    Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+                        const childItem = createPropertyItem(nestedKey, nestedValue);
+                        childrenDiv.appendChild(childItem);
+                    });
+                }
                 
                 item.appendChild(childrenDiv);
                 
@@ -1678,10 +1905,11 @@
                     item.classList.toggle('expanded');
                 });
             } else {
-                // Regular property item (non-object)
+                // Regular primitive property item
+                const escapedValue = valueStr.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
                 item.innerHTML = `
                     <div class="tree-item-content" style="padding-left: 32px; cursor: default;">
-                        <span class="tree-label"><strong>${key}:</strong> ${valueStr}</span>
+                        <span class="tree-label"><strong>${key}:</strong> <code style="background: #3a3a3a; padding: 2px 4px; border-radius: 2px; color: #0098ff; font-family: monospace; font-size: 11px;">${escapedValue}</code></span>
                     </div>
                 `;
             }
@@ -1732,6 +1960,40 @@
             
             // Force an immediate render after visibility changes
             renderer.render(scene, camera);
+            
+            // After visibility changes, update material colors for all visible meshes
+            updateMaterialColors();
+        }
+
+        function updateMaterialColors() {
+            console.log('🎨 updateMaterialColors: Updating colors for all meshes');
+            objects3d.forEach((mesh, meshId) => {
+                // Extract component GUID from mesh ID (format: componentGuid or componentGuid-item-idx)
+                const componentGuid = meshId.includes('-item-') ? meshId.split('-item-')[0] : meshId;
+                
+                if (currentData && currentData.components && currentData.components[componentGuid]) {
+                    const componentData = currentData.components[componentGuid];
+                    
+                    // Use comprehensive entity type resolution
+                    let entityType = resolveEntityType(componentData, componentGuid);
+                    
+                    if (entityType) {
+                        const { color, opacity } = getColorAndOpacityForEntityType(entityType);
+                        if (mesh.material) {
+                            const wasDefault = mesh.material.color.getHex() === 0x0098ff;
+                            mesh.material.color.setHex(color);
+                            mesh.material.opacity = opacity;
+                            mesh.material.transparent = opacity < 1.0;
+                            mesh.material.needsUpdate = true;
+                            if (wasDefault) {
+                                console.log(`  ✓ Updated ${meshId.substring(0, 20)}... from default to ${color.toString(16)} (type: ${entityType})`);
+                            }
+                        }
+                    } else {
+                        console.warn(`  ✗ Could not resolve entityType for ${meshId}`);
+                    }
+                }
+            });
         }
 
         function updateTableForSelection() {
@@ -2084,6 +2346,56 @@
         }
 
         // ============================================
+        // SPLITTER BAR FUNCTIONALITY
+        // ============================================
+        function setupSplitter() {
+            const splitter = document.getElementById('splitter');
+            const contentSection = document.querySelector('.content-section');
+            const leftPanel = document.querySelector('.left-panel');
+            
+            if (!splitter || !contentSection || !leftPanel) {
+                console.warn('Splitter setup: Required elements not found');
+                return;
+            }
+
+            let isResizing = false;
+
+            splitter.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                splitter.classList.add('active');
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+
+                // Get the offset of the container
+                const containerRect = contentSection.getBoundingClientRect();
+                const newWidth = e.clientX - containerRect.left;
+                const minWidth = 250; // Minimum left panel width
+                const maxWidth = containerRect.width - 300; // Leave space for right panel
+
+                if (newWidth > minWidth && newWidth < maxWidth) {
+                    leftPanel.style.width = newWidth + 'px';
+                    leftPanel.style.minWidth = 'unset';
+                    leftPanel.style.maxWidth = 'unset';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    splitter.classList.remove('active');
+                    document.body.style.cursor = 'default';
+                    document.body.style.userSelect = 'auto';
+                }
+            });
+
+            console.log('✓ Splitter initialized');
+        }
+
+        // ============================================
         // EVENT HANDLERS
         // ============================================
         document.getElementById('executeBtn').addEventListener('click', executeQuery);
@@ -2102,6 +2414,7 @@
             console.log('✓ Viewer initialized with custom OBJ parser');
             init3DViewer();
             setupTabSwitching();
+            setupSplitter();
         });
     </script>
 </body>

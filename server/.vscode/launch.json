@@ -2,16 +2,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Convert IFC to JSON",
+            "name": "ifc4ingestor2",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/ingestors/ifc4ingestor.py",
+            "program": "${workspaceFolder}/ingestors/ifc4ingestor2.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "ingestors/HelloWallIFCjsonC-2x3.ifc",
+                "ingestors/HelloWall-01.ifc",
                 "-o",
-                "ingestors/HelloWallIfcx.json"
+                "ingestors/HelloWall-01.json"
             ]
         },
         {

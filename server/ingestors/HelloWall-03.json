@@ -1,0 +1,143 @@
+[
+  {
+    "componentGuid": "cb49135a-1bbb-e7a0-db38-83267ee21a2a",
+    "componentType": "IfcDoorComponent",
+    "entityGuid": "f1c8fc3e-82ee-4c75-ae69-2b1be0926297",
+    "entityType": "IfcDoor",
+    "name": "Door-Passage-Single-Flush:36\" x 84\":1240679",
+    "objectType": "Door-Passage-Single-Flush:36\" x 84\"",
+    "overallHeight": 7.333333333333333,
+    "overallWidth": 3.333333333333333,
+    "tag": "1240679"
+  },
+  {
+    "componentGuid": "a01fa51b-847a-dd6a-58d5-8d9b15fc3674",
+    "componentType": "IfcDoorComponent",
+    "entityGuid": "f1c8fc3e-82ee-4c75-ae69-2b1be0926228",
+    "entityType": "IfcDoor",
+    "name": "Door-Passage-Single-Flush:36\" x 84\":1240792",
+    "objectType": "Door-Passage-Single-Flush:36\" x 84\"",
+    "overallHeight": 7.333333333333333,
+    "overallWidth": 3.333333333333333,
+    "tag": "1240792"
+  },
+  {
+    "componentGuid": "12682669-738e-7aec-3728-0ebef5244809",
+    "componentType": "IfcWallStandardCaseComponent",
+    "entityGuid": "f1c8fc3e-82ee-4c75-ae69-2b1be09262cd",
+    "entityType": "IfcWallStandardCase",
+    "name": "Basic Wall:Generic - 8\":1240637",
+    "objectType": "Basic Wall:Generic - 8\"",
+    "tag": "1240637"
+  },
+  {
+    "componentGuid": "747a943e-e1e6-31be-4426-ee554a92a76e",
+    "componentType": "IfcOpeningElementComponent",
+    "entityGuid": "dfbcf82b-f08c-b71f-8154-9b43694ff068",
+    "entityType": "IfcOpeningElement",
+    "name": "Door-Passage-Single-Flush:36\" x 84\":1240679:1",
+    "objectType": "Opening",
+    "tag": "1240679"
+  },
+  {
+    "componentGuid": "cda5ce8c-1187-1640-2f4c-82324cc73a25",
+    "componentType": "IfcOpeningElementComponent",
+    "entityGuid": "34944d75-dffe-483c-0997-14383c9fe076",
+    "entityType": "IfcOpeningElement",
+    "name": "Door-Passage-Single-Flush:36\" x 84\":1240792:1",
+    "objectType": "Opening",
+    "tag": "1240792"
+  },
+  {
+    "buildingAddress": {
+      "addressLines": [
+        "Enter address here\r\nAddress Line 2"
+      ],
+      "componentType": "IfcPostalAddressComponent",
+      "country": "MA",
+      "postalCode": "",
+      "region": "Boston",
+      "town": ""
+    },
+    "componentGuid": "3e778dca-d0ff-c51b-f448-4636ba9f1d7d",
+    "componentType": "IfcBuildingComponent",
+    "compositionType": "ELEMENT",
+    "entityGuid": "aaf83eec-52a7-4529-9ad6-4b13bfd385fe",
+    "entityType": "IfcBuilding",
+    "longName": "Building Name",
+    "name": "Building Name"
+  },
+  {
+    "componentGuid": "99d9c8fa-5815-c5ab-2348-3d09ba402a38",
+    "componentType": "IfcBuildingStoreyComponent",
+    "compositionType": "ELEMENT",
+    "elevation": 0.0,
+    "entityGuid": "933c4a06-93b8-11d3-80f8-00c04f8efc2c",
+    "entityType": "IfcBuildingStorey",
+    "longName": "L1",
+    "name": "L1",
+    "objectType": "Level:1/4\" Head"
+  },
+  {
+    "componentGuid": "4a63d058-4673-2e40-e77a-3f0b5d62e760",
+    "componentType": "IfcBuildingStoreyComponent",
+    "compositionType": "ELEMENT",
+    "elevation": 12.0,
+    "entityGuid": "6341822b-d4f3-11d3-a039-0000863f33f9",
+    "entityType": "IfcBuildingStorey",
+    "longName": "L2",
+    "name": "L2",
+    "objectType": "Level:1/4\" Head"
+  },
+  {
+    "componentGuid": "38427f1d-014f-8415-1f0a-b752b5da5c73",
+    "componentType": "IfcSiteComponent",
+    "compositionType": "ELEMENT",
+    "entityGuid": "aaf83eec-52a7-4529-9ad6-4b13bfd385fd",
+    "entityType": "IfcSite",
+    "name": "Default",
+    "refElevation": 0.0,
+    "refLatitude": [
+      42,
+      21,
+      31,
+      401672
+    ],
+    "refLongitude": [
+      -71,
+      -3,
+      -24,
+      -345703
+    ]
+  },
+  {
+    "componentGuid": "cc79bbf1-8193-f546-8f7a-a1ad48a87577",
+    "componentType": "IfcProjectComponent",
+    "entityGuid": "aaf83eec-52a7-4529-9ad6-4b13bfd385ff",
+    "entityType": "IfcProject",
+    "longName": "Project Name",
+    "name": "Project Number",
+    "phase": "Project Status"
+  },
+  {
+    "componentGuid": "e06f6670-5642-bea2-83a9-8ffd48dcf5e5",
+    "componentType": "IfcDoorStyleComponent",
+    "constructionType": "NOTDEFINED",
+    "entityGuid": "9595ce05-8910-aa94-bc52-49a2f31272a1",
+    "entityType": "IfcDoorStyle",
+    "name": "Door-Passage-Single-Flush:36\" x 84\"",
+    "operationType": "SINGLE_SWING_RIGHT",
+    "parameterTakesPrecedence": false,
+    "sizeable": false,
+    "tag": "387960"
+  },
+  {
+    "componentGuid": "d9a048e0-76d2-7c21-b491-88ecd9abf2a2",
+    "componentType": "IfcWallTypeComponent",
+    "entityGuid": "7b8f559f-8b31-42c2-ba44-e16f7a04146e",
+    "entityType": "IfcWallType",
+    "name": "Basic Wall:Generic - 8\"",
+    "predefinedType": "STANDARD",
+    "tag": "441451"
+  }
+]

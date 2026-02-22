@@ -265,6 +265,8 @@
         .tree-icon.property { color: #f8b500; }   /* Orange for properties */
         .tree-icon.component { color: #56b6f2; }  /* Cyan for components */
         .tree-icon.component-with-entity { color: #4da6ff; }  /* Blue for components with entityType */
+        .tree-icon.ifcrel { color: #bb86fc; }     /* Purple for IfcRel */
+
 
         .tree-label {
             flex: 1;
@@ -279,6 +281,8 @@
         .tree-label.property-name { color: #f8b500; }    /* Orange */
         .tree-label.component-name { color: #56b6f2; }   /* Cyan */
         .tree-label.component-with-entity-name { color: #4da6ff; }   /* Blue for components with entityType */
+        .tree-label.ifcrel-name { color: #bb86fc; }      /* Purple for IfcRel */
+
 
         .tree-label-guid {
             font-size: 10px;
@@ -1251,7 +1255,12 @@
                 modelChildren.className = 'tree-children';
 
                 // Build entity → component tree under model
-                entityGuids.sort().forEach(entityGuid => {
+                // Sort alphabetically, but put "Unknown" group last
+                const knownGuids = entityGuids.filter(guid => guid !== 'Unknown').sort();
+                const unknownGuids = entityGuids.filter(guid => guid === 'Unknown');
+                const sortedGuids = [...knownGuids, ...unknownGuids];
+                
+                sortedGuids.forEach(entityGuid => {
                     // Find component data for this entity to get better display info
                     const firstCompGuid = modelEntities[entityGuid][0];
                     const firstCompData = firstCompGuid ? data.components?.[firstCompGuid] : null;
@@ -1492,6 +1501,11 @@
             } else if (type === 'component') {
                 const compType = componentData?.componentType || '';
                 const entityType = componentData?.entityType || '';
+                console.log('getIconForType component:', { compType, entityType });
+                if (compType.includes('IfcRel')) {
+                    console.log('✓ Returning IfcRel icon for:', compType);
+                    return '⇄'; // Bidirectional arrow for IfcRel
+                }
                 if (entityType && compType) return '●'; // Filled circle for component with entityType
                 if (compType.includes('ShapeRepresentation')) return '▲'; // Triangle for mesh
                 if (compType.includes('Relation')) return '🔗'; // Link for relation
@@ -1508,7 +1522,15 @@
             const compType = componentData.componentType || '';
             const entityType = componentData.entityType || '';
             
-            // Check ShapeRepresentation first - it takes priority
+            console.log('getColorClassForComponent:', { compType, entityType });
+            
+            // Check IfcRel first - it takes priority
+            if (compType.includes('IfcRel')) {
+                console.log('✓ Matched IfcRel:', compType);
+                return 'ifcrel-name';
+            }
+            
+            // Check ShapeRepresentation next
             if (compType.includes('ShapeRepresentation')) return 'mesh-name';
             
             // Then check if this is a component with entityType attribute
@@ -1516,7 +1538,7 @@
                 return 'component-with-entity-name';
             }
             
-            if (compType.includes('Relation')) return 'relation-name';
+            if (compType.includes('IfcRel')) return 'relation-name';
             if (compType.includes('Property')) return 'property-name';
             if (entityType) return 'entity-name';
             return 'component-name';
@@ -1528,8 +1550,15 @@
             } else if (type === 'component') {
                 const compType = componentData?.componentType || '';
                 const entityType = componentData?.entityType || '';
+                if (compType.includes('IfcRel')) {
+                    console.log('✓ getIconColorClass: Matched IfcRel:', compType);
+                    return 'ifcrel';
+                }
                 if (compType.includes('ShapeRepresentation')) return 'mesh';
-                if (entityType && compType) return 'component-with-entity';
+                if (entityType && compType) {
+                    console.log('  getIconColorClass: Matched entityType&&compType:', { compType, entityType });
+                    return 'component-with-entity';
+                }
                 if (compType.includes('Relation')) return 'relation';
                 if (compType.includes('Property')) return 'property';
                 return 'component';
@@ -1575,8 +1604,18 @@
             // Get icon color class
             const iconColorClass = getIconColorClass(type, componentData);
             
+            // Build tooltip with component type, entity, and title
+            let tooltipText = guid;
+            if (type === 'component' && componentData) {
+                const compType = componentData.componentType || 'Unknown Type';
+                const entityGuid = componentData.entityGuid || 'No Entity';
+                tooltipText = `Type: ${compType}\nEntity: ${entityGuid}\nGUID: ${guid}`;
+            } else if (type === 'entity') {
+                tooltipText = `Entity: ${guid}`;
+            }
+            
             item.innerHTML = `
-                <div class="tree-item-content" title="${guid}">
+                <div class="tree-item-content" title="${tooltipText}">
                     <div class="tree-toggle"></div>
                     <input type="checkbox" class="tree-checkbox">
                     <span class="tree-icon ${iconColorClass}" title="${type}">${icon}</span>
@@ -1881,6 +1920,10 @@
                             
                             if (Array.isArray(compData)) {
                                 compData.forEach(comp => {
+                                    // Log all IfcRel components
+                                    if (comp.componentType && comp.componentType.includes('IfcRel')) {
+                                        console.log('🟣 Loaded IfcRel component:', { type: comp.componentType, guid: comp.componentGuid.substring(0, 8) });
+                                    }
                                     const entityGuid = comp.entityGuid || 'Unknown';
                                     const modelName = comp.model || 'DefaultModel';
                                     
@@ -1921,6 +1964,10 @@
                             
                             // Organize components by entity GUID
                             components.forEach(comp => {
+                                // Log all IfcRel components
+                                if (comp.componentType && comp.componentType.includes('IfcRel')) {
+                                    console.log('🟣 Loaded IfcRel component:', { type: comp.componentType, guid: comp.componentGuid.substring(0, 8) });
+                                }
                                 const entityGuid = comp.entityGuid || 'Unknown';
                                 const componentGuid = comp.componentGuid;
                                 
@@ -1955,6 +2002,10 @@
                         
                         // Organize by model, then by entity
                         apiData.forEach(comp => {
+                            // Log all IfcRel components
+                            if (comp.componentType && comp.componentType.includes('IfcRel')) {
+                                console.log('🟣 Loaded IfcRel component:', { type: comp.componentType, guid: comp.componentGuid.substring(0, 8) });
+                            }
                             const entityGuid = comp.entityGuid || 'Unknown';
                             const modelName = comp.model || 'DefaultModel';
                             

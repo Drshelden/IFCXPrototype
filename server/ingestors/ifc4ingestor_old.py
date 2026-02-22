@@ -26,7 +26,7 @@ INCLUDE_EMPTY_PROPERTIES = False
 
 
 ALLOWED_TYPES = {'IfcObjectDefinition', 'IfcPropertySet', 'IfcRelationship'}
-# ALLOWED_TYPES = {'IfcRelationship'}
+# ALLOWED_TYPES = {'IfcObjectDefinition', 'IfcPropertySet'}
 
 
 # Define attributes to exclude
@@ -39,13 +39,12 @@ EXCLUDE_ATTRIBUTES = {
     'representations',
     'representationmaps',
     'representationcontexts',
-    'unitsincontext',
-    'globalId'
+    'unitsincontext'
 }
 
 # Define attribute name substitutions
 ATTRIBUTE_SUBSTITUTIONS = {
-    # 'GlobalId': 'entityGuid',
+    'GlobalId': 'entityGuid',
     'Name': 'componentName',
     'Description': 'componentDescription',
     'HasPropertySets': 'propertySets',
@@ -61,12 +60,12 @@ class IFC2JSONSimple:
 
     settings = None  # Lazy-loaded in __init__
     
-    def __init__(self, ifcModel, EMPTY_PROPERTIES=False, modelName=None):
+    def __init__(self, ifcModel, COMPACT=False, EMPTY_PROPERTIES=False, modelName=None):
         """IFC SPF simplified converter
 
         parameters:
         ifcModel: IFC filePath or ifcopenshell model instance
-        EMPTY_PROPERTIES (boolean): if True then empty properties are included
+        COMPACT (boolean): if True then pretty print is turned off
         modelName (str): Optional model name for deterministic GUID generation
         """
         if ifcopenshell is None:
@@ -81,6 +80,7 @@ class IFC2JSONSimple:
             self.ifcModel = ifcModel
         else:
             self.ifcModel = ifcopenshell.open(ifcModel)
+        self.COMPACT = COMPACT
         self.EMPTY_PROPERTIES = EMPTY_PROPERTIES
         self.modelName = modelName or "unknown"
 
@@ -95,11 +95,11 @@ class IFC2JSONSimple:
 
 
 
-    # def createReferenceObject(self, currentAttributes, COMPACT=False):
+    # def createReferenceObject(self, entityAttributes, COMPACT=False):
     #     """Returns object reference
 
     #     Parameters:
-    #     currentAttributes (dict): Dictionary of IFC object data
+    #     entityAttributes (dict): Dictionary of IFC object data
     #     COMPACT (boolean): verbose or non verbose IFC.JSON-5a output
 
     #     Returns:
@@ -110,8 +110,8 @@ class IFC2JSONSimple:
     #     if not COMPACT:
 
     #         # Entity names must be stripped of Ifc prefix
-    #         ref['type'] = currentAttributes['type'][3:]
-    #     ref['ref'] = expandGuid(currentAttributes['GlobalId']) if 'GlobalId' in currentAttributes else None
+    #         ref['type'] = entityAttributes['type'][3:]
+    #     ref['ref'] = expandGuid(entityAttributes['GlobalId']) if 'GlobalId' in entityAttributes else None
     #     return ref
 
     def spf2Json(self):
@@ -129,6 +129,8 @@ class IFC2JSONSimple:
             if hasattr(entity, 'GlobalId') and entity.GlobalId:
                 self.rootObjects[entity.id()] = guid.split(
                     guid.expand(entity.GlobalId))[1:-1]
+            # else:
+            #     print(f"Warning: Entity of type {entity.is_a()} with id {entity.id()} does not have a GlobalId and will not be referenced.")
         
         # Create a list of entities by querying for each allowed type
         entity_list = []
@@ -149,7 +151,7 @@ class IFC2JSONSimple:
     
     def processEntry(self, entity, topLevel=False):
         # Get entity type
-        if not topLevel and hasattr(entity, 'GlobalId'):
+        if not topLevel and hasattr(entity, 'GlobalId') and entity.GlobalId:
             entityGuid = expandGuid(entity.GlobalId)
             return entityGuid
         
@@ -161,38 +163,26 @@ class IFC2JSONSimple:
         
         # Get all first-level attributes from __dict__
         entityAttributes = entity.__dict__
-        
-        # Convert all attribute keys to toLowerCamelcase
-        entityAttributes = {toLowerCamelcase(key): value for key, value in entityAttributes.items()}
 
+        if hasattr(entity, 'GlobalId') and entity.GlobalId: fc = True
+        else: fc = False
 
         if(entity.is_a('IfcObjectDefinition')):
-            entityAttributes['entityType'] = entity_type
-            entityAttributes['entityGuid'] = expandGuid(entity.GlobalId) 
-            entityAttributes['componentGuid'] = generateDeterministicGuid(self.modelName, entity_type, entityAttributes['entityGuid']) 
-            entityAttributes.pop('globalId', None)
+            isEntityDefinition = True
+        else:            
+            isEntityDefinition = False
+        #isEntityDefinition = True
 
-        if(entity.is_a('IfcRelationship')):
-            # entityAttributes['entityGuid'] = ""
-            entityAttributes['componentGuid'] = expandGuid(entityAttributes['globalId']) 
-            entityAttributes.pop('globalId', None)
-
-
-        if(entity.is_a('IfcPropertySet')):
-            entityAttributes['componentGuid'] = expandGuid(entity.GlobalId) 
-            entityAttributes.pop('globalId', None)
-            if hasattr(entity, 'PropertyDefinitionOf') and len(entity.PropertyDefinitionOf) > 0:
-                relation = entity.PropertyDefinitionOf[0]
-                testentity = relation.RelatedObjects[0]
-                if hasattr(testentity, 'GlobalId'):
-                    entityAttributes['entityGuid'] = expandGuid(testentity.GlobalId)
-            else:
-                print(f"Warning: IfcPropertySet {entityAttributes['componentGuid']} of type {entity_type} has no related objects with GlobalId")
-
-        if 'representation' in entityAttributes:
+        if 'Representation' in entityAttributes:
                 obj = self.toObj(entity)
 
                 if obj:
+                    # id = guid.split(guid.expand(guid.new()))[1:-1]
+                    # ref = {}
+                    # if not self.COMPACT:
+                    #     ref['type'] = "shapeRepresentation"
+                    # ref['ref'] = id
+                    # entityAttributes['representations'] = [ref]
                     entityGuid = expandGuid(entity.GlobalId)
                     componentGuid = generateDeterministicGuid(self.modelName, "ShapeRepresentationComponent", entityGuid)    
                     self.representations.append(
@@ -208,7 +198,10 @@ class IFC2JSONSimple:
                         }
                     )
 
-        returnedAttributes = self.appendAttributes(entityAttributes, entity_type)
+                # # (!) delete original representation, even if OBJ generation fails
+                # del entityAttributes['Representation']
+
+        returnedAttributes = self.appendAttributes(entityAttributes, entity_type, fc, isEntityDefinition)
         entity_dict.update(returnedAttributes)
         
         # Sort entity_dict alphabetically by keys
@@ -216,11 +209,19 @@ class IFC2JSONSimple:
 
         return entity_dict
 
-    def appendAttributes(self, currentAttributes, entity_type):
+    def appendAttributes(self, entityAttributes, entity_type, isFirstClass=False, isEntityDefinition=False):
 
         entity_dict = {}        
         
-        keys = sorted(currentAttributes.keys())  
+        if isFirstClass:
+            # Extract component type for GUID generation and output
+            componentType = entity_type + 'Component'
+            entity_dict['componentType'] = componentType
+        
+        if isEntityDefinition:
+            entity_dict['entityType'] = entity_type         
+
+        keys = sorted(entityAttributes.keys())  
             
         for attr_name in keys:
             # Skip excluded attributes
@@ -231,7 +232,7 @@ class IFC2JSONSimple:
             if attr_name.startswith('_'):
                 continue
             
-            attr_value = currentAttributes[attr_name]
+            attr_value = entityAttributes[attr_name]
                             
             # Convert to JSON-serializable format using getAttributeValue
             try:
@@ -252,7 +253,7 @@ class IFC2JSONSimple:
             attr_type = type(attr_value).__name__
 
             # Apply substitution to attribute name if it exists in ATTRIBUTE_SUBSTITUTIONS
-            if attr_name in ATTRIBUTE_SUBSTITUTIONS:
+            if isFirstClass and attr_name in ATTRIBUTE_SUBSTITUTIONS:
                 display_attr_name = ATTRIBUTE_SUBSTITUTIONS[attr_name]
             else:
                 display_attr_name = attr_name
@@ -269,14 +270,14 @@ class IFC2JSONSimple:
                     entity_dict[display_attr_name] = ""
         
         # Generate deterministic GUID and place it as the first attribute
-        if not 'componentGuid' in entity_dict and 'globalId' in entity_dict:
-            # deterministic_guid = generateDeterministicGuid(
-            #     self.modelName,
-            #     entity_dict['componentType'],
-            #     entity_dict['entityGuid']
-            # )
-            # # Create new dict with componentGuid first, then all existing entries
-            ordered_dict = {'componentGuid': expandGuid(entity_dict['globalId']) }
+        if 'componentType' in entity_dict and 'entityGuid' in entity_dict:
+            deterministic_guid = generateDeterministicGuid(
+                self.modelName,
+                entity_dict['componentType'],
+                entity_dict['entityGuid']
+            )
+            # Create new dict with componentGuid first, then all existing entries
+            ordered_dict = {'componentGuid': deterministic_guid}
             ordered_dict.update(entity_dict)
             entity_dict = ordered_dict
 
@@ -287,7 +288,6 @@ class IFC2JSONSimple:
         if value is None:
             return None
         elif isinstance(value, ifcopenshell.entity_instance):
-        #elif isinstance(value, ifcopenshell.entity_instance):
             return self.processEntry(value)
             # Check if this is an IfcObject that should be processed
             # if value.is_a('IfcObject'):
@@ -346,7 +346,7 @@ def main():
 Examples:
   python ifc4ingestor.py input.ifc
   python ifc4ingestor.py input.ifc -o output.json
-  python ifc4ingestor.py input.ifc --empty-properties
+  python ifc4ingestor.py input.ifc --compact
         """
     )
     
@@ -354,6 +354,9 @@ Examples:
                         help='Input IFC file path')
     parser.add_argument('-o', '--output',
                         help='Output JSON file path (if not specified, prints to stdout)')
+    parser.add_argument('--compact',
+                        action='store_true',
+                        help='Compact output (no pretty printing)')
     parser.add_argument('--empty-properties',
                         action='store_true',
                         help='Include empty properties in output')
@@ -372,6 +375,7 @@ Examples:
         # Create converter instance
         converter = IFC2JSONSimple(
             args.input,
+            COMPACT=args.compact,
             EMPTY_PROPERTIES=args.empty_properties
         )
         
@@ -384,10 +388,10 @@ Examples:
         # Output results
         if args.output:
             with open(args.output, 'w') as f:
-                json.dump(output_data, f, indent=2, default=str)
+                json.dump(output_data, f, indent=None if args.compact else 2, default=str)
             print(f"Successfully wrote {len(json_objects)} entities to {args.output}")
         else:
-            json_output = json.dumps(output_data, indent=2, default=str)
+            json_output = json.dumps(output_data, indent=None if args.compact else 2, default=str)
             print(json_output)
             
     except FileNotFoundError as e:

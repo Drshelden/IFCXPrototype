@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFC Component Viewer</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="menu-bar">
+        <button class="icon-btn" id="saveQueriesBtn" data-tooltip="Save query state">💾</button>
+        <button class="icon-btn" id="openQueriesBtn" data-tooltip="Open query state">📂</button>
+        <button class="icon-btn" id="addQueryBtn" data-tooltip="Add query line">＋</button>
+        <input id="openQueriesInput" type="file" accept="application/json" style="display: none" />
+      </div>
+
+      <div class="query-section">
+        <div class="query-lines" id="queryLines"></div>
+        <div class="status-info">
+          <div class="status-dot"></div>
+          <span id="statusText">Ready</span>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <div class="left-panel">
+          <div class="left-upper">
+            <div class="tree-header">
+              <span>Entity / Component Tree</span>
+              <span id="treeCount"></span>
+            </div>
+            <div class="tree-content" id="treeContainer">
+              <div class="empty-state">Execute a query line to load data</div>
+            </div>
+          </div>
+
+          <div class="horizontal-splitter" id="horizontalSplitter"></div>
+
+          <div class="left-lower">
+            <div class="data-header">
+              <span id="dataHeaderText">Component Data</span>
+              <span id="dataStatus"></span>
+            </div>
+            <div class="data-tabs" id="dataTabs"></div>
+            <div class="data-view" id="dataView">
+              <div class="empty-state">Select an entity or component to inspect data</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="splitter" id="splitter"></div>
+
+        <div class="right-wrap">
+          <div class="right-panel">
+            <div class="viewer-header">3D View (ifclite)</div>
+            <iframe id="viewerFrame" class="viewer-frame" title="ifclite 3D viewer"></iframe>
+            <div class="viewer-controls">
+              <select id="modelSelect">
+                <option value="">Select a model…</option>
+              </select>
+              <button class="icon-btn" id="resetViewBtn" data-tooltip="Reset view / clear highlights">⛶</button>
+              <span id="viewerStatus" class="viewer-status"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

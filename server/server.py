@@ -1,13 +1,15 @@
 """Core Flask server for IFC processing with pluggable data store backends"""
 
 import os
+import re
 import sys
 import json
 import argparse
 from pathlib import Path
 from datetime import datetime
+import requests
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response, send_from_directory
 from flask_cors import CORS
 
 # Add ingestors to path
@@ -15,6 +17,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'ingestors'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'dataStores', 'fileBased'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'dataStores', 'mongodbBased'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils', 'ifc_utils'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'exporters'))
 
 # Debug logging to file
 DEBUG_LOG = None
@@ -31,6 +34,8 @@ def debug_print(msg):
             pass
 
 from ifc4ingestor import IFC2JSONSimple
+from ecs_to_ifc import ECS2IFC
+from viewer_sidecar_manager import ViewerSidecarManager
 
 
 class IFCProcessingServer:
@@ -47,13 +52,16 @@ class IFCProcessingServer:
         self.file_store = None
         self.memory_tree = None
         self._descendants_exporter = None
-        
+        self.viewer_sidecar_manager = ViewerSidecarManager(
+            os.path.join(os.path.dirname(__file__), 'viewer_sidecar')
+        )
+
         # Configure Flask app
         self._configure_app()
-        
+
         # Initialize data store and memory tree based on type
         self._initialize_backend()
-        
+
         # Register routes
         self._register_routes()
     
@@ -246,6 +254,41 @@ class IFCProcessingServer:
 
         return per_model
     
+    def _model_ifc_paths(self, model_name):
+        model_dir = os.path.join(self.file_store.base_path, model_name)
+        ifc_path = os.path.join(model_dir, 'model.ifc')
+        expressmap_path = ifc_path + '.expressmap.json'
+        return ifc_path, expressmap_path
+
+    def _generate_model_ifc(self, model_name, components):
+        """Run the home-grown ECS-JSON -> IFC4 exporter for a model and
+        cache the result (model.ifc + expressGuid map) alongside its
+        components. ifclite's own server/viewer parses model.ifc natively;
+        the expressmap is the join key back to entityGuid-keyed REST data."""
+        ifc_path, expressmap_path = self._model_ifc_paths(model_name)
+        exporter = ECS2IFC(model_name, components)
+        express_id_map = exporter.to_ifc(ifc_path)
+        with open(expressmap_path, 'w') as f:
+            json.dump(express_id_map, f)
+        return ifc_path, expressmap_path
+
+    def _ensure_model_ifc(self, model_name):
+        """Return (ifc_path, expressmap_path) for a model, generating them
+        on demand from already-stored components if missing (e.g. for
+        models ingested before this feature existed)."""
+        if self.data_store_type != 'fileBased':
+            raise RuntimeError('IFC export is only available for the fileBased store')
+
+        ifc_path, expressmap_path = self._model_ifc_paths(model_name)
+        if os.path.isfile(ifc_path) and os.path.isfile(expressmap_path):
+            return ifc_path, expressmap_path
+
+        if not self.file_store.model_exists(model_name):
+            raise FileNotFoundError(f'Model not found: {model_name}')
+
+        components = self.file_store.retrieve(model_name)
+        return self._generate_model_ifc(model_name, components)
+
     def _allowed_file(self, filename):
         """Check if file extension is allowed"""
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in self.app.config.get('ALLOWED_EXTENSIONS', [])
@@ -258,10 +301,29 @@ class IFCProcessingServer:
             """Serve the admin page"""
             return render_template('admin.html')
         
+        client_dist = os.path.join(os.path.dirname(__file__), '..', 'client', 'dist')
+
         @self.app.route('/viewer')
         def viewer():
-            """Serve the advanced viewer page"""
-            return render_template('viewer.html')
+            """Serve the built client (Vite) viewer page: the tree/property
+            panel plus the ifclite 3D pane embedded via /viewer-proxy."""
+            index_path = os.path.join(client_dist, 'index.html')
+            if not os.path.isfile(index_path):
+                return (
+                    "client/dist/index.html not found - run `npm install && npm run build` "
+                    "inside client/ first",
+                    503,
+                )
+            return send_from_directory(client_dist, 'index.html')
+
+        @self.app.route('/assets/<path:filename>')
+        def viewer_assets(filename):
+            """Serves the Vite-built client's hashed JS/CSS assets."""
+            return send_from_directory(os.path.join(client_dist, 'assets'), filename)
+
+        @self.app.route('/favicon.svg')
+        def viewer_favicon():
+            return send_from_directory(client_dist, 'favicon.svg')
         
         @self.app.route('/api/upload', methods=['POST'])
         def upload_file():
@@ -313,10 +375,13 @@ class IFCProcessingServer:
                     
                     # Store in data store
                     result = self.file_store.store(json_filename, json_objects)
-                    
+
+                    # Generate the ifclite-consumable IFC4 file for this model
+                    self._generate_model_ifc(model_name, json_objects)
+
                     # Refresh memory tree with new data
                     self._refresh_memory_tree()
-                    
+
                     # Clean up uploads
                     os.remove(file_path)
                     os.remove(json_path)
@@ -349,10 +414,13 @@ class IFCProcessingServer:
                     
                     # Store in data store
                     result = self.file_store.store(filename, json_objects)
-                    
+
+                    # Generate the ifclite-consumable IFC4 file for this model
+                    self._generate_model_ifc(model_name, json_objects)
+
                     # Refresh memory tree with new data
                     self._refresh_memory_tree()
-                    
+
                     # Clean up upload
                     os.remove(file_path)
                     
@@ -641,6 +709,88 @@ class IFCProcessingServer:
             models = self.memory_tree.get_models()
             return jsonify(models)
 
+        @self.app.route('/api/models/<model_name>/expressmap', methods=['GET'])
+        def model_expressmap(model_name):
+            """entityGuid -> IFC express ID map for a model's generated IFC
+            file, so the browser can join REST (GUID-keyed) selection state
+            to the ifclite viewer's (expressId-keyed) command protocol."""
+            try:
+                _, expressmap_path = self._ensure_model_ifc(model_name)
+                with open(expressmap_path) as f:
+                    return jsonify(json.load(f))
+            except FileNotFoundError as e:
+                return jsonify({'error': str(e)}), 404
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
+
+        def _proxy_to_sidecar(model_name, subpath):
+            try:
+                ifc_path, _ = self._ensure_model_ifc(model_name)
+                port = self.viewer_sidecar_manager.get_or_start(model_name, ifc_path)
+            except FileNotFoundError as e:
+                return jsonify({'error': str(e)}), 404
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
+
+            target_url = f'http://127.0.0.1:{port}/{subpath}'
+
+            if subpath == 'events':
+                upstream = requests.get(target_url, stream=True, timeout=None)
+
+                def stream():
+                    for chunk in upstream.iter_content(chunk_size=None):
+                        if chunk:
+                            yield chunk
+
+                return Response(stream(), mimetype='text/event-stream')
+
+            if request.method == 'POST':
+                upstream = requests.post(
+                    target_url,
+                    data=request.get_data(),
+                    headers={'Content-Type': request.content_type or 'application/json'},
+                )
+            else:
+                upstream = requests.get(target_url, params=request.args)
+
+            excluded_headers = {'content-encoding', 'transfer-encoding', 'connection'}
+            headers = [
+                (k, v) for k, v in upstream.headers.items() if k.lower() not in excluded_headers
+            ]
+            return Response(upstream.content, status=upstream.status_code, headers=headers)
+
+        @self.app.route(
+            '/viewer-proxy/<model_name>/', defaults={'subpath': ''}, methods=['GET', 'POST']
+        )
+        @self.app.route('/viewer-proxy/<model_name>/<path:subpath>', methods=['GET', 'POST'])
+        def viewer_proxy(model_name, subpath):
+            """Reverse-proxies to the per-model ifclite viewer sidecar
+            (spawned/reused on demand) so the browser only ever talks to
+            Flask's own port, even in single-port deployments (Heroku/Docker)."""
+            return _proxy_to_sidecar(model_name, subpath)
+
+        def _model_from_referer():
+            """ifclite's bundled viewer HTML/JS hits /model.ifc, /wasm/*,
+            /events and /api/command as ROOT-ABSOLUTE paths - it has no idea
+            it's mounted under /viewer-proxy/<model>/. Those requests carry
+            no model name of their own, but the browser sends the iframe's
+            own document URL (.../viewer-proxy/<model>/) as their Referer,
+            which is what these fallback routes recover it from."""
+            referer = request.headers.get('Referer', '')
+            match = re.search(r'/viewer-proxy/([^/]+)/', referer)
+            return match.group(1) if match else None
+
+        @self.app.route('/model.ifc', methods=['GET'])
+        @self.app.route('/events', methods=['GET'])
+        @self.app.route('/api/command', methods=['POST'])
+        @self.app.route('/wasm/<path:subpath>', methods=['GET'])
+        def viewer_proxy_root_fallback(subpath=None):
+            model_name = _model_from_referer()
+            if not model_name:
+                return jsonify({'error': 'Could not resolve model from Referer header'}), 400
+            resolved_subpath = f'wasm/{subpath}' if subpath else request.path.lstrip('/')
+            return _proxy_to_sidecar(model_name, resolved_subpath)
+
         @self.app.route('/api/models/details', methods=['GET'])
         def list_models_details():
             """List all stored models with metadata (file-based only)"""
@@ -817,7 +967,7 @@ Examples:
     print("="*50 + "\n")
     
     try:
-        server.app.run(debug=args.debug, host=args.host, port=args.port)
+        server.app.run(debug=args.debug, host=args.host, port=args.port, threaded=True)
     except KeyboardInterrupt:
         print("\n\n✅ Server stopped")
         sys.exit(0)

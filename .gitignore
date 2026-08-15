@@ -14,3 +14,7 @@ __pycache__/
 # Virtual environment
 .venv/
 venv/
+
+# Node (client/ Vite project, server/viewer_sidecar/)
+node_modules/
+client/dist/

@@ -1,0 +1,10 @@
+{
+  "name": "ifc-ecs-viewer-sidecar",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Spawns ifclite's own IFC viewer server, pointed at a home-grown-exported model.ifc file, for the Flask app to reverse-proxy.",
+  "dependencies": {
+    "@ifc-lite/viewer-core": "^0.2.12"
+  }
+}

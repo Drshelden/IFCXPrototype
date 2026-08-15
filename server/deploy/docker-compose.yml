@@ -1,8 +1,10 @@
 services:
   ifc-ecs:
     build:
-      context: ..
-      dockerfile: Dockerfile
+      # Repo root: needed so the Dockerfile's client-build stage can reach
+      # the top-level client/ (Vite) project, which lives outside server/.
+      context: ../..
+      dockerfile: server/Dockerfile
     container_name: ifc-ecs
     restart: unless-stopped
     environment:
